@@ -1,0 +1,12 @@
+[Unit]
+Description=thin-edge.io Sense HAT
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/thin-edge-sense-hat
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+TimeoutSec=900
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1 @@
+from .thin_edge_client import SenseHatThinEdgeClient
