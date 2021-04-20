@@ -5,7 +5,7 @@
 <br />
 <p align="center">
   <a href="https://thin-edge.io">
-    <img src="images/thin-edge-logo.png" alt="Logo">
+    <img src="https://github.com/thin-edge/thin-edge.io/blob/main/images/thin-edge-logo.png" alt="Logo">
   </a>
 
   <h3 align="center">The open edge framework for lightweight IoT devices</h3>
