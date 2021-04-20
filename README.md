@@ -14,6 +14,7 @@
   <br />
 </p>
 
+This repo contains examples and demos that can be use together with [thin-edge.io](https://github.com/thin-edge/thin-edge.io) but are not part of the thin-edge.io software itself.
 
 
 <!-- CONTRIBUTING -->
