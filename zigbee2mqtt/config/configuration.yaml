@@ -1,0 +1,11 @@
+homeassistant: false
+permit_join: false
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://localhost:1883'
+  client_id: 'zigbee2mqtt'
+serial:
+  port: /dev/ttyACM0
+  disable_led: false
+advanced:
+  network_key: GENERATE
