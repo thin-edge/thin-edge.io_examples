@@ -1,0 +1,3 @@
+paho-mqtt
+re
+c8y-device-proxy
