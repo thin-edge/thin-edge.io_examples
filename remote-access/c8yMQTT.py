@@ -13,9 +13,7 @@ import time
 import re
 
 class C8yMQTT(object):
-
  
-    
     def __init__(self,clientId, mqtthost,mqttport,topics):
         '''
         Read Configuration file
@@ -56,7 +54,6 @@ class C8yMQTT(object):
         ret=self.client.publish(topic,payload,qos)
         self.logger.debug('publish ret:' + str(ret))
         return ret
-
 
     def on_publish(self,client, obj, mid):
         self.logger.debug("publish: " + str(mid))
@@ -107,10 +104,7 @@ class C8yMQTT(object):
     
     def on_disconnect(self,client, userdata, rc):
         self.logger.error("on_disconnect rc: " +str(rc))
-
-
-        
-
+      
     def connect(self,on_message):
         self.connected=-1
         ''' Will connect to the mqtt broker

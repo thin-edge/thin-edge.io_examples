@@ -4,10 +4,11 @@ from threading import Thread
 import threading
 from c8yMQTT import C8yMQTT
 import concurrent.futures
+import os
+
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(name)s %(message)s')
 logger = logging.getLogger(__name__)
-
 
 def setCommandExecuting(command):
     logger.info('Setting command: '+ command + ' to executing')
@@ -36,7 +37,7 @@ def on_message(client, obj, msg):
         c8y.logger.info('Received Remote Connect.')
         setCommandExecuting('c8y_RemoteAccessConnect') 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(remoteConnect,tcp_host,tcp_port,connection_key,'https://mqtt.eu-latest.cumulocity.com' )
+            future = executor.submit(remoteConnect,tcp_host,tcp_port,connection_key,'https://'+url )
             return_value = future.result()
             c8y.logger.info('Remote Connect Result:' + return_value)
             if return_value.startswith('success'):
@@ -64,7 +65,9 @@ def remoteConnect( tcp_host,tcp_port,connection_key,base_url):
         logger.error('Remote Connection error:' + str(e))
         return str(e)
 
-
+stream = os.popen('sudo tedge config get c8y.url')
+url=stream.read().strip() 
+logger.info('Got tenant URL: '+ url)
 c8y = C8yMQTT('remote_connect','localhost',1883,'c8y/s/ds,c8y/s/e,c8y/s/dt,c8y/s/dat')
 connected = c8y.connect(on_message)
 logger.info('Connection Result:' + str(connected))
