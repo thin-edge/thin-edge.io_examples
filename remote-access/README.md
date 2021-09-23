@@ -1,6 +1,6 @@
 # thin-edge.io remote access
 
-To access a device remotely that runs thin edge, remote_connect.py can be used. After startup it will connect to the Cumulocity cloud/edge instance. From that point on you can use the remote access tab in device management to access the device. In addition your can use a local proxy o connect any local port ot the device.
+To access a device remotely that runs thin edge, `remote_connect.py` can be used. After startup, it will connect to the Cumulocity cloud/edge instance. From that point on you can use the remote access tab in device management to access the device. In addition your can use a local proxy or connect any local port on the device.
 
 ## Requirements
 
