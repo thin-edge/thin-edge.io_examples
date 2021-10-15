@@ -6,17 +6,19 @@ To access a device remotely that runs thin edge, `remote_connect.py` can be used
 
 - Working thin edge installation
 
-- Python3 and pip3 installation
+- Python3 and pip3 installation (will not work on python2)
 
 - The Cloud Remote Access Feature is assigned to your Tenant. If not ask your Administrator to get it assigned to your Tenant. Please note that the Version must be at least 1007.2.0+
 
 - The Cloud Remote Access Role must be assigned to the user who wants to use that Feature: Administration -> Role -> <any Role> -> check “Remote Access”. Assign the role to the user used for the next steps.
 
+- OAuth must be the default authentication method (This can be configured in cumulocity under Administration - > Settings)
+
 
 ## Installation 
 
 1. Check out this repo
-2. run pip install -r requirements.txt
+2. run pip3 install -r requirements.txt
 
 
 ## Usage
@@ -52,6 +54,8 @@ Body:
     "credentialsType": "NONE"
 }
 ```
+- where hostname/port is the machine where the tunnel should terminate on the device
+
 - Install local proxy on your PC/Client:
 Easiest way is to install python3 + pip3 and afterwards execute 
 
@@ -66,7 +70,11 @@ pip3 install c8ylp
 
     - Check if your device is online in cumulocity UI Device Management.
     - Start the c8ylp with the required parameters (host, external ID, Tenant ID, user and password):
-    - Example: c8ylp  -h examples.cumulocity.com -d test-device -t t1111 -u user -p verysecret (the device id is the external id of the device per default c8y_Serial is used as external id type)
+    - Example: 
+    c8ylp  -h examples.cumulocity.com -d test-device -t t1111 -u user -p verysecret
+    - The device id is the external id of the device (Identity API) per default c8y_Serial is used as external id type. You can find the external id in device management in the device tab Identity
+    - Per default the name of the configuration is "Passthrough". The same you have created with the POST call beforhand. If you used another name you need to specify that with the -n switch
+    - The tenant id can be found by clicking your name in the top right corner in the cumulocity web interface 
     - Per default the local port 2222 is used.
     - Wait until it states that the WebSocket connection is open and waiting for incoming connections…
     - This will tunnel remote web server running on 127.0.0.1:80 on the device to the local client on port 2222
