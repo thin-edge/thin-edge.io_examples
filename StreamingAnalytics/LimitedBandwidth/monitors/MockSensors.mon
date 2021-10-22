@@ -1,0 +1,27 @@
+
+/**
+ * This monitor continuously sends fake sensor events.
+ */
+monitor MockSensors {
+	
+	integer n := 0;
+	
+	action onload() {
+		
+		on all wait(1.0) {
+			float temperature := 25.1 + (n.toFloat() * 1.1);
+			float pressure := 79.9 + (n.toFloat() * 2.01234);
+			float vibration := 0.1 + (n.toFloat() * 0.16234);
+			
+			log Temperature(temperature).toString() at INFO;
+			log Pressure(pressure).toString() at INFO;
+			log Vibration(vibration).toString() at INFO;
+			
+			send Temperature(temperature) to "mqtt:sensors/temperature";
+			send Pressure(pressure) to "mqtt:sensors/pressure";
+			send Vibration(vibration) to "mqtt:sensors/vibration";
+			
+			n := (n % 5) + 1;
+		}
+	}
+}

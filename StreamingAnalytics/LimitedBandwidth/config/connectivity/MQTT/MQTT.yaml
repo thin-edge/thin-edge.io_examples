@@ -22,6 +22,9 @@ connectivityPlugins:
   MQTTTransport:
     libraryName: connectivity-mqtt
     class: MQTTTransport
+  classifierCodec:
+    libraryName: ClassifierCodec
+    class: ClassifierCodec
 
 # The chain manager, responsible for the connection to MQTT
 dynamicChainManagers:
@@ -49,24 +52,15 @@ dynamicChains:
 
     #- diagnosticCodec:
 
-    - mapperCodec:
-        "*":
-          towardsHost:
-
-            # Change 'mypackage.MySampleInput' to appropriate EPL event type according to the application
-            # If the input MQTT message maps to multiple EPL event types consider using the classifier codec
-
-            defaultValue:
-              - metadata.sag.type: mypackage.MySampleInput
-            mapFrom:
-
-              # Assuming that the EPL event type (MySampleInput) has field 'myParameter'
-              # Map MQTT's topic name from the metadata to the EPL event's 'myParameter' field
-              - payload.myParameter: metadata.mqtt.topic
-
-              # Message fields that don't correspond to fields in the event type will go into
-              # the dictionary referred to by @ExtraFieldsDict inside EPL code
-
+    - classifierCodec:
+        rules:
+          - Temperature:
+            - metadata.mqtt.topic: sensors/temperature
+          - Pressure:
+            - metadata.mqtt.topic: sensors/pressure
+          - Vibration:
+            - metadata.mqtt.topic: sensors/vibration
+        
     # Codec that logs message contents during testing/debugging - should be commented out in production
     #- diagnosticCodec:
     

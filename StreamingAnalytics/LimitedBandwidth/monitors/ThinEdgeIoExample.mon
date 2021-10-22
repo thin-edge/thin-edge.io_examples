@@ -1,0 +1,53 @@
+
+/**
+ * This monitor collates temperature, pressure and vibration
+ * measurements, averages them and sends the average of the last 5 seconds
+ * to the cloud every 5 seconds.
+ */
+monitor ThinEdgeIoExample {
+	integer combinedMeasurements := 0;
+	
+	action onload() {
+		monitor.subscribe("mqtt:sensors/temperature");
+		monitor.subscribe("mqtt:sensors/pressure");
+		monitor.subscribe("mqtt:sensors/vibration");
+		
+		CombinedMeasurement averagedMeasurement := new CombinedMeasurement;
+		on all CombinedMeasurement() as m {
+			log "got new " + m.toString() at INFO;
+			float avgTemperature := ((averagedMeasurement.temperature * combinedMeasurements.toFloat())
+										+ m.temperature)
+									/ (combinedMeasurements + 1).toFloat();
+			float avgPressure := ((averagedMeasurement.pressure * combinedMeasurements.toFloat())
+										+ m.pressure)
+									/ (combinedMeasurements + 1).toFloat();
+			float avgVibration := ((averagedMeasurement.vibration * combinedMeasurements.toFloat())
+										+ m.vibration)
+									/ (combinedMeasurements + 1).toFloat();
+			combinedMeasurements := combinedMeasurements + 1;
+			averagedMeasurement.temperature := avgTemperature;
+			averagedMeasurement.pressure := avgPressure;
+			averagedMeasurement.vibration := avgVibration;
+			log "averagedMeasurement is now " + averagedMeasurement.toString() at INFO;
+		}
+		
+		on all wait(5.0) {
+			log "on all wait 5.0..." at INFO;
+			log averagedMeasurement.toString() at INFO;
+			log "n=" + combinedMeasurements.toString() at INFO;
+			if averagedMeasurement.pressure != 0.0 {
+				log "sending averaged " + averagedMeasurement.toString() at INFO;
+				send averagedMeasurement to "mqtt:tedge/measurements";
+			}
+			combinedMeasurements := 0;
+		}
+		
+		on all (Temperature() as t and Pressure() as p and Vibration() as v) {
+			CombinedMeasurement m := CombinedMeasurement(t.temperature, p.pressure, v.vibration);
+			log "sending " + m.toString() at INFO;
+			route m;
+		}
+		
+		com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
+	}
+}
