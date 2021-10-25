@@ -32,11 +32,10 @@ monitor ThinEdgeIoExample {
 		}
 		
 		on all wait(5.0) {
-			log "on all wait 5.0..." at INFO;
-			log averagedMeasurement.toString() at INFO;
-			log "n=" + combinedMeasurements.toString() at INFO;
-			if averagedMeasurement.pressure != 0.0 {
-				log "sending averaged " + averagedMeasurement.toString() at INFO;
+			if combinedMeasurements > 0 {
+				log "averaged " + combinedMeasurements.toString() + " measurements" at INFO;
+				log "sending " + averagedMeasurement.toString() 
+					+ " to mqtt:tedge/measurements" at INFO;
 				send averagedMeasurement to "mqtt:tedge/measurements";
 			}
 			combinedMeasurements := 0;
@@ -44,7 +43,6 @@ monitor ThinEdgeIoExample {
 		
 		on all (Temperature() as t and Pressure() as p and Vibration() as v) {
 			CombinedMeasurement m := CombinedMeasurement(t.temperature, p.pressure, v.vibration);
-			log "sending " + m.toString() at INFO;
 			route m;
 		}
 		
