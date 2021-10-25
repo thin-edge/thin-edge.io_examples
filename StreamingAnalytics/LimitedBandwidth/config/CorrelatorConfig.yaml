@@ -17,3 +17,12 @@
 # information about the supported options.
 #To enable use of this file when you launch this project from Designer, edit the project's run/launch configuration,
 #open the correlator, and tick the "Configuration" checkbox next to the textbox that names this .yaml file.
+
+correlator:
+    initialization:
+        list:
+            - ${APAMA_HOME}/monitors/ConnectivityPluginsControl.mon
+            - ${APAMA_HOME}/monitors/ConnectivityPlugins.mon
+            - ${PARENT_DIR}/../eventdefinitions/EventDefs.mon
+            - ${PARENT_DIR}/../monitors/ThinEdgeIoExample.mon
+            - ${PARENT_DIR}/../monitors/MockSensors.mon
