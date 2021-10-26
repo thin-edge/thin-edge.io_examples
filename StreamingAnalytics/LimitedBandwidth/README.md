@@ -1,5 +1,8 @@
 # Streaming Analytics Limited Bandwidth Sample
 
+This example shows how Apama can be used to process & filter events to reduce
+the frequency of messages sent to the cloud.
+
 ## Prerequisites
 * An installation of Apama
 * Thin-edge.io installed (or a local MQTT broker like Mosquitto)
