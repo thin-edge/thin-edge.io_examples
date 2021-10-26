@@ -166,7 +166,9 @@ dynamicChains:
 # Deploying and Launching
 
 ## Deploying to thin-edge.io
-To deploy the project, 
+To deploy the project, copy the config and monitor directories from your Designer project to the /etc/tedge/apama/project directory on the Raspberry Pi.
+
+Alternatively, you can copy the directory here (part of this repository) if you wish to skip the Designer project steps for a quick demo.
 
 
 # Launching the Project
