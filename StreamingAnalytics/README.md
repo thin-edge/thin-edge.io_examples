@@ -11,14 +11,18 @@ Download the Apama Community Core zip for Arm to the Raspberry Pi.  The latest 
 
 Untar the archive to /opt/softwareag
 
-`mkdir /opt/softwareag`
-`tar -xzf apama_core_<version>_armv7_linux.tar.gz --directory /opt/softwareag`
+```
+mkdir /opt/softwareag
+tar -xzf apama_core_<version>_armv7_linux.tar.gz --directory /opt/softwareag
+```
 
 ## Installing the Apama Server Script
 Clone the Thin-edge examples github repository to the home directory of the Raspberry Pi
 
-`cd ~`
-`git clone https://github.com/thin-edge/thin-edge.io_examples.git`
+```
+cd ~
+git clone https://github.com/thin-edge/thin-edge.io_examples.git
+```
 
 Copy the apama server script to /etc/init.d
 
