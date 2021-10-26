@@ -70,7 +70,7 @@ MQTT messages need to be mapped to EPL events in order to be able to use them wi
 ### Configuring the correlator
 Once MQTT is configured, the correlator must be configured to include the configs and inject monitor files in the correct order.
 
-Copy the configuration [from here](src/Instructions/project/config/CorrelatorConfig.yaml) in to 
+Copy the configuration [from here](src/Instructions/project/config/CorrelatorConfig.yaml) into the CorrelatorConfig.yaml file found in the config directory in the project explorer.
 # Deploying and Launching
 
 ## Deploying to thin-edge.io
