@@ -25,4 +25,3 @@ correlator:
             - ${APAMA_HOME}/monitors/ConnectivityPlugins.mon
             - ${PARENT_DIR}/../eventdefinitions/EventDefs.mon
             - ${PARENT_DIR}/../monitors/ThinEdgeIoExample.mon
-            - ${PARENT_DIR}/../monitors/MockSensors.mon
