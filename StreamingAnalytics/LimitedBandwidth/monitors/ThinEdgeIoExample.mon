@@ -2,7 +2,7 @@
 /**
  * This monitor collates temperature, pressure and vibration
  * measurements, averages them and sends the average of the last 5 seconds
- * to the cloud every 5 seconds.
+ * to MQTT every 5 seconds.
  */
 monitor ThinEdgeIoExample {
 	integer combinedMeasurements := 0;
