@@ -1,8 +1,8 @@
 # Prerequisites
 
-- A Raspberry Pi <min version> running Raspberry Pi OS <min version> 
-- Thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions on this page.
-- A full installation of Apama Community Edition including Designer on a laptop or PC
+- A Raspberry Pi (minimum version 3) running Raspberry Pi OS 32bit 
+- Thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions on [this page](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md).
+- A full installation of [Apama Community Edition](https://apamacommunity.com) including Designer on a laptop or PC
 
 
 # Setup and Configuration
@@ -168,7 +168,7 @@ dynamicChains:
 ## Deploying to thin-edge.io
 To deploy the project, copy the config and monitor directories from your Designer project to the /etc/tedge/apama/project directory on the Raspberry Pi.
 
-Alternatively, you can copy the directory here (part of this repository) if you wish to skip the Designer project steps for a quick demo.
+Alternatively, you can copy the directory [here](src/Instructions/project)  if you wish to skip the Designer project steps for a quick demo.
 
 
 # Launching the Project
