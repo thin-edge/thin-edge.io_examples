@@ -146,7 +146,7 @@ dynamicChains:
     - classifierCodec:
         rules:
 	  - MQTTNumber:
-	    - metadata.mqtt.topic: test/number
+	    - metadata.mqtt.topic: demo/number
 
     # Codec that logs message contents during testing/debugging - should be commented out in production
     #- diagnosticCodec:
