@@ -143,20 +143,11 @@ dynamicChains:
 
     #- diagnosticCodec:
 
-    - mapperCodec:
-        "*":
-          towardsHost:
-            defaultValue:
-              - metadata.sag.type: MQTTNumber
-            mapFrom:
-              - payload.number: metadata.mqtt.topic
+    - classifierCodec:
+        rules:
+	  - MQTTNumber:
+	    - metadata.mqtt.topic: test/number
 
-          towardsTransport:
-             defaultValue:
-               - metadata.sag.type: NumberPlusOne
-             mapFrom:
-               - metadata.mqtt.topic: payload.numberplusone
-                
     # Codec that logs message contents during testing/debugging - should be commented out in production
     #- diagnosticCodec:
     
@@ -171,6 +162,8 @@ dynamicChains:
 # Deploying and Launching
 
 ## Deploying to thin-edge.io
+To deploy the project, 
+
 
 # Launching the Project
 To launch the project, invoke the server script on the Raspberry Pi

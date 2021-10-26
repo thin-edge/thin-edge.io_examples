@@ -1,0 +1,61 @@
+ service file to start and stop the correlator
+#               Service name = apama (so service apama start works)
+#               Provides start, stop, restart, force-reload (=restart)
+#               probably using start-stop-daemon and the correlator's --pid-file option
+#               does nothing if /etc/tedge/apama/project does not exist
+#               starts the correlator with --config /etc/tedge/apama/project
+
+
+### BEGIN INIT INFO
+# Provides: Apama
+# Required-Start: $local_fs $all /etc/tedge/apama/project
+# Required-Stop:
+# Default-Start: 2345
+# Default-Stop:
+# Short-Description: Starts Apama correlator with thin-edge.io project
+# Description: Starts the Apama correlator with the configuration located in /etc/tedge/apama/project, does nothing if /etc/tedge/apama/project does not exist
+
+APAMAHOME=/opt/softwareag/Apama
+PROJHOME=/etc/tedge/apama/project
+PIDFILE=/var/run/Apama.pid
+LOGFILE=/var/run/Apama.log
+
+##Service start/stop functions##
+start() {
+	echo "Starting Apama correlator"
+	start-stop-daemon -S -x $APAMAHOME/bin/correlator -p $PIDFILE
+	return 0
+}
+
+stop () {
+	echo "Stopping Apama correlator"
+	start-stop-daemon -K -p $PIDFILE
+}
+
+restart () {
+    
+}
+
+force-reload () {
+
+}
+
+##case statement to be used to call functions##
+case "$1" in
+start)
+start
+;;
+stop)
+stop
+;;
+restart)
+restart
+;;
+force-reload)
+force-reload
+;;
+*)
+echo $"Usage: $0 {start|stop|restart|force-reload}"
+exit 5
+esac
+exit $?
