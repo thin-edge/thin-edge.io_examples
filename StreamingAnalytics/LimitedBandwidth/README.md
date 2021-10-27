@@ -4,14 +4,19 @@ This example shows how Apama can be used to process & filter events to reduce
 the frequency of messages sent to the cloud.
 
 ## Prerequisites
-* An installation of Apama
-* Thin-edge.io installed (or a local MQTT broker like Mosquitto)
+Before trying to use this sample, please follow the instructions in the 
+[README](../README.md) file in the parent directory.
 
 ## How to run the sample
-1. Open an Apama command prompt
-2. From this directory run `correlator --config config`
-3. Publish events to sensors/temperature, sensors/pressure and 
-sensors/vibration topics via thin-edge, script or other MQTT utility.
+1. Run `engine_deploy --outputDeployDir deployed` from your development/full
+Apama installation.
+2. Copy the `deployed` directory from the previous step to
+`/etc/tedge/apama/project` on the thin-edge device.
+3. On the thin-edge device, restart the service with `sudo service apama
+restart`.
+4. Publish events to sensors/temperature, sensors/pressure and
+sensors/vibration topics via `thin-edge mqtt pub`, script or other MQTT
+utility.
 
 Examples: (topic: payload)
 ```
