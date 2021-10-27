@@ -22,6 +22,15 @@ connectivityPlugins:
   MQTTTransport:
     libraryName: connectivity-mqtt
     class: MQTTTransport
+  classifierCodec:
+    libraryName: ClassifierCodec
+    class: ClassifierCodec
+  jsonCodec:
+    libraryName: connectivity-json-codec
+    class: JSONCodec
+  stringCodec:
+    libraryName: connectivity-string-codec
+    class: StringCodec
 
 # The chain manager, responsible for the connection to MQTT
 dynamicChainManagers:

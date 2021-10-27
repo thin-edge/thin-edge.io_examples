@@ -26,7 +26,9 @@ git clone https://github.com/thin-edge/thin-edge.io_examples.git
 
 Copy the apama server script to /etc/init.d
 
-`cp thin-edge.io_examples/StreamingAnalytics/server/apama /etc/init.d`
+```
+cp thin-edge.io_examples/StreamingAnalytics/server/apama /etc/init.d
+```
 
 # Creating a Designer Project
 ## Creating a New Project
@@ -41,68 +43,17 @@ Add the MQTT connectivity plug-in from 'Connectivity bundles' and JSON support 
 ## Creating a Monitor
 Click the File dropdown and select New → EPL Monitor
 
-Give the monitor a name, for this example we will use TedgeTestMonitor.  Copy and paste the EPL from below into the monitor file:
+Give the monitor a name, for this example we will use TedgeTestMonitor.  
 
-```
-event MQTTNumber {
-	integer number;
-}
+The EPL code [here](src/Instructions/project/monitors/TedgeTestMonitor.mon) will listen for messages on the mqtt topic demo/number.  When an event is recieved on that topic, the number provided is incremented by 1 then published to the tedge/measurements topic.
 
-event NumberPlusOne {
-	integer numberplusone;
-}
-
-/** This monitor is an arbitrary demonstration how to connect Apama and thin-edge.io
-* 	It subscribes to the mqtt topic demo/number and sends the number incremented by 1 to mqtt topic tedge/measurements 
-*/
-
-monitor TedgeTestMonitor {
-	action onload() {
-		
-		log "Loaded monitor TedgeTestMonitor" at INFO;
-		
-		monitor.subscribe("mqtt:demo/number");
-		
-		log "Subscribed to demo/number" at INFO;
-		
-		on all MQTTNumber() as n {
-			log "Message recieved, incrementing number and sending to tedge/measurements" at INFO;
-			send NumberPlusOne(n.number + 1) to "mqtt:tedge/measurements";
-		}
-	}
-}
-```
-
+Copy and paste the code into your newly created monitor file.
 
 ## Configuring MQTT Support
 In the Project Explorer tab, MQTT can be found under Connectivity and Adapters. 
 
 ### Configuring the plug-in
-Open the MQTT.properties file.  Edit the properties to match the configuration below (or replace the file by copying and pasting across)
-
-```
-# Use this setting to specify the URL of the broker you want to use for MQTT connectivity.
-MQTT_brokerURL=127.0.0.1:1883
-
-# Use these settings to specify credentials for authentication, if required.
-MQTT_username=
-MQTT_password=
-
-# If non-validated server certificates are to be accepted or not
-MQTT_acceptUnrecognizedCertificates=true
-
-# Path to a CA certificate file for verifying the server in PEM format
-MQTT_certificateAuthorityFile=
-
-# Path to a certificate file for verifying the client in PEM format
-MQTT_certificateFile=
-
-# Path to the client's private key in PEM format, if not already included in the certificate file
-MQTT_privateKeyFile=
-
-# Used to decrypt the client's private key, if encrypted
-MQTT_certificatePassword=
-```
+Open the MQTT.properties file.  Edit the properties to match [this configuration](src/Instructions/project/config/connectivity/MQTT/MQTT.properties) (or replace the whole file)
 
 Explanation:
 
@@ -113,56 +64,13 @@ Explanation:
 ### Configuring the chain
 MQTT messages need to be mapped to EPL events in order to be able to use them within Apama.  
 - Open the MQTT.yaml file
-- Copy and paste the configuration from below into the file
+- Remove the pre-populated configurations
+- Copy in the configuration [found here](src/Instructions/project/config/connectivity/MQTT/MQTT.yaml) or replace the whole file
 
-```
-connectivityPlugins:
-  MQTTTransport:
-    libraryName: connectivity-mqtt
-    class: MQTTTransport
+### Configuring the correlator
+Once MQTT is configured, the correlator must be configured to include the configs and inject monitor files in the correct order.
 
-# The chain manager, responsible for the connection to MQTT
-dynamicChainManagers:
-  MQTTManager:
-    transport: MQTTTransport
-    managerConfig:
-      # WARNING: If you are using multiple MQTT bundles, make sure that each chain manager
-      # is configured with a distinct prefix to avoid unexpected behaviour
-      channelPrefix: "mqtt:"
-      brokerURL: ${MQTT_brokerURL}
-      certificateAuthorityFile: ${MQTT_certificateAuthorityFile}
-      acceptUnrecognizedCertificates: ${MQTT_acceptUnrecognizedCertificates}
-      authentication:
-        username: ${MQTT_username}
-        password: ${MQTT_password}
-        certificateFile: ${MQTT_certificateFile}
-        certificatePassword: ${MQTT_certificatePassword}
-        privateKeyFile: ${MQTT_privateKeyFile}
-
-dynamicChains:
-  # This is a sample chain definition showing how to turn a JSON message from MQTT broker to EPL events
-  MQTTChain:
-    - apama.eventMap:
-        suppressLoopback: true
-
-    #- diagnosticCodec:
-
-    - classifierCodec:
-        rules:
-	  - MQTTNumber:
-	    - metadata.mqtt.topic: demo/number
-
-    # Codec that logs message contents during testing/debugging - should be commented out in production
-    #- diagnosticCodec:
-    
-    - jsonCodec:
-    - stringCodec:
-        nullTerminated: false
-    
-    - MQTTTransport
- 
-```
-
+Copy the configuration [from here](src/Instructions/project/config/CorrelatorConfig.yaml) into the CorrelatorConfig.yaml file found in the config directory in the project explorer.
 # Deploying and Launching
 
 ## Deploying to thin-edge.io
