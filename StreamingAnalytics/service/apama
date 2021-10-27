@@ -28,9 +28,9 @@ fi
 . /lib/lsb/init-functions
 
 # Are we running from init?
-#run_by_init() {
-#    ([ "$previous" ] && [ "$runlevel" ]) || [ "$runlevel" = S ]
-#}
+run_by_init() {
+    ([ "$previous" ] && [ "$runlevel" ]) || [ "$runlevel" = S ]
+}
 
 case "$1" in
   start)
@@ -75,7 +75,7 @@ case "$1" in
         if init_is_upstart; then
             exit 1
         fi
-        echo "Attempting to restart correlator
+        echo "Attempting to restart correlator"
         if start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile ${PIDFILE}; then
             rm -f ${PIDFILE}
             echo "Stopped running correlator"
