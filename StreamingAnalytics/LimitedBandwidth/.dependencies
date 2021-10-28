@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apama-project>
+	<dependency>
+		<dependencyentry path="" kind="src"/>
+	</dependency>
+	<catalogs>
+	</catalogs>
+	<bundles>
+		<bundle file="MQTTConnectivity.bnd" origin-path="" origin="CONNECTIVITY_CATALOG">
+			<config-files>
+			</config-files>
+			<bundle-instance-files>
+				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.properties" timestamp="1634637220273"/>
+				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.yaml" timestamp="1634637220274"/>
+			</bundle-instance-files>
+			<static-files>
+			</static-files>
+			<dashboard-files>
+			</dashboard-files>
+			<evt-files>
+			</evt-files>
+		</bundle>
+	</bundles>
+</apama-project>

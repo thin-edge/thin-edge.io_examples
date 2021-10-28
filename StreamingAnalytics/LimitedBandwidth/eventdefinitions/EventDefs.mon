@@ -1,0 +1,18 @@
+
+event Temperature {
+	float temperature;
+}
+
+event Pressure {
+	float pressure;
+}
+
+event Vibration {
+	float vibration;
+}
+
+event CombinedMeasurement {
+	float temperature;
+	float pressure;
+	float vibration;
+}
