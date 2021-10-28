@@ -17,14 +17,3 @@
 # information about the supported options.
 #To enable use of this file when you launch this project from Designer, edit the project's run/launch configuration,
 #open the correlator, and tick the "Configuration" checkbox next to the textbox that names this .yaml file.
-
-includes:
-   - /etc/tedge/apama/project/config/connectivity/MQTT/MQTT.properties
-   - /etc/tedge/apama/project/config/connectivity/MQTT/MQTT.yaml
-
-correlator:
-    initialization:
-        list:
-            - /opt/softwareag/Apama/monitors/ConnectivityPluginsControl.mon
-            - /opt/softwareag/Apama/monitors/ConnectivityPlugins.mon
-            - /etc/tedge/apama/project/monitors/TedgeTestMonitor.mon
