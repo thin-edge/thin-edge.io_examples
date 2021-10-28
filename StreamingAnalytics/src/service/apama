@@ -17,7 +17,6 @@ set -e
 APAMAHOME=/opt/softwareag/Apama
 APAMAPROJECT=/etc/tedge/apama/project
 PIDFILE=/var/run/correlator.pid
-LOGFILE=/var/log/correlator.log
 
 if [[ ! -d "$APAMAPROJECT" ]];
 then
@@ -34,53 +33,36 @@ run_by_init() {
 
 case "$1" in
   start)
-        if init_is_upstart; then
-            exit 1
-        fi
-	echo "Attempting to start correlator"
-        if start-stop-daemon --start --quiet --oknodo --background  --make-pidfile --pidfile ${PIDFILE} --exec ${APAMAHOME}/bin/apama_env -- correlator --config ${APAMAPROJECT}/config ; then
+        echo "Attempting to start correlator"
+        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} ; then
             echo "Success"
-	    log_end_msg 0
+            log_end_msg 0
         else
-	    echo "Project is already running. Did not start."
+            echo "Project is already running. Did not start."
             log_end_msg 1
         fi
         ;;
   stop)
-        if init_is_upstart; then
-            exit 0
-        fi
         echo "Stopping correlator"
         if start-stop-daemon --stop --quiet --oknodo --pidfile ${PIDFILE}; then
             log_end_msg 0
-            rm -f ${PIDFILE}
-	    echo "Success"
-        else
-            log_end_msg 1
-        fi
-        ;;
-  reload|force-reload)
-        if init_is_upstart; then
-            exit 1
-        fi
-        echo "Attempting to reload correlator"
-        if start-stop-daemon --stop --signal HUP --quiet --oknodo --pidfile $PIDFILE; then
-            log_end_msg 0
+            if [ -f "${PIDFILE}"]; then
+                rm -f ${PIDFILE}
+            fi
             echo "Success"
         else
             log_end_msg 1
         fi
         ;;
-  restart)
-        if init_is_upstart; then
-            exit 1
-        fi
+  restart|force-reload)
         echo "Attempting to restart correlator"
         if start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile ${PIDFILE}; then
-            rm -f ${PIDFILE}
+            if [ -f "${PIDFILE}"]; then
+                rm -f ${PIDFILE}
+            fi
             echo "Stopped running correlator"
         fi
-        if start-stop-daemon --start --quiet --oknodo --background --make-pidfile --pidfile ${PIDFILE} --exec ${APAMAHOME}/bin/apama_env -- correlator --config ${APAMAPROJECT}/config ; then
+        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} ; then
             echo "Started new correlator"
             log_end_msg 0
         else
@@ -88,14 +70,10 @@ case "$1" in
         fi
         ;;
   status)
-        if init_is_upstart; then
-            exit 1
-        fi
         status_of_proc -p ${PIDFILE} ${APAMAHOME}/bin/correlator correlator && exit 0 || exit $?
         ;;
-
   *)
-        #log_action_msg "Usage: service apama {start|stop|reload|force-reload|restart|status}"
+        log_action_msg "Usage: service apama {start|stop|reload|force-reload|restart|status}"
         exit 1
 esac
 exit 0
