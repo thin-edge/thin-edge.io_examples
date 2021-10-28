@@ -81,14 +81,14 @@ An example MQTT.yaml file which contains the mapping for a single event with a s
 The quickstart example (see [Quick Start](#quick-start)) and the samples in this directory show some examples of EPL for some basic use cases.  The full EPL reference can be found [here](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/ApamaDoc/index.html).
 
 
-## Deploying the Project
-To deploy the project, use the `engine_deploy` utility provided with apama.  Navigate to the workspace directory in a command prompt/terminal and run the following command in an `apama_env` prompt (see ['Setting up the environment using the apama command prompt'](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-DepAndManApaApp_setting_up_the_environment_using_the_apama_command_prompt.html) ).
+## Deploying a Project
+To deploy a project, use the `engine_deploy` utility provided with apama.  Navigate to the workspace directory in a command prompt/terminal and run the following command in an `apama_env` prompt (see ['Setting up the environment using the apama command prompt'](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-DepAndManApaApp_setting_up_the_environment_using_the_apama_command_prompt.html) ).
 ```
 engine_deploy --outputDeployDir project <project-src-dir>
 ```
 Take the 'project' directory output by `engine_deploy` and copy it to the `/etc/tedge/apama` directory on the Raspberry Pi.
 
-# Launching the Project
+# Launching a Project
 To launch the project, use the command below to start the service.  The restart function first checks to see if the project is already running and attempts to perform a graceful shutdown of the correlator if it is.  It then starts a new correlator with the project located in /etc/tedge/apama/project
 
 ```
@@ -97,8 +97,8 @@ sudo service apama restart
 
 >If you update or replace the project in `/etc/tedge/apama/project`, you will need to restart the service again to load the new configuration.
 
-# Testing the Project
-To publish messages to MQTT, thin-edge has a [built in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).  
+# Testing a Project
+To publish messages to MQTT, thin-edge has a [built in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).  You can publish/subscribe to any MQTT topic using this command not just thin-edge specific ones.  The messages should be valid [thin-edge JSON](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/architecture/thin-edge-json.md) format.
 
 To test the quick-start example, first open a terminal to subscribe to the `tedge/measurements` topic
 
@@ -109,6 +109,7 @@ In a seperate terminal send some messages formatted like below
 ```
 tedge mqtt pub 'demo/number' '{ "number": 3 }'
 ```
+
 The output numbers in the `tedge/measurements` topic should be the original test values incremented by 1.
 
 If you followed the recommended prerequisite of connecting thin-edge to a cloud provider such as Cumulocity or Azure, the messages published to `tedge/measurements` will now also be appearing in the device measurement interface.
