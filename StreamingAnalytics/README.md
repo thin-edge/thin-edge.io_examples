@@ -72,9 +72,9 @@ MQTT_brokerURL=localhost
 
 Open the MQTT.yaml file.  This contains configuration relating to the chain which maps the MQTT messages to EPL events.
 
-MQTT messages need to be mapped to EPL events in order to be able to use them within Apama.  The easiest way to do this for this purpose is using the classifierCodec.  
+MQTT messages need to be mapped to EPL events in order to be able to use them within Apama.  The easiest way to do this for this purpose is using the [Classifier codec](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-ConApaAppToExtCom_classifier_codec.html%23wwconnect_header) which will inspect incoming events on the transport and classify them, usually to an EPL event type, based upon their payload and metadata.  
 
-An example MQTT.yaml file which contains the mapping for a single event with a single member can be found [here](src/quickstart/project/config/connectivity/MQTT/MQTT.yaml), more examples can be found within the other Streaming Analytics sample projects.
+An example MQTT.yaml file which contains the mapping for a single event with a single member can be found [here](src/quickstart/project/config/connectivity/MQTT/MQTT.yaml), more examples can be found within the other Streaming Analytics sample projects in this repository.
 
 ## Writing Apama Projects
 
