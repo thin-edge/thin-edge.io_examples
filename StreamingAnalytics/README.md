@@ -25,10 +25,11 @@ cd ~
 git clone https://github.com/thin-edge/thin-edge.io_examples.git
 ```
 
-Copy the apama server script to /etc/init.d
+Copy the apama server script to /etc/init.d then run the install command
 
 ```
 sudo cp thin-edge.io_examples/StreamingAnalytics/src/service/apama /etc/init.d
+sudo service apama install
 ```
 
 This service will start a correlator with the project located in /etc/tedge/apama/project.  If no project exists in that location, the script exits without starting the correlator.
