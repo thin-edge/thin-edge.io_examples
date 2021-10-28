@@ -13,15 +13,17 @@ Follow the setup and configuration instructions in the [README](../README.md)
 file in the parent directory before running this sample.
 
 ## How to run the sample
-1. Run `engine_deploy --outputDeployDir deployed` from your development/full
-Apama installation.
-2. Copy the `deployed` directory from the previous step to
-`/etc/tedge/apama/project` on the thin-edge device.
+1. Run `engine_deploy --outputDeployDir deployed .` in this folder from your
+development/full Apama installation.
+2. Copy the contents of the `deployed` directory that was created by the
+previous step to the `/etc/tedge/apama/project` directory on the thin-edge
+device.
 3. On the thin-edge device, restart the service with `sudo service apama
-restart`.
-4. Publish events to sensors/temperature, sensors/pressure and
-sensors/vibration topics via `tedge mqtt pub`, script or other MQTT
-utility.
+restart`. This will restart the correlator and run the project that was copied
+in the previous step.
+4. Exercise the sample by publishing events to sensors/temperature,
+sensors/pressure and sensors/vibration topics via `tedge mqtt pub`, script or
+other MQTT utility.
 
 Event examples: (topic: payload)
 ```
@@ -29,3 +31,13 @@ sensors/temperature: {"temperature":30.6}
 sensors/pressure: {"pressure":68.265}
 sensors/vibration: {"vibration":0.12098}
 ```
+
+5. Run `cat /var/log/<correlator log filename>` to print out the contents of
+the correlator log file. The actual correlator log filename is determined by
+the [apama service script](../service/apama).
+
+In the correlator's output you should see log messages indicating that the
+combined measurement has been sent to `tedge/measurements`.
+
+If you have also configured thin-edge to connect to Cumulocity IoT or another
+cloud service you should also see the measurement(s) appear there.
