@@ -1,16 +1,28 @@
 
+/**
+ * Example input event from a thin-edge device.
+ */
 event Temperature {
 	float temperature;
 }
 
+/**
+ * Example input event from a thin-edge device.
+ */
 event Pressure {
 	float pressure;
 }
 
+/**
+ * Example input event from a thin-edge device.
+ */
 event Vibration {
 	float vibration;
 }
 
+/**
+ * Example output event from Apama -> thin-edge.io -> cloud.
+ */
 event CombinedMeasurement {
 	float temperature;
 	float pressure;
