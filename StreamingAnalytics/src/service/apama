@@ -73,7 +73,7 @@ case "$1" in
         status_of_proc -p ${PIDFILE} ${APAMAHOME}/bin/correlator correlator && exit 0 || exit $?
         ;;
   *)
-        log_action_msg "Usage: service apama {start|stop|reload|force-reload|restart|status}"
+        log_action_msg "Usage: service apama {start|stop|force-reload|restart|status}"
         exit 1
 esac
 exit 0
