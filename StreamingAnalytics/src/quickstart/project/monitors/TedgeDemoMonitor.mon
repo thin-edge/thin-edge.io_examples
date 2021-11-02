@@ -1,4 +1,5 @@
-
+/** This event maps to JSON format eg. {"number": 4} 
+*/
 event Number {
 	integer number;
 }

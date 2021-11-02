@@ -52,9 +52,9 @@ sudo cp thin-edge.io_examples/StreamingAnalytics/src/quickstart/project /etc/ted
 ```
 Now skip to the [launching instructions](#launching-a-project) to launch the project.
 
-# Creating a Designer Project
+# Creating a Software AG Designer Project
 ## Creating a New Project
-- Open Designer on the laptop or PC and select a workspace (the default location is fine).
+- Open Software AG Designer on the laptop or PC and select a workspace (the default location is fine).
 - Start a new project by choosing __File → New → Apama Project__.
 - Give your project a name then click 'Next'.
 - Add the MQTT connectivity plug-in from 'Connectivity bundles' and JSON support from 'Standard 
