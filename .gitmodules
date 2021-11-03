@@ -1,0 +1,3 @@
+[submodule "bme280/bme280"]
+	path = bme280/bme280
+	url = https://github.com/tilghman/check_bme280
