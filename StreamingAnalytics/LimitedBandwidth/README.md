@@ -13,8 +13,9 @@ Follow the setup and configuration instructions in the [README](../README.md)
 file in the parent directory before running this sample.
 
 ## How to run the sample
-1. Run `engine_deploy --outputDeployDir deployed .` in this folder from your
-development/full Apama installation.
+1. From an Apama command prompt in your full Apama installation, run
+`engine_deploy --outputDeployDir deployed LimitedBandwidth` from the 
+parent directory ([StreamingAnalytics](../)).
 2. Copy the contents of the `deployed` directory that was created by the
 previous step to the `/etc/tedge/apama/project` directory on the thin-edge
 device.
