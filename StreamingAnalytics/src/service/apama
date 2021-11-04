@@ -47,7 +47,7 @@ case "$1" in
         echo "Stopping correlator"
         if start-stop-daemon --stop --quiet --oknodo --pidfile ${PIDFILE}; then
             log_end_msg 0
-            if [ -f "${PIDFILE}"]; then
+            if [ -f "${PIDFILE}" ]; then
                 rm -f ${PIDFILE}
             fi
             echo "Success"
@@ -58,7 +58,7 @@ case "$1" in
   restart|force-reload)
         echo "Attempting to restart correlator"
         if start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile ${PIDFILE}; then
-            if [ -f "${PIDFILE}"]; then
+            if [ -f "${PIDFILE}" ]; then
                 rm -f ${PIDFILE}
             fi
             echo "Stopped running correlator"
