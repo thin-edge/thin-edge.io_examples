@@ -16,7 +16,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about">About</a></li>
-    <li><a href="#getting started">Getting Started</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#license">License</a></li>
   </ol>
