@@ -1,0 +1,5 @@
+**/*.o
+bme280/check_bme280
+local_bme280
+cloud_bme280
+tedge_bme280
