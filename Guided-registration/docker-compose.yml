@@ -1,0 +1,17 @@
+version: "3.0"
+services:
+  tedge:
+   build: ./tedge
+   hostname: tedge
+   container_name: thin-edge.io
+   expose:
+      - "1883"
+      - "8080"
+   ports:
+      - "1883:1883"
+      - "8080:80"
+   volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+   deploy:
+      restart_policy:
+         condition: on-failure
