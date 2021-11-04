@@ -35,7 +35,6 @@ Additionally it extends thin-edge.io in the area of managing, visualizing and pe
 <br/>
 
 <!-- GETTING STARTED -->
-
 # Getting Started
 1. Adapt Architecture: Within the current build the used architecture is hardcoded in 4 places and needs to be adapted to either amd64, armhf or arm64 within /tedge/Dockerfile
 <br/>
