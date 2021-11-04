@@ -63,7 +63,7 @@ case "$1" in
             fi
             echo "Stopped running correlator"
         fi
-        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} ; then
+        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} --logFile ${LOGFILE}; then
             echo "Started new correlator"
             log_end_msg 0
         else
