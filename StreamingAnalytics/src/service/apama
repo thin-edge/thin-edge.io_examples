@@ -17,6 +17,7 @@ set -e
 APAMAHOME=/opt/softwareag/Apama
 APAMAPROJECT=/etc/tedge/apama/project
 PIDFILE=/var/run/correlator.pid
+LOGFILE=/var/log/apama/correlator.log
 
 if [[ ! -d "$APAMAPROJECT" ]];
 then
@@ -34,7 +35,7 @@ run_by_init() {
 case "$1" in
   start)
         echo "Attempting to start correlator"
-        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} ; then
+        if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} --logFile ${LOGFILE} ; then
             echo "Success"
             log_end_msg 0
         else
