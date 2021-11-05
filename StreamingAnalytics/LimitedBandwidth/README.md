@@ -38,7 +38,7 @@ cloud service you should see the measurement(s) appear there.
 Otherwise, run `cat <path to correlator log>` to print out the contents of
 the correlator log file. The actual path to the correlator log file is
 determined by the project's configuration and any `--logfile` argument passed
-to the correlator in the [apama service script](../service/apama).
+to the correlator in the [apama service script](../src/service/apama).
 > Note: The `--logfile` argument overrides any setting in the project's 
 configuration files.
 
