@@ -25,14 +25,18 @@ cd ~
 git clone https://github.com/thin-edge/thin-edge.io_examples.git
 ```
 
-Copy the Apama server script to `/etc/init.d` then run the install command:
+Copy the Apama server script to `/etc/init.d`, make it executable then run the
+install command:
 
 ```
 sudo cp thin-edge.io_examples/StreamingAnalytics/src/service/apama /etc/init.d
+sudo chmod +x /etc/init.d/apama
 sudo service apama install
 ```
 
-This service will start a correlator with the project located in `/etc/tedge/apama/project`.  If no project exists in that location, the script exits without starting the correlator.
+This service will start a correlator with the project located in
+`/etc/tedge/apama/project`. If no project exists in that location, the script
+exits without starting the correlator.
 
 To set up the service to run on startup, run the command:
 ```
@@ -48,7 +52,7 @@ Copy the project located in the `StreamingAnalytics/src` directory of this repos
 `/etc/tedge/apama/project` directory on the Raspberry Pi:
 
 ```
-sudo cp thin-edge.io_examples/StreamingAnalytics/src/quickstart/project /etc/tedge/apama
+sudo cp -r thin-edge.io_examples/StreamingAnalytics/src/quickstart/project /etc/tedge/apama
 ```
 Now skip to the [launching instructions](#launching-a-project) to launch the project.
 
