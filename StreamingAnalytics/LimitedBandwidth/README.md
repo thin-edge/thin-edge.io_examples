@@ -33,11 +33,14 @@ sensors/pressure: {"pressure":68.265}
 sensors/vibration: {"vibration":0.12098}
 ```
 
-5. Run `cat /var/log/<correlator log filename>` to print out the contents of
-the correlator log file. The actual correlator log filename is determined by
-the and project's configuration and any `--logfile` argument passed to the
-correlator in the [apama service script](../service/apama).
+5. If you have configured thin-edge to connect to Cumulocity IoT or another
+cloud service you should see the measurement(s) appear there.
+Otherwise, run `cat <path to correlator log>` to print out the contents of
+the correlator log file. The actual path to the correlator log file is
+determined by the project's configuration and any `--logfile` argument passed
+to the correlator in the [apama service script](../src/service/apama).
+> Note: The `--logfile` argument overrides any setting in the project's 
+configuration files.
+
 In the correlator's output you should see log messages indicating that the
 combined measurement has been sent to `tedge/measurements`.
-If you have also configured thin-edge to connect to Cumulocity IoT or another
-cloud service you should also see the measurement(s) appear there.
