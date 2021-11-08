@@ -52,7 +52,7 @@ Copy the project located in the `StreamingAnalytics/src` directory of this repos
 `/etc/tedge/apama/project` directory on the Raspberry Pi:
 
 ```
-sudo cp -r thin-edge.io_examples/StreamingAnalytics/src/quickstart/ /etc/tedge/apama
+sudo cp -r thin-edge.io_examples/StreamingAnalytics/src/quickstart/project /etc/tedge/apama
 ```
 Now skip to the [launching instructions](#launching-a-project) to launch the project.
 
