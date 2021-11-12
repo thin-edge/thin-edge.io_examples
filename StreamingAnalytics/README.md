@@ -7,9 +7,10 @@
 
 ## Optional
 
-These are not essential to be able to run the examples here, but are
-recommended if you want to modify or extend the examples or implement a real
-solution with Apama and thin-edge.
+These are not essential to be able to run the examples provided. If you want to
+modify or extend the examples or implement a real solution with Apama and
+thin-edge we recommend you follow the guidance on creating, configuring and
+deploying a project contained within this document.
 
 - A full installation of [Apama Community Edition](https://apamacommunity.com/downloads/)
 including Software AG Designer on a laptop or PC.
