@@ -1,14 +1,27 @@
 # Prerequisites
 
 - A Raspberry Pi (minimum version 3) running Raspberry Pi OS 32bit. 
-- Thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions [here](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md).
-- A full installation of [Apama Community Edition](https://apamacommunity.com/downloads/) including Software AG Designer on a laptop or PC.
-- _Recommended_: Thin-edge configured with connection to Cumulocity or Azure using the instructions [here](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/004_connect.md).
+- thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions [here](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md).
+- _Recommended:_ thin-edge configured with connection to Cumulocity or Azure using the instructions
+[here](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/004_connect.md).
 
+## Optional
+
+These are not essential to be able to run the examples here, but are
+recommended if you want to modify or extend the examples or implement a real
+solution with Apama and thin-edge.
+
+- A full installation of [Apama Community Edition](https://apamacommunity.com/downloads/)
+including Software AG Designer on a laptop or PC.
+- Docker and the apama-builder and apama-correlator images. See the links below
+for more details.
+	- https://tech.forums.softwareag.com/t/apama-builder-for-docker/237796
+	- https://hub.docker.com/_/softwareag-apama-builder
+	- https://hub.docker.com/_/apama-correlator
 
 # Setup and Configuration
 ## Installing Apama Community Core to the Raspberry Pi
-Download the Apama Community Core zip for Arm to the Raspberry Pi.  The latest version is available from the [Apama Community Edition Downloads page](https://www.apamacommunity.com/downloads/) .
+Download the Apama Community Core zip for Arm to the Raspberry Pi. The latest version is available from the [Apama Community Edition Downloads page](https://www.apamacommunity.com/downloads/).
 
 Untar the archive to /opt/softwareag:
 
