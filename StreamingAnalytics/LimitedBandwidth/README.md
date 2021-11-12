@@ -42,9 +42,10 @@ sensors/vibration: {"vibration":0.12098}
 cloud service you should see the measurement(s) appear there.
 Otherwise, run `cat <path to correlator log>` to print out the contents of
 the correlator log file. The actual path to the correlator log file is
-determined by the project's configuration and any `--logfile` argument passed
+determined by the project's configuration or the `--logfile` argument passed
 to the correlator in the [apama service script](../src/service/apama). In the
 correlator's output you should see log messages indicating that the combined
 measurement has been sent to `tedge/measurements`.
-> Note: The `--logfile` argument overrides any setting in the project's 
-configuration files.
+> _Caution:_ The correlator will fail to start if you specify the name of the
+> logfile in both the project configuration and the `--logfile` argument to
+> the correlator.
