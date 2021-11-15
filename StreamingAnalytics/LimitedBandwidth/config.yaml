@@ -1,0 +1,15 @@
+# Root configuration file which inherits other config files
+# and contains the initialization list.
+
+includes:
+   - ${APAMA_HOME}/connectivity/bundles/standard-codecs.yaml
+   - ${PARENT_DIR}/config/connectivity/MQTT/MQTT.properties
+   - ${PARENT_DIR}/config/connectivity/MQTT/MQTT.yaml
+
+correlator:
+    initialization:
+        list:
+            - ${APAMA_HOME}/monitors/ConnectivityPluginsControl.mon
+            - ${APAMA_HOME}/monitors/ConnectivityPlugins.mon
+            - ${PARENT_DIR}/eventdefinitions/EventDefs.mon
+            - ${PARENT_DIR}/monitors/ThinEdgeIoExample.mon
