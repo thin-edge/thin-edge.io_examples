@@ -45,7 +45,7 @@ install command:
 ```
 sudo cp thin-edge.io_examples/StreamingAnalytics/src/service/apama /etc/init.d
 sudo chmod +x /etc/init.d/apama
-sudo service apama install
+sudo service apama start
 ```
 
 This service will start a correlator with the project located in
