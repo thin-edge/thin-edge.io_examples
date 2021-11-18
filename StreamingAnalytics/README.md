@@ -29,7 +29,7 @@ for more details.
 ### Installing Apama Community Core to the Raspberry Pi
 Download the Apama Community Core zip for Arm to the Raspberry Pi. The latest version is available from the [Apama Community Edition Downloads page](https://www.apamacommunity.com/downloads/).
 
-Untar the archive to /opt/softwareag:
+Untar the archive to `/opt/softwareag`:
 
 ```
 mkdir /opt/softwareag
@@ -115,15 +115,15 @@ found within the other Streaming Analytics sample projects in this repository.
 
 ### Writing Apama Projects
 
-The quickstart example (see [Quick Start](#quick-start)) and the samples in this directory show 
+The quick start example (see [Quick Start](#quick-start)) and the samples in this directory show 
 some examples of EPL for some basic use cases.  The full EPL reference can be found 
 [here](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/ApamaDoc/index.html).
 
 
 ### Deploying a Project
-To deploy a project, use the `engine_deploy` utility provided with apama.  Navigate to the 
+To deploy a project, use the `engine_deploy` utility provided with Apama.  Navigate to the 
 workspace directory in a command prompt/terminal and run the following command in an `apama_env` 
-prompt (see ['Setting up the environment using the apama command prompt'](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-DepAndManApaApp_setting_up_the_environment_using_the_apama_command_prompt.html)):
+prompt (see ['Setting up the environment using the Apama command prompt'](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-DepAndManApaApp_setting_up_the_environment_using_the_apama_command_prompt.html)):
 ```
 engine_deploy --outputDeployDir project <project-src-dir>
 ```
@@ -144,12 +144,12 @@ sudo service apama restart
 the service again to load the new configuration.
 
 ## Testing a Project
-To publish messages to MQTT, thin-edge.io has a [built in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).
-You can publish/subscribe to any MQTT topic using this command not just
+To publish messages to MQTT, thin-edge.io has a [built-in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).
+You can publish/subscribe to any MQTT topic using this command, not just
 thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/architecture/thin-edge-json.md)
 format.
 
-To test the quick-start example, first open a terminal to subscribe to the `tedge/measurements` 
+To test the quick start example, first open a terminal to subscribe to the `tedge/measurements` 
 topic:
 
 ``` 

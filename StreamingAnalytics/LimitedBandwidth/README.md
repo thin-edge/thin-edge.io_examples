@@ -43,7 +43,7 @@ cloud service you should see the measurement(s) appear there.
 Otherwise, run `cat <path to correlator log>` to print out the contents of
 the correlator log file. The actual path to the correlator log file is
 determined by the project's configuration or the `--logfile` argument passed
-to the correlator in the [apama service script](../src/service/apama). In the
+to the correlator in the [Apama service script](../src/service/apama). In the
 correlator's output you should see log messages indicating that the combined
 measurement has been sent to `tedge/measurements`.
 > _Caution:_ The correlator fails to start if you specify the name of the
