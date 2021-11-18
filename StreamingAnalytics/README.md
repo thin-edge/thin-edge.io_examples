@@ -49,12 +49,12 @@ install it.
 ```
 sudo cp thin-edge.io_examples/StreamingAnalytics/src/service/apama /etc/init.d
 sudo chmod +x /etc/init.d/apama
-sudo service apama install
+sudo service apama start
 ```
 
 This service starts a correlator with the project located in
 `/etc/tedge/apama/project`. If no project exists in that location, the script
-exits without starting the correlator.
+exits without starting the correlator, as it will in this instance.
 
 To set up the service to run on startup, run the command:
 ```
