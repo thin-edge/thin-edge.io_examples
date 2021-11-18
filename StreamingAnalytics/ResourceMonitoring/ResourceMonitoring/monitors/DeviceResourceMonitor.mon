@@ -1,0 +1,13 @@
+event StatusUpdate {
+	string readTime;
+	float cpuPercent;
+	float memPercent;	
+}
+
+
+/** This monitor is responsible for ...  */
+monitor DeviceResourceMonitor {
+	action onload() {
+		log "Loaded monitor DeviceResourceMonitor" at INFO;		
+	}
+}
