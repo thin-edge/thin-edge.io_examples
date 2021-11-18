@@ -37,7 +37,7 @@ tar -xzf apama_core_<version>_armv7_linux.tar.gz --directory /opt/softwareag
 ```
 
 ### Installing the Apama Server Script
-Clone the thin-edge.io examples github repository to the home directory of the Raspberry Pi:
+Clone the thin-edge.io examples GitHub repository to the home directory of the Raspberry Pi:
 
 ```
 cd ~
