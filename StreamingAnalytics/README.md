@@ -127,8 +127,8 @@ prompt (see ['Setting up the environment using the Apama command prompt'](https:
 ```
 engine_deploy --outputDeployDir project <project-src-dir>
 ```
-Take the `project` directory output by the `engine_deploy` command above and
-copy it to the `/etc/tedge/apama` directory on the Raspberry Pi.
+Copy the contents of the `project` directory created by the above command to
+the `/etc/tedge/apama/project` directory on the Raspberry Pi.
 
 ## Launching a Project
 Use the command below to start the service. The restart function first 
