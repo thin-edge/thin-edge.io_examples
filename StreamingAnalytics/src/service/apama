@@ -19,11 +19,14 @@ APAMAPROJECT=/etc/tedge/apama/project
 PIDFILE=/var/run/correlator.pid
 LOGFILE=/var/log/apama/correlator.log
 
-if [[ ! -d "$APAMAPROJECT" ]];
-then
-    echo "No project located in /etc/tedge/apama/project.  To use this service ensure there is an Apama project located in that directory."
-    exit 1
-fi
+validate_project() {
+    if [[ ! -d "$APAMAPROJECT" ]];
+    then
+        echo "No project located in /etc/tedge/apama/project.  To use this service ensure there is an Apama project located in that directory."
+        exit 1
+    fi
+}
+
 
 . /lib/lsb/init-functions
 
@@ -35,6 +38,7 @@ run_by_init() {
 case "$1" in
   start)
         echo "Attempting to start correlator"
+        validate_project
         if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} --logfile ${LOGFILE} ; then
             echo "Success"
             log_end_msg 0
@@ -45,7 +49,7 @@ case "$1" in
         ;;
   stop)
         echo "Stopping correlator"
-        if start-stop-daemon --stop --quiet --oknodo --pidfile ${PIDFILE}; then
+        if start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile ${PIDFILE}; then
             log_end_msg 0
             if [ -f "${PIDFILE}" ]; then
                 rm -f ${PIDFILE}
@@ -63,6 +67,7 @@ case "$1" in
             fi
             echo "Stopped running correlator"
         fi
+        validate_project
         if start-stop-daemon --start --quiet --oknodo --background --exec ${APAMAHOME}/bin/apama_env -- correlator --pidfile ${PIDFILE} --config ${APAMAPROJECT} --logfile ${LOGFILE}; then
             echo "Started new correlator"
             log_end_msg 0
