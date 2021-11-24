@@ -1,13 +1,80 @@
 event StatusUpdate {
-	string readTime;
+	float readTime;
 	float cpuPercent;
-	float memPercent;	
+	float memPercent;
+	
 }
 
+event StatusReport {
+	float reportTime;
+	float cpuPercent;
+	float memPercent;
+	float monitoringDuration;
+}
 
 /** This monitor is responsible for ...  */
 monitor DeviceResourceMonitor {
+	
+	constant string MQTT_SEND_CHANNEL := "out";
+	constant string MQTT_SUBSCRIBE_CHANNEL := "in";
+
+	constant float ONE_HOUR_INTERVAL := 120.0;
+	constant float FIVE_MINS_INTERVAL := 10.0;
+	
+	constant float CPU_AVERAGE_THRESHOLD := 70.0;
+	constant float MEM_AVERAGE_THRESHOLD := 70.0;
+	
+	integer readings;
+	float cpuPercentCMA;
+	float memPercentCMA;
+	float lastStatusReportTime;
+	
+	listener nextStatusReportWait;
+	float currentMonitoringFor;
+	
 	action onload() {
 		log "Loaded monitor DeviceResourceMonitor" at INFO;		
+
+		monitor.subscribe(MQTT_SUBSCRIBE_CHANNEL);
+	
+		resetVariables();
+		scheduleNextStatusReport(ONE_HOUR_INTERVAL);
+		
+		on all StatusUpdate() as statusUpdate {
+			cpuPercentCMA := cpuPercentCMA + (statusUpdate.cpuPercent - cpuPercentCMA)/(readings+1).toFloat();
+			memPercentCMA := memPercentCMA + (statusUpdate.memPercent - memPercentCMA)/(readings+1).toFloat();
+			
+			readings := readings + 1;
+			//log "Status Update " + statusUpdate.toString();
+			//log cpuPercentCMA.toString() + " ====,===== " + memPercentCMA.toString() + " +===+ " + readings.toString();
+			
+			// No need for extra checks if we are going to report numbers after FIVE_MINS_INTERVAL
+			if (currentMonitoringFor = FIVE_MINS_INTERVAL) {
+				return;
+			}
+			if (cpuPercentCMA >= CPU_AVERAGE_THRESHOLD or memPercentCMA >= MEM_AVERAGE_THRESHOLD) {
+				scheduleNextStatusReport(FIVE_MINS_INTERVAL);
+			}
+		}
+	}
+	
+	action scheduleNextStatusReport(float monitoringDuration) {
+		nextStatusReportWait.quit();
+		float waitInterval := lastStatusReportTime + monitoringDuration - currentTime;
+		nextStatusReportWait := on wait(waitInterval) {
+			send StatusReport(currentTime, cpuPercentCMA, memPercentCMA, monitoringDuration) to MQTT_SEND_CHANNEL;
+			resetVariables();
+			
+			// Always schedule the next report to the default ONE_HOUR_INTERVAL
+			scheduleNextStatusReport(ONE_HOUR_INTERVAL);
+		}
+		currentMonitoringFor := monitoringDuration;
+	}
+	
+	action resetVariables() {
+		readings := 0;
+		cpuPercentCMA := 0.0;
+		memPercentCMA := 0.0;
+		lastStatusReportTime := currentTime;
 	}
 }
