@@ -6,46 +6,46 @@ using com.apama.aggregates.mean;
  * to MQTT every 5 seconds.
  */
 monitor ThinEdgeIoExample {
-	
-	constant float AVGWINDOW := 5.0;
-	
-	float avgTemperature := float.NAN;
-	float avgPressure := float.NAN;
-	float avgVibration := float.NAN;
-	
-	action onload() {
-		// Collect sensor measurements and keep the average of the last 5
-		// seconds. If there are no measurements for more than five seconds
-		// then the value is set to NaN.
-		from t in all Temperature() 
-			within AVGWINDOW
-			select mean(t.temperature) : avgTemperature { }
-		from p in all Pressure()
-			within AVGWINDOW
-			select mean(p.pressure) : avgPressure { }
-		from v in all Vibration()
-			within AVGWINDOW
-			select mean(v.vibration) : avgVibration { }
 
-		// Every 5 seconds send out the averaged measurements as a combined
-		// measurements event. Will only send if there has been at least one
-		// measurement of each type in the last 5 seconds.
-		on all wait(AVGWINDOW) {
-			if (avgTemperature.isFinite()
-					and avgPressure.isFinite()
-					and avgVibration.isFinite()) {
-				CombinedMeasurement m := CombinedMeasurement(
-					avgTemperature, avgPressure, avgVibration);
-				log "Sending " + m.toString() 
-					+ " to mqtt:tedge/measurements" at INFO;
-				send m to "mqtt:tedge/measurements";
-			}
-		}
-		
-		monitor.subscribe("mqtt:sensors/temperature");
-		monitor.subscribe("mqtt:sensors/pressure");
-		monitor.subscribe("mqtt:sensors/vibration");
-		
-		com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
-	}
+    constant float AVGWINDOW := 5.0;
+
+    float avgTemperature := float.NAN;
+    float avgPressure := float.NAN;
+    float avgVibration := float.NAN;
+
+    action onload() {
+        // Collect sensor measurements and keep the average of the last 5
+        // seconds. If there are no measurements for more than five seconds
+        // then the value is set to NaN.
+        from t in all Temperature()
+            within AVGWINDOW
+            select mean(t.temperature) : avgTemperature { }
+        from p in all Pressure()
+            within AVGWINDOW
+            select mean(p.pressure) : avgPressure { }
+        from v in all Vibration()
+            within AVGWINDOW
+            select mean(v.vibration) : avgVibration { }
+
+        // Every 5 seconds send out the averaged measurements as a combined
+        // measurements event. Will only send if there has been at least one
+        // measurement of each type in the last 5 seconds.
+        on all wait(AVGWINDOW) {
+            if (avgTemperature.isFinite()
+                    and avgPressure.isFinite()
+                    and avgVibration.isFinite()) {
+                CombinedMeasurement m := CombinedMeasurement(
+                    avgTemperature, avgPressure, avgVibration);
+                log "Sending " + m.toString()
+                    + " to mqtt:tedge/measurements" at INFO;
+                send m to "mqtt:tedge/measurements";
+            }
+        }
+
+        monitor.subscribe("mqtt:sensors/temperature");
+        monitor.subscribe("mqtt:sensors/pressure");
+        monitor.subscribe("mqtt:sensors/vibration");
+
+        com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
+    }
 }
