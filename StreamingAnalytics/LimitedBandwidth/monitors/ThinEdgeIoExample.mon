@@ -14,6 +14,10 @@ monitor ThinEdgeIoExample {
     float avgVibration := float.NAN;
 
     action onload() {
+        monitor.subscribe("mqtt:sensors/temperature");
+        monitor.subscribe("mqtt:sensors/pressure");
+        monitor.subscribe("mqtt:sensors/vibration");
+
         // Collect sensor measurements and keep the average of the last 5
         // seconds. If there are no measurements for more than five seconds
         // then the value is set to NaN.
@@ -41,10 +45,6 @@ monitor ThinEdgeIoExample {
                 send m to "mqtt:tedge/measurements";
             }
         }
-
-        monitor.subscribe("mqtt:sensors/temperature");
-        monitor.subscribe("mqtt:sensors/pressure");
-        monitor.subscribe("mqtt:sensors/vibration");
 
         com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
     }
