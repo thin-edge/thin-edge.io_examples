@@ -7,13 +7,13 @@ using com.apama.aggregates.mean;
  */
 monitor ThinEdgeIoExample {
 	
+	constant float AVGWINDOW := 5.0;
+	
 	float avgTemperature := float.NAN;
 	float avgPressure := float.NAN;
 	float avgVibration := float.NAN;
 	
 	action onload() {
-		float AVGWINDOW := 5.0;
-		
 		// Collect sensor measurements and keep the average of the last 5
 		// seconds. If there are no measurements for more than five seconds
 		// then the value is set to NaN.
