@@ -5,7 +5,7 @@ monitor Testing {
 		spawn testCode();
 	}
 	
-	float counter := 1.0;
+	float counter := 65.0;
 	
 	action testCode() {
 		monitor.subscribe("out");

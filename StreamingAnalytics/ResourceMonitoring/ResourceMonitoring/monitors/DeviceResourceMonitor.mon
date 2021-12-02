@@ -1,28 +1,33 @@
-using com.apama.aggregates.mean;
+using com.apama.aggregates.percentile;
+using com.apama.aggregates.count;
 
 /**
- *  This monitor is responsible for process and aggregate the cpu and memory usage measurments received over a
- *  certain period of time. If reports the average values to the cloud for cpu/memory usage in an interval of 
- *  five minutes if the average breaches THRESHOLD values, otherwise it does an hourly paper report.
+ *  This monitor is responsible for process the cpu and memory usage measurments received over a certain period
+ *  of time. It reports the percentage of the that time period over which usage was above THRESHOLDs values.
+ *  It reports to the cloud if the last five minutes high usage percentage is more than PERCENTILE_THRESHOLD.
+ *  otherwise it does an hourly paper report.
  */
 monitor DeviceResourceMonitor {
 
 	constant string MQTT_SEND_CHANNEL := "out";
 	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
-	constant float ONE_HOUR_INTERVAL := 120.0;
-	constant float FIVE_MINS_INTERVAL := 10.0;
+	constant float ONE_HOUR_INTERVAL := 30.0;
+	constant float FIVE_MINS_INTERVAL := 5.0;
 
-	constant float CPU_AVERAGE_THRESHOLD := 70.0;
-	constant float MEM_AVERAGE_THRESHOLD := 70.0;
+	constant float CPU_THRESHOLD := 70.0;
+	constant float MEM_THRESHOLD := 70.0;
+
+	constant float CPU_PERCENTILE_THRESHOLD := 70.0;
+	constant float MEM_PERCENTILE_THRESHOLD := 70.0;
 
 	integer cpuReadings := 0;
-	float cpuPercentCMA := 0.0;
+	float highCpuTimeFraction := 0.0;
 	float lastCpuReportTime := 0.0;
 	listener nextCpuReportWait;
 
 	integer memReadings := 0;
-	float memPercentCMA := 0.0;
+	float highMemTimeFraction := 0.0;
 	float lastMemReportTime := 0.0;
 	listener nextMemReportWait;
 
@@ -37,32 +42,48 @@ monitor DeviceResourceMonitor {
 		// stream of cpu measurements
 		stream<CpuMeasurement> cpuMeasurementStream := all CpuMeasurement();
 
-		// report lastFiveMinAverage of cpu measurements if it has breached CPU_AVERAGE_THRESHOLD
+		// derived streams of total cpu measurment counts and counts of measurements more than CPU_THRESHOLD within last FIVE_MINS_INTERVAL
+		stream<integer> windowTotalCpuUsageCounts := from measurement in cpuMeasurementStream within FIVE_MINS_INTERVAL select count();
+		stream<integer> windowHighCpuUsageCounts := from measurement in cpuMeasurementStream within FIVE_MINS_INTERVAL select count(measurement.cpuMeasurement >= CPU_THRESHOLD);
+
+		// calculate the time percentage for which cpu usage was above CPU_THRESHOLD
+		// report lastFiveMinHighUsgaePercentage if it has breached CPU_PERCENTILE_THRESHOLD
 		// and we have not reported in the last FIVE_MINS_INTERVAL
-		from cpuMeasurement in cpuMeasurementStream within FIVE_MINS_INTERVAL select mean(cpuMeasurement.cpuMeasurement) as lastFiveMinAverage {
-			if (lastFiveMinAverage >= CPU_AVERAGE_THRESHOLD and lastCpuReportTime + FIVE_MINS_INTERVAL <= currentTime) {
-				reportCpuUsage(lastFiveMinAverage);
+		from highUsageCount in windowHighCpuUsageCounts from totalCount in windowTotalCpuUsageCounts select 100.0 * highUsageCount.toFloat()/totalCount.toFloat() as lastFiveMinHighUsgaePercentage {
+			if (lastFiveMinHighUsgaePercentage >= CPU_PERCENTILE_THRESHOLD and lastCpuReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+				reportCpuUsage(lastFiveMinHighUsgaePercentage);
 			}
 		}
 
-		// maintain an overall average in case it is going to be an hourly paper report
+		// maintain an overall time fraction of high usage since the last report in case it is going to be an hourly paper report
 		from cpuMeasurement in cpuMeasurementStream select cpuMeasurement.cpuMeasurement as measurement {
-			// calculate the cumulative average of the readings received since the last cpu usage report to the cloud
-			cpuPercentCMA := cpuPercentCMA + (measurement - cpuPercentCMA)/(cpuReadings + 1).toFloat();
+			// calculate the cumulative percentile of the readings received since the last cpu usage report to the cloud
+			integer newReading := 0;
+			if measurement >= CPU_THRESHOLD {
+				newReading := 1;
+			}
+			highCpuTimeFraction := highCpuTimeFraction + (newReading.toFloat() - highCpuTimeFraction)/(cpuReadings + 1).toFloat();
 			cpuReadings := cpuReadings + 1;
 		}
 
 		// set up the same for memory usage measurements
 		stream<MemMeasurement> memMeasurementStream := all MemMeasurement();
 
-		from memMeasurement in memMeasurementStream within FIVE_MINS_INTERVAL select mean(memMeasurement.memMeasurement) as lastFiveMinAverage {
-				if (lastFiveMinAverage >= MEM_AVERAGE_THRESHOLD and lastMemReportTime + FIVE_MINS_INTERVAL <= currentTime) {
-					reportMemoryUsage(lastFiveMinAverage);
-				}
+		stream<integer> windowHighMemUsageCounts := from measurement in memMeasurementStream within FIVE_MINS_INTERVAL select count(measurement.memMeasurement >= MEM_THRESHOLD);
+		stream<integer> windowTotalMemUsageCounts := from measurement in memMeasurementStream within FIVE_MINS_INTERVAL select count();
+
+		from highUsageCount in windowHighMemUsageCounts from totalCount in windowTotalMemUsageCounts select 100.0 * highUsageCount.toFloat()/totalCount.toFloat() as lastFiveMinHighUsgaePercentage {
+			if (lastFiveMinHighUsgaePercentage >= MEM_PERCENTILE_THRESHOLD and lastMemReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+				reportMemoryUsage(lastFiveMinHighUsgaePercentage);
 			}
+		}
 
 		from memMeasurement in memMeasurementStream select memMeasurement.memMeasurement as measurement {
-			memPercentCMA := memPercentCMA + (measurement - memPercentCMA)/(memReadings + 1).toFloat();
+			integer newReading := 0;
+			if measurement >= MEM_THRESHOLD {
+				newReading := 1;
+			}
+			highMemTimeFraction := highMemTimeFraction + (newReading.toFloat() - highMemTimeFraction)/(memReadings + 1).toFloat();
 			memReadings := memReadings + 1;
 		}
 
@@ -74,7 +95,7 @@ monitor DeviceResourceMonitor {
 
 		// reset the cpu variables
 		cpuReadings := 0;
-		cpuPercentCMA := 0.0;
+		highCpuTimeFraction := 0.0;
 		lastCpuReportTime := reportingTime;
 
 		// schedule the next report
@@ -82,7 +103,7 @@ monitor DeviceResourceMonitor {
 	}
 
 	action paperReportCpuUsage() {
-		reportCpuUsage(memPercentCMA);
+		reportCpuUsage(highCpuTimeFraction * 100.0);
 	}
 
 	action reportMemoryUsage(float averageMemUsage) {
@@ -91,7 +112,7 @@ monitor DeviceResourceMonitor {
 
 		// reset the mem variables
 		memReadings := 0;
-		memPercentCMA := 0.0;
+		highMemTimeFraction := 0.0;
 		lastMemReportTime := reportingTime;
 
 		// schedule the next paper report
@@ -99,7 +120,7 @@ monitor DeviceResourceMonitor {
 	}
 
 	action paperReportMemoryUsage() {
-		reportMemoryUsage(memPercentCMA);
+		reportMemoryUsage(highMemTimeFraction * 100.0);
 	}
 
 	action scheduleNextHourlyReport(listener currentWaitListener, action<> reportUsageAction) returns listener {

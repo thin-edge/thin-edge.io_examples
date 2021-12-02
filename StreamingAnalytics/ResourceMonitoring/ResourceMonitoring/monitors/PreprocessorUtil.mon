@@ -18,7 +18,7 @@ monitor PreprocessorUtil {
 	action preprocessIncomingData() {
 		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
 		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
-
+		monitor.subscribe("in");
 		on all RawCpuMeasurement() as measurement {
 			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
 		}
