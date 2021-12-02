@@ -6,8 +6,8 @@
  */
 monitor PreprocessorUtil {
 
-	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:cpu/percent-active";
-	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:mem/percent-used";
+	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/cpu/percent-active";
+	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/mem/percent-used";
 	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
 	action onload() {
@@ -18,7 +18,7 @@ monitor PreprocessorUtil {
 	action preprocessIncomingData() {
 		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
 		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
-		monitor.subscribe("in");
+
 		on all RawCpuMeasurement() as measurement {
 			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
 		}

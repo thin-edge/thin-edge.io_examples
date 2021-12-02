@@ -8,9 +8,9 @@ event RawMemMeasurement {
 }
 
 event CpuMeasurement {
-	float cpuMeasurement;
+	float percentActive;
 }
 
 event MemMeasurement {
-	float memMeasurement;
+	float percentUsed;
 }
