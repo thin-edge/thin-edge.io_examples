@@ -1,0 +1,32 @@
+
+/** This monitor is responsible for ...  */
+monitor PreprocessorUtil {
+
+	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:cpu/percent-active";
+	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:mem/percent-used";
+
+	action onload() {
+		log "Loaded monitor PreprocessorUtil" at INFO;
+		spawn preprocessIncomingData() to context("new_context");
+
+	}
+
+	action preprocessIncomingData() {
+		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
+		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
+		monitor.subscribe("in");
+
+		on all RawCpuMeasurement() as measurement {
+			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to "PROCESSED_MEASUREMENTS_CHANNEL";
+		}
+
+		on all RawMemMeasurement() as measurement {
+			send MemMeasurement(preprocessMessage(measurement.memMeasurement)) to "PROCESSED_MEASUREMENTS_CHANNEL";
+		}
+	}
+
+	action preprocessMessage(string rawMeasurement) returns float {
+		integer startIndex := rawMeasurement.find(":") + 1;
+		return rawMeasurement.substring(startIndex, rawMeasurement.length()).toFloat();
+	}
+}

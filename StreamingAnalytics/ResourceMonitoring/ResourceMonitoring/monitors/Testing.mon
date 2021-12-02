@@ -9,13 +9,18 @@ monitor Testing {
 	
 	action testCode() {
 		monitor.subscribe("out");
-		on all StatusReport() as status {
-			log "Got report at " + status.reportTime.toString() + " : CPU = " + status.cpuPercent.toString() + " , MEM: " + status.memPercent.toString() + " for duration "
-			+ status.monitoringDuration.toString();
+		on all RawCpuMeasurement() as cpu {
+			log "cpu for you " + cpu.toString();
 		}
-		
+
+		on all RawMemMeasurement() as mem {
+			log "mem for you " + mem.toString();
+		}
+
 		on all Trigger() {
-			send StatusUpdate(currentTime, counter, 30.0) to "in";
+			float timestamp := currentTime;
+			send RawCpuMeasurement(timestamp.toString() + ":" + counter.toString()) to "in";
+			send RawMemMeasurement(timestamp.toString() + ":" + "30.0") to "in";
 			counter := counter + 1.0;
 			on wait(1.0) {
 				send Trigger() to context.current();

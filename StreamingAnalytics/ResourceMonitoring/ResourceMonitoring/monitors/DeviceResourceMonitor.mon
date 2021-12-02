@@ -1,80 +1,112 @@
-event StatusUpdate {
-	float readTime;
-	float cpuPercent;
-	float memPercent;
-	
-}
-
-event StatusReport {
-	float reportTime;
-	float cpuPercent;
-	float memPercent;
-	float monitoringDuration;
-}
+using com.apama.aggregates.mean;
 
 /** This monitor is responsible for ...  */
 monitor DeviceResourceMonitor {
-	
+
 	constant string MQTT_SEND_CHANNEL := "out";
-	constant string MQTT_SUBSCRIBE_CHANNEL := "in";
+	constant string MQTT_SUBSCRIBE_CHANNEL := "mqtt:cpu/percent-active";
 
 	constant float ONE_HOUR_INTERVAL := 120.0;
 	constant float FIVE_MINS_INTERVAL := 10.0;
-	
+
 	constant float CPU_AVERAGE_THRESHOLD := 70.0;
 	constant float MEM_AVERAGE_THRESHOLD := 70.0;
-	
-	integer readings;
-	float cpuPercentCMA;
-	float memPercentCMA;
-	float lastStatusReportTime;
-	
-	listener nextStatusReportWait;
-	float currentMonitoringFor;
-	
-	action onload() {
-		log "Loaded monitor DeviceResourceMonitor" at INFO;		
 
-		monitor.subscribe(MQTT_SUBSCRIBE_CHANNEL);
-	
-		resetVariables();
-		scheduleNextStatusReport(ONE_HOUR_INTERVAL);
-		
-		on all StatusUpdate() as statusUpdate {
-			cpuPercentCMA := cpuPercentCMA + (statusUpdate.cpuPercent - cpuPercentCMA)/(readings+1).toFloat();
-			memPercentCMA := memPercentCMA + (statusUpdate.memPercent - memPercentCMA)/(readings+1).toFloat();
-			
-			readings := readings + 1;
-			//log "Status Update " + statusUpdate.toString();
-			//log cpuPercentCMA.toString() + " ====,===== " + memPercentCMA.toString() + " +===+ " + readings.toString();
-			
-			// No need for extra checks if we are going to report numbers after FIVE_MINS_INTERVAL
-			if (currentMonitoringFor = FIVE_MINS_INTERVAL) {
-				return;
-			}
-			if (cpuPercentCMA >= CPU_AVERAGE_THRESHOLD or memPercentCMA >= MEM_AVERAGE_THRESHOLD) {
-				scheduleNextStatusReport(FIVE_MINS_INTERVAL);
+	integer cpuReadings := 0;
+	float cpuPercentCMA := 0.0;
+	float lastCpuReportTime := 0.0;
+	listener nextCpuReportWait;
+
+	integer memReadings := 0;
+	float memPercentCMA := 0.0;
+	float lastMemReportTime := 0.0;
+	listener nextMemReportWait;
+
+	action onload() {
+		log "Loaded monitor DeviceResourceMonitor" at INFO;
+		monitor.subscribe("PROCESSED_MEASUREMENTS_CHANNEL");
+
+		// schedules the initial reports on load
+		nextCpuReportWait := scheduleNextHourlyReport(nextCpuReportWait, paperReportCpuUsage);
+		nextMemReportWait := scheduleNextHourlyReport(nextMemReportWait, paperReportMemoryUsage);
+
+		// stream of cpu measurements
+		stream<CpuMeasurement> cpuMeasurementStream := all CpuMeasurement();
+
+		// reports in FIVE_MINS_INTERVALs if the lastFiveMinAverage of cpu measurements breaches CPU_AVERAGE_THRESHOLD
+		from cpuMeasurement in cpuMeasurementStream within FIVE_MINS_INTERVAL select mean(cpuMeasurement.cpuMeasurement) as lastFiveMinAverage {
+			// reports the lastFiveMinAverage immediately if it has breached CPU_AVERAGE_THRESHOLD
+			// and we have not reported in the last FIVE_MINS_INTERVAL
+			if (lastFiveMinAverage >= CPU_AVERAGE_THRESHOLD and lastCpuReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+				reportCpuUsage(lastFiveMinAverage);
 			}
 		}
-	}
-	
-	action scheduleNextStatusReport(float monitoringDuration) {
-		nextStatusReportWait.quit();
-		float waitInterval := lastStatusReportTime + monitoringDuration - currentTime;
-		nextStatusReportWait := on wait(waitInterval) {
-			send StatusReport(currentTime, cpuPercentCMA, memPercentCMA, monitoringDuration) to MQTT_SEND_CHANNEL;
-			resetVariables();
-			
-			// Always schedule the next report to the default ONE_HOUR_INTERVAL
-			scheduleNextStatusReport(ONE_HOUR_INTERVAL);
+
+		// maintains an average  in case it is going to be an hourly paper report
+		from cpuMeasurement in cpuMeasurementStream select cpuMeasurement.cpuMeasurement as measurement {
+			// calculate the cumulative average of the readings received since the last cpu usage report to the cloud
+			cpuPercentCMA := cpuPercentCMA + (measurement - cpuPercentCMA)/(cpuReadings + 1).toFloat();
+			cpuReadings := cpuReadings + 1;
 		}
-		currentMonitoringFor := monitoringDuration;
+
+		// sets up the same for memory usage measurements
+		stream<MemMeasurement> memMeasurementStream := all MemMeasurement();
+
+		from memMeasurement in memMeasurementStream within FIVE_MINS_INTERVAL select mean(memMeasurement.memMeasurement) as lastFiveMinAverage {
+			//	log "lastFiveMinAverage " + lastFiveMinAverage.toString();
+				if (lastFiveMinAverage >= MEM_AVERAGE_THRESHOLD and lastMemReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+					// report the lastFiveMinAverage immediately if we have not reported in the last FIVE_MINS_INTERVAL
+					reportMemoryUsage(lastFiveMinAverage);
+				}
+			}
+
+		from memMeasurement in memMeasurementStream select memMeasurement.memMeasurement as measurement {
+		//	log memPercentCMA.toString() + " measurement " + measurement.toString();
+			memPercentCMA := memPercentCMA + (measurement - memPercentCMA)/(memReadings + 1).toFloat();
+			memReadings := memReadings + 1;
+		}
+
 	}
-	
-	action resetVariables() {
-		readings := 0;
+
+	action reportCpuUsage(float averageCpuUsage) {
+		float reportingTime := currentTime;
+		send RawCpuMeasurement(reportingTime.toString() + ":" + averageCpuUsage.toString()) to MQTT_SEND_CHANNEL;
+
+		// reset the cpu variables
+		cpuReadings := 0;
 		cpuPercentCMA := 0.0;
+		lastCpuReportTime := reportingTime;
+
+		// schedule the next report
+		nextCpuReportWait := scheduleNextHourlyReport(nextCpuReportWait, paperReportCpuUsage);
+	}
+
+	action paperReportCpuUsage() {
+		reportCpuUsage(memPercentCMA);
+	}
+
+	action reportMemoryUsage(float averageMemUsage) {
+		float reportingTime := currentTime;
+		send RawMemMeasurement(reportingTime.toString() + ":" + averageMemUsage.toString()) to MQTT_SEND_CHANNEL;
+
+		// reset the mem variables
+		memReadings := 0;
 		memPercentCMA := 0.0;
-		lastStatusReportTime := currentTime;
+		lastMemReportTime := reportingTime;
+
+		// schedule the next paper report
+		nextMemReportWait := scheduleNextHourlyReport(nextMemReportWait, paperReportMemoryUsage);
+	}
+
+	action paperReportMemoryUsage() {
+		reportMemoryUsage(memPercentCMA);
+	}
+
+	action scheduleNextHourlyReport(listener currentWaitListener, action<> reportUsageAction) returns listener {
+		currentWaitListener.quit();
+		listener newWaitListener := on wait(ONE_HOUR_INTERVAL) {
+			reportUsageAction();
+		}
+		return newWaitListener;
 	}
 }
