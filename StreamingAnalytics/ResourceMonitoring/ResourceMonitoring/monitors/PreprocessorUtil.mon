@@ -1,27 +1,30 @@
 
-/** This monitor is responsible for ...  */
+/**
+ *  This monitor is responsible for preprocessing the raw measurements received over mqtt
+ *  and sending out the float values to the measurement processing code.
+ *  "<timestamp>:<measurement>" -----(preprocess)-----> <measurement>
+ */
 monitor PreprocessorUtil {
 
 	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:cpu/percent-active";
 	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:mem/percent-used";
+	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
 	action onload() {
 		log "Loaded monitor PreprocessorUtil" at INFO;
 		spawn preprocessIncomingData() to context("new_context");
-
 	}
 
 	action preprocessIncomingData() {
 		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
 		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
-		monitor.subscribe("in");
 
 		on all RawCpuMeasurement() as measurement {
-			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to "PROCESSED_MEASUREMENTS_CHANNEL";
+			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
 		}
 
 		on all RawMemMeasurement() as measurement {
-			send MemMeasurement(preprocessMessage(measurement.memMeasurement)) to "PROCESSED_MEASUREMENTS_CHANNEL";
+			send MemMeasurement(preprocessMessage(measurement.memMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
 		}
 	}
 

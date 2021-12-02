@@ -1,10 +1,14 @@
 using com.apama.aggregates.mean;
 
-/** This monitor is responsible for ...  */
+/**
+ *  This monitor is responsible for process and aggregate the cpu and memory usage measurments received over a
+ *  certain period of time. If reports the average values to the cloud for cpu/memory usage in an interval of 
+ *  five minutes if the average breaches THRESHOLD values, otherwise it does an hourly paper report.
+ */
 monitor DeviceResourceMonitor {
 
 	constant string MQTT_SEND_CHANNEL := "out";
-	constant string MQTT_SUBSCRIBE_CHANNEL := "mqtt:cpu/percent-active";
+	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
 	constant float ONE_HOUR_INTERVAL := 120.0;
 	constant float FIVE_MINS_INTERVAL := 10.0;
@@ -24,44 +28,40 @@ monitor DeviceResourceMonitor {
 
 	action onload() {
 		log "Loaded monitor DeviceResourceMonitor" at INFO;
-		monitor.subscribe("PROCESSED_MEASUREMENTS_CHANNEL");
+		monitor.subscribe(PROCESSED_MEASUREMENTS_CHANNEL);
 
-		// schedules the initial reports on load
+		// schedule the initial reports on load
 		nextCpuReportWait := scheduleNextHourlyReport(nextCpuReportWait, paperReportCpuUsage);
 		nextMemReportWait := scheduleNextHourlyReport(nextMemReportWait, paperReportMemoryUsage);
 
 		// stream of cpu measurements
 		stream<CpuMeasurement> cpuMeasurementStream := all CpuMeasurement();
 
-		// reports in FIVE_MINS_INTERVALs if the lastFiveMinAverage of cpu measurements breaches CPU_AVERAGE_THRESHOLD
+		// report lastFiveMinAverage of cpu measurements if it has breached CPU_AVERAGE_THRESHOLD
+		// and we have not reported in the last FIVE_MINS_INTERVAL
 		from cpuMeasurement in cpuMeasurementStream within FIVE_MINS_INTERVAL select mean(cpuMeasurement.cpuMeasurement) as lastFiveMinAverage {
-			// reports the lastFiveMinAverage immediately if it has breached CPU_AVERAGE_THRESHOLD
-			// and we have not reported in the last FIVE_MINS_INTERVAL
 			if (lastFiveMinAverage >= CPU_AVERAGE_THRESHOLD and lastCpuReportTime + FIVE_MINS_INTERVAL <= currentTime) {
 				reportCpuUsage(lastFiveMinAverage);
 			}
 		}
 
-		// maintains an average  in case it is going to be an hourly paper report
+		// maintain an overall average in case it is going to be an hourly paper report
 		from cpuMeasurement in cpuMeasurementStream select cpuMeasurement.cpuMeasurement as measurement {
 			// calculate the cumulative average of the readings received since the last cpu usage report to the cloud
 			cpuPercentCMA := cpuPercentCMA + (measurement - cpuPercentCMA)/(cpuReadings + 1).toFloat();
 			cpuReadings := cpuReadings + 1;
 		}
 
-		// sets up the same for memory usage measurements
+		// set up the same for memory usage measurements
 		stream<MemMeasurement> memMeasurementStream := all MemMeasurement();
 
 		from memMeasurement in memMeasurementStream within FIVE_MINS_INTERVAL select mean(memMeasurement.memMeasurement) as lastFiveMinAverage {
-			//	log "lastFiveMinAverage " + lastFiveMinAverage.toString();
 				if (lastFiveMinAverage >= MEM_AVERAGE_THRESHOLD and lastMemReportTime + FIVE_MINS_INTERVAL <= currentTime) {
-					// report the lastFiveMinAverage immediately if we have not reported in the last FIVE_MINS_INTERVAL
 					reportMemoryUsage(lastFiveMinAverage);
 				}
 			}
 
 		from memMeasurement in memMeasurementStream select memMeasurement.memMeasurement as measurement {
-		//	log memPercentCMA.toString() + " measurement " + measurement.toString();
 			memPercentCMA := memPercentCMA + (measurement - memPercentCMA)/(memReadings + 1).toFloat();
 			memReadings := memReadings + 1;
 		}

@@ -1,0 +1,16 @@
+
+event RawCpuMeasurement {
+	string cpuMeasurement;
+}
+
+event RawMemMeasurement {
+	string memMeasurement;
+}
+
+event CpuMeasurement {
+	float cpuMeasurement;
+}
+
+event MemMeasurement {
+	float memMeasurement;
+}
