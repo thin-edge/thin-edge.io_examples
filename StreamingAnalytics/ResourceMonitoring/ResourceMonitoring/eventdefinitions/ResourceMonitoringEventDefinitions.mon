@@ -1,4 +1,3 @@
-
 event RawCpuMeasurement {
 	string cpuMeasurement;
 }
@@ -13,4 +12,10 @@ event CpuMeasurement {
 
 event MemMeasurement {
 	float percentUsed;
+}
+
+event ResourceUsageReport {
+	string time;
+	float cpuPercentActive;
+	float memPercentUsed;
 }

@@ -1,4 +1,5 @@
 using com.apama.aggregates.count;
+using com.apama.correlator.timeformat.TimeFormat;
 
 /**
  *  This monitor is responsible for processing the cpu and memory usage measurments received over a certain period
@@ -8,7 +9,7 @@ using com.apama.aggregates.count;
  */
 monitor DeviceResourceMonitor {
 
-	constant string MQTT_SEND_CHANNEL := "out";
+	constant string MQTT_SEND_CHANNEL := "mqtt:tedge/measurements";
 	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
 	constant float ONE_HOUR_INTERVAL := 3600.0;
@@ -22,21 +23,19 @@ monitor DeviceResourceMonitor {
 
 	integer cpuReadings := 0;
 	float highCpuTimeFraction := 0.0;
-	float lastCpuReportTime := 0.0;
-	listener nextCpuReportWait;
 
 	integer memReadings := 0;
 	float highMemTimeFraction := 0.0;
-	float lastMemReportTime := 0.0;
-	listener nextMemReportWait;
+
+	float lastReportTime := 0.0;
+	listener nextReportTimer;
 
 	action onload() {
 		log "Loaded monitor DeviceResourceMonitor" at INFO;
 		monitor.subscribe(PROCESSED_MEASUREMENTS_CHANNEL);
 
-		// schedule the initial reports on load
-		nextCpuReportWait := scheduleNextHourlyReport(nextCpuReportWait, paperReportCpuUsage);
-		nextMemReportWait := scheduleNextHourlyReport(nextMemReportWait, paperReportMemoryUsage);
+		// schedule the initial report on load
+		scheduleNextHourlyReport();
 
 		// stream of cpu measurements
 		stream<CpuMeasurement> cpuMeasurementStream := all CpuMeasurement();
@@ -48,8 +47,8 @@ monitor DeviceResourceMonitor {
 		// calculate the time percentage for which cpu usage was above CPU_THRESHOLD within FIVE_MINS_INTERVAL
 		// report lastFiveMinHighUsgaePercentage if it has breached CPU_PERCENTILE_THRESHOLD and it has been five mins since last report
 		from highUsageCount in windowHighCpuUsageCounts from totalCount in windowTotalCpuUsageCounts select 100.0 * highUsageCount.toFloat()/totalCount.toFloat() as lastFiveMinHighUsgaePercentage {
-			if (lastFiveMinHighUsgaePercentage >= CPU_PERCENTILE_THRESHOLD and lastCpuReportTime + FIVE_MINS_INTERVAL <= currentTime) {
-				reportCpuUsage(lastFiveMinHighUsgaePercentage);
+			if (lastFiveMinHighUsgaePercentage >= CPU_PERCENTILE_THRESHOLD and lastReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+				sendReport(lastFiveMinHighUsgaePercentage, highMemTimeFraction * 100.0);
 			}
 		}
 
@@ -71,8 +70,8 @@ monitor DeviceResourceMonitor {
 		stream<integer> windowTotalMemUsageCounts := from measurement in memMeasurementStream within FIVE_MINS_INTERVAL select count();
 
 		from highUsageCount in windowHighMemUsageCounts from totalCount in windowTotalMemUsageCounts select 100.0 * highUsageCount.toFloat()/totalCount.toFloat() as lastFiveMinHighUsgaePercentage {
-			if (lastFiveMinHighUsgaePercentage >= MEM_PERCENTILE_THRESHOLD and lastMemReportTime + FIVE_MINS_INTERVAL <= currentTime) {
-				reportMemoryUsage(lastFiveMinHighUsgaePercentage);
+			if (lastFiveMinHighUsgaePercentage >= MEM_PERCENTILE_THRESHOLD and lastReportTime + FIVE_MINS_INTERVAL <= currentTime) {
+				sendReport(highCpuTimeFraction * 100.0, lastFiveMinHighUsgaePercentage);
 			}
 		}
 
@@ -87,45 +86,34 @@ monitor DeviceResourceMonitor {
 
 	}
 
-	action reportCpuUsage(float averageCpuUsage) {
-		float reportingTime := currentTime;
-		send RawCpuMeasurement(reportingTime.toString() + ":" + averageCpuUsage.toString()) to MQTT_SEND_CHANNEL;
-
-		// reset the cpu variables
-		cpuReadings := 0;
-		highCpuTimeFraction := 0.0;
-		lastCpuReportTime := reportingTime;
-
-		// schedule the next report
-		nextCpuReportWait := scheduleNextHourlyReport(nextCpuReportWait, paperReportCpuUsage);
-	}
-
-	action paperReportCpuUsage() {
-		reportCpuUsage(highCpuTimeFraction * 100.0);
-	}
-
-	action reportMemoryUsage(float averageMemUsage) {
-		float reportingTime := currentTime;
-		send RawMemMeasurement(reportingTime.toString() + ":" + averageMemUsage.toString()) to MQTT_SEND_CHANNEL;
-
-		// reset the mem variables
+	action resetVariables() {
 		memReadings := 0;
 		highMemTimeFraction := 0.0;
-		lastMemReportTime := reportingTime;
+
+		cpuReadings := 0;
+		highCpuTimeFraction := 0.0;
+	}
+
+	action sendReport(float highCpuTimePercent, float highMemTimePercent) {
+		float reportingTime := currentTime;
+
+		send ResourceUsageReport(TimeFormat.format(reportingTime, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"), highCpuTimePercent, highMemTimePercent) to MQTT_SEND_CHANNEL;
+		lastReportTime := reportingTime;
+
+		resetVariables();
 
 		// schedule the next paper report
-		nextMemReportWait := scheduleNextHourlyReport(nextMemReportWait, paperReportMemoryUsage);
+		scheduleNextHourlyReport();
 	}
 
-	action paperReportMemoryUsage() {
-		reportMemoryUsage(highMemTimeFraction * 100.0);
+	action sendPaperReport() {
+		sendReport(highCpuTimeFraction * 100.0 , highMemTimeFraction * 100.0);
 	}
 
-	action scheduleNextHourlyReport(listener currentWaitListener, action<> reportUsageAction) returns listener {
-		currentWaitListener.quit();
-		listener newWaitListener := on wait(ONE_HOUR_INTERVAL) {
-			reportUsageAction();
+	action scheduleNextHourlyReport() {
+		nextReportTimer.quit();
+		nextReportTimer := on wait(ONE_HOUR_INTERVAL) {
+			sendPaperReport();
 		}
-		return newWaitListener;
 	}
 }

@@ -31,6 +31,9 @@ connectivityPlugins:
   stringCodec:
     libraryName: connectivity-string-codec
     class: StringCodec
+  mapperCodec:
+   libraryName: MapperCodec
+   class: MapperCodec
 
 # The chain manager, responsible for the connection to MQTT
 dynamicChainManagers:
@@ -55,22 +58,30 @@ dynamicChains:
   MQTTChain:
     - apama.eventMap:
         suppressLoopback: true
-
-    #- diagnosticCodec:
-
+    - mapperCodec:
+        allowMissing: false
+        RawCpuMeasurement:
+            towardsHost:
+                mapFrom:
+                    - payload.cpuMeasurement: payload
+        RawMemMeasurement:
+            towardsHost:
+                mapFrom:
+                    - payload.memMeasurement: payload
+        ResourceUsageReport:
+            towardsTransport:
+                defaultValue:
+                    - metadata.contentType: "application/json"
+                mapFrom:
+                    - payload.cpu.percent-active: payload.cpuPercentActive
+                    - payload.memory.percent-used: payload.memPercentUsed
     - classifierCodec:
         rules:
-          - Cpu-inst:
+          - RawCpuMeasurement:
             - metadata.mqtt.topic: collectd/thin-edge/cpu/percent-active
-          - Mem-inst:
+          - RawMemMeasurement:
             - metadata.mqtt.topic: collectd/thin-edge/mem/percent-used
-                
-    # Codec that logs message contents during testing/debugging - should be commented out in production
-    #- diagnosticCodec:
-    
     - jsonCodec:
+        filterOnContentType: true
     - stringCodec:
-        nullTerminated: false
-    
     - MQTTTransport
-
