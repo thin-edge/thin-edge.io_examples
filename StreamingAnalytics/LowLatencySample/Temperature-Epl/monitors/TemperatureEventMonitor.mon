@@ -1,0 +1,33 @@
+package lowlatency;
+using com.apama.aggregates.mean;
+/** If average temperature in 5 minutes is greater than 80 C, send a shutdwon alert  */
+
+event Temperature {
+	float temperature;
+}
+
+event ShutDown {
+	string shutdownMessage;
+}
+monitor TempEventMonitor {
+	
+	action onload() {
+		monitor.subscribe("in");
+		monitor.subscribe("mqtt:sensors/temperature");
+		monitor.subscribe("mqtt:alerts/temperature");
+		stream<Temperature> temperatures := all Temperature();
+		from temp in temperatures within 300.0
+		  select Temperature(mean(temp.temperature)) as temperature{
+			log "Ankit" at INFO;
+			if temperature.temperature > 80.0 {
+				
+				log temperature.temperature.toString();
+				send ShutDown("ShutDown ! Temp is high") to "mqtt:alerts/temperature";
+				send Temperature(temperature.temperature) to "mqtt:alerts/temperature";
+				
+			}
+			
+			
+		}
+	}
+}

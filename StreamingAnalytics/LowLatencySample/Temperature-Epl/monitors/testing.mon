@@ -1,0 +1,27 @@
+monitor Testing {
+	
+	
+	event Trigger {}
+	action onload() {
+		spawn testCode();
+	}
+	
+	float counter := 100.0;
+	
+	action testCode() {
+		monitor.subscribe("out");
+
+		
+		on all Trigger() {
+			float reading := counter.rand();
+			log "Sending "+reading.toString() ;
+			send Temperature("Sensor1", reading) to "in";
+			
+			on wait(1.0) {
+				send Trigger() to context.current();
+			}
+		}
+		route Trigger();
+		
+	}
+}
