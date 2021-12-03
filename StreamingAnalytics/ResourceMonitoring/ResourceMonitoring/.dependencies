@@ -10,21 +10,8 @@
 			<config-files>
 			</config-files>
 			<bundle-instance-files>
-				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.properties" timestamp="1630667311171"/>
-				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.yaml" timestamp="1630667311172"/>
-			</bundle-instance-files>
-			<static-files>
-			</static-files>
-			<dashboard-files>
-			</dashboard-files>
-			<evt-files>
-			</evt-files>
-		</bundle>
-		<bundle file="JSONPlugin.bnd" origin-path="" origin="PRODUCT_CATALOG">
-			<instance name=""/>
-			<config-files>
-			</config-files>
-			<bundle-instance-files>
+				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.properties" timestamp="1631519392283"/>
+				<file name="../bundles/MQTTConnectivity/@INSTANCE_NAME@.yaml" timestamp="1631519392285"/>
 			</bundle-instance-files>
 			<static-files>
 			</static-files>
@@ -44,6 +31,20 @@
 			<dashboard-files>
 			</dashboard-files>
 			<evt-files>
+			</evt-files>
+		</bundle>
+		<bundle file="AutomaticOnApplicationInitialized.bnd" origin-path="" origin="PRODUCT_CATALOG">
+			<instance name=""/>
+			<config-files>
+			</config-files>
+			<bundle-instance-files>
+			</bundle-instance-files>
+			<static-files>
+			</static-files>
+			<dashboard-files>
+			</dashboard-files>
+			<evt-files>
+				<file name="${APAMA_HOME}/monitors/AutomaticOnApplicationInitialized.evt" timestamp="1631519392706"/>
 			</evt-files>
 		</bundle>
 	</bundles>
