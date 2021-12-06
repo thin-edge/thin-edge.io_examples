@@ -1,11 +1,11 @@
+using com.apama.exceptions.Exception;
 
 /**
- *  This monitor is responsible for preprocessing the raw measurements received over mqtt
- *  and sending out the float values to the measurement processing code.
+ *  This monitor is responsible for preprocessing the raw measurements received
+ *  over mqtt and sending out the float values to the measurement processing code.
  *  "<timestamp>:<measurement>" -----(preprocess)-----> <measurement>
  */
 monitor PreprocessorUtil {
-
 	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/cpu/percent-active";
 	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/mem/percent-used";
 	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
@@ -18,18 +18,32 @@ monitor PreprocessorUtil {
 	action preprocessIncomingData() {
 		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
 		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
-
 		on all RawCpuMeasurement() as measurement {
-			send CpuMeasurement(preprocessMessage(measurement.cpuMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
+			float cpuPercentActive := preprocessMessage(measurement.cpuMeasurement);
+			if cpuPercentActive >= 0.0 {
+				send CpuMeasurement(cpuPercentActive) to PROCESSED_MEASUREMENTS_CHANNEL;
+			}
 		}
 
 		on all RawMemMeasurement() as measurement {
-			send MemMeasurement(preprocessMessage(measurement.memMeasurement)) to PROCESSED_MEASUREMENTS_CHANNEL;
+			float memPercentUsed := preprocessMessage(measurement.memMeasurement);
+			if memPercentUsed >= 0.0 {
+				send MemMeasurement(memPercentUsed) to PROCESSED_MEASUREMENTS_CHANNEL;
+			}
 		}
 	}
 
 	action preprocessMessage(string rawMeasurement) returns float {
-		integer startIndex := rawMeasurement.find(":") + 1;
-		return rawMeasurement.substring(startIndex, rawMeasurement.length()).toFloat();
+		integer startIndex := rawMeasurement.find(":");
+		try {
+			if (startIndex < 0) {
+				throw new Exception;
+			}
+			return float.parse(rawMeasurement.substring(startIndex, rawMeasurement.length()));
+		} catch (Exception e) {
+			log "Failed to parse the raw measurement. It should be formatted as follows: <timestamp>:<measurement>.
+				The following measurement will be dropped: " + rawMeasurement at WARN;
+			return -1.0;
+		}
 	}
 }
