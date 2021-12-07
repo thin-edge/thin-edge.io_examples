@@ -18,6 +18,8 @@ mqttClient.connect(broker)
 
 while True:
 	cpuPercent = psutil.cpu_percent()
+	# the results from psutil.virtual_memory() refer to the virtual_memory excluding swap_space
+	# which essentially means the resident_memory. For more details refer the docs for module 'psutil'
 	memPercent = psutil.virtual_memory().percent
 	timestamp = f'{time.time():.3f}'
 	
