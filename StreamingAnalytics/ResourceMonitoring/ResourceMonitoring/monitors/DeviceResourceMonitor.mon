@@ -10,10 +10,6 @@ using com.apama.correlator.timeformat.TimeFormat;
  *  otherwise it does an hourly paper report.
  */
 monitor DeviceResourceMonitor {
-
-	constant string MQTT_SEND_CHANNEL := "mqtt:tedge/measurements";
-	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
-
 	constant float ONE_HOUR_INTERVAL := 3600.0;
 	constant float FIVE_MINS_INTERVAL := 300.0;
 
@@ -34,7 +30,8 @@ monitor DeviceResourceMonitor {
 
 	action onload() {
 		log "Loaded monitor DeviceResourceMonitor" at INFO;
-		monitor.subscribe(PROCESSED_MEASUREMENTS_CHANNEL);
+		monitor.subscribe(CpuMeasurement.CHANNEL);
+		monitor.subscribe(MemMeasurement.CHANNEL);
 
 		// schedule the initial report on load
 		scheduleNextHourlyReport();
@@ -128,7 +125,7 @@ monitor DeviceResourceMonitor {
 		float reportingTime := currentTime;
 
 		send ResourceUsageReport(TimeFormat.format(reportingTime, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
-		                         highCpuTimePercent, highMemTimePercent) to MQTT_SEND_CHANNEL;
+		                         highCpuTimePercent, highMemTimePercent) to ResourceUsageReport.SEND_CHANNEL;
 		lastReportTime := reportingTime;
 
 		resetVariables();

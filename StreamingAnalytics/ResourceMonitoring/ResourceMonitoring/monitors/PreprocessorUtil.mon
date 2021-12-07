@@ -6,9 +6,6 @@ using com.apama.exceptions.Exception;
  *  "<timestamp>:<measurement>" -----(preprocess)-----> <measurement>
  */
 monitor PreprocessorUtil {
-	constant string MQTT_CPU_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/cpu/percent-active";
-	constant string MQTT_MEM_SUBSCRIBE_CHANNEL := "mqtt:collectd/thin-edge/mem/percent-used";
-	constant string PROCESSED_MEASUREMENTS_CHANNEL := "PROCESSED_MEASUREMENTS_CHANNEL";
 
 	action onload() {
 		log "Loaded monitor PreprocessorUtil" at INFO;
@@ -16,30 +13,30 @@ monitor PreprocessorUtil {
 	}
 
 	action preprocessIncomingData() {
-		monitor.subscribe(MQTT_CPU_SUBSCRIBE_CHANNEL);
-		monitor.subscribe(MQTT_MEM_SUBSCRIBE_CHANNEL);
+		monitor.subscribe(RawCpuMeasurement.SUBSCRIBE_CHANNEL);
+		monitor.subscribe(RawMemMeasurement.SUBSCRIBE_CHANNEL);
 		on all RawCpuMeasurement() as measurement {
 			float cpuPercentActive := parseRawMessage(measurement.cpuMeasurement);
 			if cpuPercentActive >= 0.0 {
-				send CpuMeasurement(cpuPercentActive) to PROCESSED_MEASUREMENTS_CHANNEL;
+				send CpuMeasurement(cpuPercentActive) to CpuMeasurement.CHANNEL;
 			}
 		}
 
 		on all RawMemMeasurement() as measurement {
 			float memPercentUsed := parseRawMessage(measurement.memMeasurement);
 			if memPercentUsed >= 0.0 {
-				send MemMeasurement(memPercentUsed) to PROCESSED_MEASUREMENTS_CHANNEL;
+				send MemMeasurement(memPercentUsed) to MemMeasurement.CHANNEL;
 			}
 		}
 	}
 
 	action parseRawMessage(string rawMeasurement) returns float {
-		integer startIndex := rawMeasurement.find(":");
+		integer colonIndex := rawMeasurement.find(":");
 		try {
-			if (startIndex < 0) {
+			if (colonIndex < 0) {
 				throw Exception("Raw measurement missing expected ':'", "ParseException");
 			}
-			return float.parse(rawMeasurement.substring(startIndex, rawMeasurement.length()));
+			return float.parse(rawMeasurement.substring(colonIndex + 1, rawMeasurement.length()));
 		} catch (Exception e) {
 			log "Failed to parse the raw measurement. Got the following exception: " + e.getMessage()
 				+ ". The following measurement will be dropped: " + rawMeasurement at WARN;
