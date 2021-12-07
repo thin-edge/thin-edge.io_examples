@@ -16,6 +16,6 @@ event MemMeasurement {
 
 event ResourceUsageReport {
 	string time;
-	float cpuPercentActive;
-	float memPercentUsed;
+	float highCpuPercent;
+	float highMemPercent;
 }

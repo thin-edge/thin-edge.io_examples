@@ -73,8 +73,8 @@ dynamicChains:
                 defaultValue:
                     - metadata.contentType: "application/json"
                 mapFrom:
-                    - payload.cpu.percent-active: payload.cpuPercentActive
-                    - payload.memory.percent-used: payload.memPercentUsed
+                    - payload.cpu.high-use-percent: payload.highCpuPercent
+                    - payload.memory.high-use-percent: payload.highMemPercent
     - classifierCodec:
         rules:
           - RawCpuMeasurement:
