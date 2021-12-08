@@ -34,7 +34,7 @@ pip3 install psutil
 This will restart the correlator running the project that was copied in the previous step.
 3. Run the [resource-monitor.py](resource-monitor.py) script from this directory using Python 3
 with the command `python3 resource-monitor.py`
-4. To see the measurements that will be sent to the cloud run `tedge sub 'tedge/measurements'`
+4. To see the measurements that will be sent to the cloud run `tedge mqtt sub 'tedge/measurements'`
 5. If you have configured thin-edge to connect to a cloud provider, your measurements 
 will begin appearing there.
 
