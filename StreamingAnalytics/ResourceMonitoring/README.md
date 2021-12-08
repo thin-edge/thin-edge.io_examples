@@ -12,7 +12,7 @@ which CPU or memory usage breached the threshold._
 Follow the setup and configuration instructions in the [README](../README.md)
 file in the parent directory before running this sample.
 
-Ensure that the thin-edge device has Python 3 installed and that it is on your `$path` :
+Ensure that the thin-edge device has Python 3 installed and that it is on your `$path` and you have installed the psutil python library:
 
 ```
 sudo apt-get install python3

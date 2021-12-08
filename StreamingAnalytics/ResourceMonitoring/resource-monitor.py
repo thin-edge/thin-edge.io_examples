@@ -16,6 +16,9 @@ mqttClient.on_connect = on_connect
 mqttClient.on_publish = on_publish
 mqttClient.connect(broker)
 
+# Junk call to psutil.cpu_percent() - see https://psutil.readthedocs.io/en/latest/#psutil.cpu_percent
+psutil.cpu_percent()
+
 while True:
 	cpuPercent = psutil.cpu_percent()
 	# the results from psutil.virtual_memory() refer to the virtual_memory excluding swap_space
