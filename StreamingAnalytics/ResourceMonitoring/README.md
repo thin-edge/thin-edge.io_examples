@@ -21,14 +21,6 @@ pip3 install psutil
 
 ## Running the Sample
 
-> Note: If you intend to modify or extend this sample it is recommended that
-> you delete the provided [config.yaml](config.yaml) file and use
-> `engine_deploy` from a full Apama installation to build a deployable version
-> of your project which you then copy to the thin-edge device. This is because
-> building out this sample is likely to break the configuration in
-> [config.yaml](config.yaml) and using `engine_deploy` works out the
-> correct initialization order when creating a deployable project.
-
 1. Copy the [project](project) directory to the `/etc/tedge/apama/project` directory on the thin-edge device. 
 2. Restart the Apama service on the thin-edge device with `sudo service apama restart`.
 This will restart the correlator running the project that was copied in the previous step.
@@ -38,10 +30,9 @@ with the command `python3 resource-monitor.py`
 5. If you have configured thin-edge to connect to a cloud provider, your measurements 
 will begin appearing there.
 
-> Note: This project reports to the cloud once per five minutes __only__ if resource
-> usage exceeds the 70% threshold for at least 70% of that five minutes.  Otherwise
-> it will report only once per hour meaning you may have to wait some time to see
-> measurements appearing in the `tedge/measurements` topic or cloud provider unless you artifcially
-> manipulate resource use to exceed the threshold.
-
+> Note: You may need to wait up to an hour for this
+example to publish a message to the `tedge/measurements`
+channel. If you want to speed this up you could alter
+the threshold(s), interval(s) or CPU and memory usage
+variables accordingly.
 
