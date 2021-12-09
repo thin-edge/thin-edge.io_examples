@@ -69,15 +69,14 @@ pip3 install c8ylp
 - Test Steps:
 
     - Check if your device is online in cumulocity UI Device Management.
-    - Start the c8ylp with the required parameters (host, external ID, Tenant ID, user and password):
-    - Example: 
-    c8ylp  -h examples.cumulocity.com -d test-device -t t1111 -u user -p verysecret
+    - Start the c8ylp with the required parameters find instructions here: 
+    https://github.com/SoftwareAG/cumulocity-remote-access-local-proxy/
     - The device id is the external id of the device (Identity API) per default c8y_Serial is used as external id type. You can find the external id in device management in the device tab Identity
     - Per default the name of the configuration is "Passthrough". The same you have created with the POST call beforhand. If you used another name you need to specify that with the -n switch
     - The tenant id can be found by clicking your name in the top right corner in the cumulocity web interface 
-    - Per default the local port 2222 is used.
+    - Per default the local proxy will choose a local port for you but you can define one one by providing the --port option. Lets assume you choose 2222 as localport
     - Wait until it states that the WebSocket connection is open and waiting for incoming connections…
-    - This will tunnel remote web server running on 127.0.0.1:80 on the device to the local client on port 2222
+    - This will tunnel remote web server running on 127.0.0.1:80 on the device to the local client on port 2222 (must be configured in c8ylp using --port)
     - Open the browser and try to reach localhost:2222. If everything is working fine you should see the UI of the Web server of the device.
 
 
