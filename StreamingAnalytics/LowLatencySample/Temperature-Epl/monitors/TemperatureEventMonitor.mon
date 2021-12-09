@@ -1,6 +1,6 @@
 package lowlatency;
 using com.apama.aggregates.mean;
-/** If average temperature in 5 minutes is greater than 80 C, send a shutdwon alert  */
+/** If average temperature in 5 minutes is greater than 80 C, send a shutdown alert  */
 
 event Temperature {
     float temperature;
@@ -14,7 +14,6 @@ monitor TempEventMonitor {
     constant float FIVE_MINS_INTERVAL := 300.0;
     constant float THRESHOLD_TEMPERATURE := 80.0;
     action onload() {
-       monitor.subscribe("in");
        monitor.subscribe("mqtt:sensors/temperature");
        monitor.subscribe("mqtt:alerts/temperature");
        stream<Temperature> temperatures := all Temperature();
