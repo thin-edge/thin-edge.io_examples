@@ -12,7 +12,7 @@ which CPU or memory usage breached the threshold._
 Follow the setup and configuration instructions in the [README](../README.md)
 file in the parent directory before running this sample.
 
-Ensure that the thin-edge device has Python 3 installed and that it is on your `$path` and you have installed the psutil python library:
+Ensure that the thin-edge device has Python 3 installed, that it is on your `$path`, and that you have installed the psutil python library:
 
 ```
 sudo apt-get install python3
@@ -23,7 +23,7 @@ pip3 install psutil
 
 1. Copy the [project](project) directory to the `/etc/tedge/apama/project` directory on the thin-edge device. 
 2. Restart the Apama service on the thin-edge device with `sudo service apama restart`.
-This will restart the correlator running the project that was copied in the previous step.
+This restarts the correlator and runs the project that was copied in the previous step.
 3. Run the [resource-monitor.py](resource-monitor.py) script from this directory using Python 3
 with the command `python3 resource-monitor.py`
 4. To see the measurements that will be sent to the cloud run `tedge mqtt sub 'tedge/measurements'`
