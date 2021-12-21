@@ -57,7 +57,7 @@ dynamicChains:
 
               # Assuming that the EPL event type (MySampleInput) has field 'myParameter'
               # Map MQTT's topic name from the metadata to the EPL event's 'myParameter' field
-              - payload.Temperature: payload.temperature
+              - payload.Temperature: payload.value
               - payload.ApamaMessage: payload.shutdownMessage  
 
           towardsHost:
@@ -66,12 +66,12 @@ dynamicChains:
             # If the input MQTT message maps to multiple EPL event types consider using the classifier codec
 
             defaultValue:
-              - metadata.sag.type: lowlatency.Temperature
+              - metadata.sag.type: Temperature
             mapFrom:
 
               # Assuming that the EPL event type (MySampleInput) has field 'myParameter'
               # Map MQTT's topic name from the metadata to the EPL event's 'myParameter' field
-              - payload.temperature: payload.temperature
+              - payload.value: payload.temperature
 
               # Message fields that don't correspond to fields in the event type will go into
               # the dictionary referred to by @ExtraFieldsDict inside EPL code
