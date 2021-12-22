@@ -29,4 +29,4 @@ while True:
     data['temperature'] = temp
 
     mqttClient.publish('sensors/temperature', json.dumps(data , default = str))
-    time.sleep(5)
+    time.sleep(0.5)

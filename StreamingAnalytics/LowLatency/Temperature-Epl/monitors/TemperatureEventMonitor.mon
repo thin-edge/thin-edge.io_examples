@@ -1,5 +1,5 @@
 using com.apama.aggregates.mean;
-/** If average temperature in 5 minutes is greater than 80 C, send a shutdown alert . */
+/** If average temperature in 10 seconds is greater than 80 C, send a shutdown alert. */
 
 event Temperature {
     float value;
@@ -11,14 +11,14 @@ event ShutDown {
 
 monitor TempEventMonitor {
 	
-    constant float FIVE_MINS_INTERVAL := 300.0;
+    constant float TEN_SEC_INTERVAL := 10.0;
     constant float THRESHOLD_TEMPERATURE := 80.0;
     
     action onload() {
        monitor.subscribe("mqtt:sensors/temperature");
        monitor.subscribe("mqtt:alerts/temperature");
        stream<Temperature> temperatures := all Temperature();
-       from temp in temperatures within FIVE_MINS_INTERVAL
+       from temp in temperatures within TEN_SEC_INTERVAL
          select Temperature(mean(temp.value)) as temperature{
            if temperature.value > THRESHOLD_TEMPERATURE {
                 log temperature.value.toString() at INFO;
