@@ -1,3 +1,4 @@
+# This python script is just for the sake of testing and does not provide real temperature readings.
 import paho.mqtt.client as mqtt
 import time
 import random, json

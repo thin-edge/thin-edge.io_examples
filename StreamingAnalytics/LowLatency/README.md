@@ -26,11 +26,15 @@ directory on the thin-edge device.
 2. Restart the Apama service on the thin-edge device with `sudo service apama restart`.
 This restarts the correlator and runs the project that was copied in the previous step.
 
-3. Run the `publisher.py` script from this directory using
-Python 3 with the command `python3 publisher.py`.
+3. This project expects the sensor to publish the temperature readings on
+this mqtt topic `'sensors/temperature'`.
 
 4. To see the measurements that will be sent
 to the cloud, run `tedge mqtt sub 'alerts/temperature'`.
 
-5. If you have configured the thin-edge.io installation to
+5. This project publishes a shutdown message to the mqtt topic `'device/operations'`
+to trigger shutdown operation whenever average temperature in last 10 seconds window
+exceeds threshold temperature. 
+
+6. If you have configured the thin-edge.io installation to
 connect to a cloud provider, your measurements will begin appearing there.
