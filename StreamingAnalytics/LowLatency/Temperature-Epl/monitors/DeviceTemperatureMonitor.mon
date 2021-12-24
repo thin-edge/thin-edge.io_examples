@@ -1,5 +1,5 @@
 using com.apama.aggregates.mean;
-/** This monitor is responsible to send a shutdown alert if average temperature in last 10 seconds window exceeds a threshold temperature (in this example - 80C). */
+/** This monitor is responsible to send a shutdown alert if the average temperature in last 10 seconds window exceeds a threshold temperature (in this example - 80C). */
 
 monitor DeviceTemperatureMonitor {
 	
@@ -14,7 +14,7 @@ monitor DeviceTemperatureMonitor {
            if temperature.value > THRESHOLD_TEMPERATURE {
                 //log temperature.value.toString() at INFO;
                 log "Average temperature " + temperature.value.toString() + " Celsius" + " exceeded threshold temperature " + THRESHOLD_TEMPERATURE.toString() + " Celsius" + " ." + "Sending alert and requesting shutdown ." at WARN;
-                send ShutDown("Average temperature greater than threshold temperature. Shutdown the device now.") to ShutDown.SEND_CHANNEL;
+                send ShutDown("Device temperature is over the threshold value. Shutdown the device now.") to ShutDown.SEND_CHANNEL;
                 send Temperature(temperature.value) to Temperature.SEND_CHANNEL;
            }
         }
