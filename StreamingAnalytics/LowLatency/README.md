@@ -19,9 +19,7 @@ pip3 install paho-mqtt
 
 ## Running the Sample
 
-1. Deploy the Project using `engine_deploy --outputDeployDir project <project-src-dir>`
-(Take reference from [README](../README.md)) and then Copy the project directory to the `/etc/tedge/apama/project`
-directory on the thin-edge device.
+1. Copy the [project](project) directory to the `/etc/tedge/apama/project` directory on the thin-edge device.
 
 2. Restart the Apama service on the thin-edge device with `sudo service apama restart`.
 This restarts the correlator and runs the project that was copied in the previous step.
