@@ -3,10 +3,13 @@ using com.apama.aggregates.mean;
 
 event Temperature {
     float value;
+    constant string SUBSCRIBE_CHANNEL := "mqtt:sensors/temperature";
+    constant string SEND_CHANNEL := "mqtt:alerts/temperature";
 }
 
 event ShutDown {
     string shutdownMessage;
+    constant string SEND_CHANNEL := "mqtt:device/operations";
 }
 
 monitor TempEventMonitor {
@@ -15,16 +18,15 @@ monitor TempEventMonitor {
     constant float THRESHOLD_TEMPERATURE := 80.0;
     
     action onload() {
-       monitor.subscribe("mqtt:sensors/temperature");
-       monitor.subscribe("mqtt:alerts/temperature");
+       monitor.subscribe(Temperature.SUBSCRIBE_CHANNEL);
        stream<Temperature> temperatures := all Temperature();
        from temp in temperatures within TEN_SEC_INTERVAL
          select Temperature(mean(temp.value)) as temperature{
            if temperature.value > THRESHOLD_TEMPERATURE {
                 log temperature.value.toString() at INFO;
                 log "Average temperature " + temperature.value.toString() + " Celsius" + " exceeded threshold temperature " + THRESHOLD_TEMPERATURE.toString() + " Celsius" + " ." + "Sending alert and requesting shutdown ." at WARN;
-                send ShutDown("ShutDown ! Temp is high") to "mqtt:alerts/temperature";
-                send Temperature(temperature.value) to "mqtt:alerts/temperature";
+                send ShutDown("ShutDown ! Temp is high") to ShutDown.SEND_CHANNEL;
+                send Temperature(temperature.value) to Temperature.SEND_CHANNEL;
            }
         }
     }

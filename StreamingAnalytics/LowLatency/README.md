@@ -1,14 +1,21 @@
 # Streaming Analytics Low Latency Command and Control Sample
-This example demonstrates the use of Apama to monitor temperature and calculate
-the average temperature recorded by a sensor in every 10 seconds interval. It
-reports it to the cloud in 10-seconds cycles if the average temperature
-exceeds a threshold temperature (ex- 80C) or not. If the average
-temperature exceeds threshold temperature, then it sends a shutdown operation.
+This example demonstrates the use of Apama to average temperature
+sensor values over a 10 second window. If the average temperature
+exceeds a threshold (80 in this example) then an alert is sent to the
+cloud and a shutdown is initiated.
 
 ## Prerequisites
 
 Follow the setup and configuration instructions in the
 [README](../README.md) file in the parent directory before running this sample.
+
+Ensure that the thin-edge device has Python 3 installed, that it is on your `$path`,
+and that you have installed the paho-mqtt Python library:
+
+```
+sudo apt-get install python3
+pip3 install paho-mqtt
+```
 
 ## Running the Sample
 

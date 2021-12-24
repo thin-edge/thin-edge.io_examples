@@ -47,7 +47,7 @@ dynamicChains:
     - apama.eventMap:
         suppressLoopback: true
 
-    - diagnosticCodec:
+    #- diagnosticCodec:
 
     - mapperCodec:
         allowMissing: true
@@ -77,7 +77,7 @@ dynamicChains:
               # the dictionary referred to by @ExtraFieldsDict inside EPL code
 
     # Codec that logs message contents during testing/debugging - should be commented out in production
-    - diagnosticCodec:
+    #- diagnosticCodec:
     
     - jsonCodec:
     - stringCodec:
