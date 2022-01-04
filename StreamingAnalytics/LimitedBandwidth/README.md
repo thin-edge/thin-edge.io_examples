@@ -18,7 +18,7 @@ file in the parent directory before running this sample.
 > you delete the provided [config.yaml](config.yaml) file and use
 > `engine_deploy` from a full Apama installation to build a deployable version
 > of your project which you then copy to the thin-edge device. This is because
-> building out this sample is likely to break the configuration in
+> changing this sample could break the configuration in
 > [config.yaml](config.yaml) and using `engine_deploy` works out the
 > correct initialization order when creating a deployable project.
 
