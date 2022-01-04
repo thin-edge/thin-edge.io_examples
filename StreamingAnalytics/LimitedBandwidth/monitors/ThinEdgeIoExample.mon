@@ -47,7 +47,7 @@ monitor ThinEdgeIoExample {
         }
 
 		// Required so that the application can receive events from connectivity
-		// pluging (MQTT in this case). See Apama documentation for more details.
+		// plugins (MQTT in this case). See Apama documentation for more details.
         com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
     }
 }
