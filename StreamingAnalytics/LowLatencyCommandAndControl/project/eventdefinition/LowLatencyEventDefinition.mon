@@ -1,0 +1,11 @@
+
+event Temperature {
+    float value;
+    constant string SUBSCRIBE_CHANNEL := "mqtt:sensors/temperature";
+    constant string SEND_CHANNEL := "mqtt:alerts/temperature";
+}
+
+event ShutDown {
+    string shutdownMessage;
+    constant string SEND_CHANNEL := "mqtt:device/operations";
+}
