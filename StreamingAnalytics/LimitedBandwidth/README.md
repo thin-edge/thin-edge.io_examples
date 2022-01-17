@@ -29,7 +29,9 @@ restart`. This restarts the correlator and runs the project that was copied
 in the previous step.
 3. Exercise the sample by publishing events to `sensors/temperature`,
 `sensors/pressure` and `sensors/vibration` topics via `tedge mqtt pub`, script
-or other MQTT utility.
+or other MQTT utility. The implementation requires at least one of each type
+of measurement within the same five second interval, so scripting the sending
+of measurements is recommended.
 
 Event examples: (topic: payload)
 ```
