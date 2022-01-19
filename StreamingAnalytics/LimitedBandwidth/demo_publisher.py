@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import paho.mqtt.client as mqtt
 import json
+import random
 import time
 
 mqttClient = mqtt.Client("Demo-measurements")
@@ -18,13 +19,13 @@ mqttClient.connect(broker)
 
 while True:
     event = {}
-    event['temperature'] = 41.23
+    event['temperature'] = 25.0 + (random.random() * 35.0)
     mqttClient.publish('sensors/temperature', json.dumps(event, default=str))
     event = {}
-    event['pressure'] = 903.58
+    event['pressure'] = 0.5 + random.random()
     mqttClient.publish('sensors/pressure', json.dumps(event, default=str))
     event = {}
-    event['vibration'] = 0.014
+    event['vibration'] = 1000.0 + (random.random() * 500.0)
     mqttClient.publish('sensors/vibration', json.dumps(event, default=str))
 
     time.sleep(1)
