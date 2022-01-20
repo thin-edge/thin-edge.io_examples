@@ -12,11 +12,12 @@ which CPU or memory usage breached the threshold._
 Follow the setup and configuration instructions in the [README](../README.md)
 file in the parent directory before running this sample.
 
-Ensure that the thin-edge device has Python 3 installed, that it is on your `$path`, and that you have installed the `psutil` Python library:
-
+Ensure that the thin-edge device has Python 3 installed, that it is on your
+`$path`, and that you have installed `psutil` and `paho-mqtt`:
 ```
 sudo apt-get install python3
-pip3 install psutil
+pip install psutil
+pip install paho-mqtt
 ```
 
 ## Running the Sample

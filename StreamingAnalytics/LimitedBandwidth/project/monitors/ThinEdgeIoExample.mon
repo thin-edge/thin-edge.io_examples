@@ -7,7 +7,7 @@ using com.apama.aggregates.mean;
  */
 monitor ThinEdgeIoExample {
 
-    constant float AVGWINDOW := 5.0;
+    constant float AVG_WINDOW := 5.0;
 
     float avgTemperature := float.NAN;
     float avgPressure := float.NAN;
@@ -22,19 +22,19 @@ monitor ThinEdgeIoExample {
         // seconds. If there are no measurements for more than five seconds
         // then the value is set to NaN.
         from t in all Temperature()
-            within AVGWINDOW
+            within AVG_WINDOW
             select mean(t.temperature) : avgTemperature { }
         from p in all Pressure()
-            within AVGWINDOW
+            within AVG_WINDOW
             select mean(p.pressure) : avgPressure { }
         from v in all Vibration()
-            within AVGWINDOW
+            within AVG_WINDOW
             select mean(v.vibration) : avgVibration { }
 
         // Every 5 seconds send out the averaged measurements as a combined
         // measurements event. Will only send if there has been at least one
         // measurement of each type in the last 5 seconds.
-        on all wait(AVGWINDOW) {
+        on all wait(AVG_WINDOW) {
             if (avgTemperature.isFinite()
                     and avgPressure.isFinite()
                     and avgVibration.isFinite()) {
@@ -46,6 +46,8 @@ monitor ThinEdgeIoExample {
             }
         }
 
+		// Required so that the application can receive events from connectivity
+		// plugins (MQTT in this case). See Apama documentation for more details.
         com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();
     }
 }
