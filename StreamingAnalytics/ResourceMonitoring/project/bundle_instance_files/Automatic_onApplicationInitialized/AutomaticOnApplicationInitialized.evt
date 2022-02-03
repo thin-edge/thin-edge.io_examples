@@ -1,0 +1,7 @@
+#
+# $Copyright (c) 2016-2018 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.$
+# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+#
+
+# This event should be sent after all monitors are injected; Software AG Designer will send event files after injections, so the ordering relative to other evt files is unimportant.
+com.apama.connectivity.ApplicationInitialized()

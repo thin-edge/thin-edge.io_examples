@@ -1,0 +1,87 @@
+# Copyright (c) 2016,2018 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+# This is a YAML configuration file. See the associated .properties file for an 
+# easy way to change the most commonly needed configuration settings. 
+#
+# When editing YAML files, be sure to use spaces (not tabs) for indentation. 
+# List entries are denoted by a line beginning with hyphen and space ("- ").
+# Map key and value pairs are separated by a colon and new line or space ("key: value").
+# Empty strings and those that need escaping should be surrounded by double-quotes ("...").
+# Apama replaces ${prop} substitution variables with the configured value of the 
+# specified property, taken from the command line or from .properties files. 
+#
+
+###########################################################################################
+# MQTT connectivity configuration for sending/receiving events to/from an MQTT broker 
+#
+# Most user-accessible configuration is available and documented in the properties file,
+# except for the codecs used to do the EPL <-> binary message translation.
+###########################################################################################
+
+connectivityPlugins:
+  MQTTTransport:
+    libraryName: connectivity-mqtt
+    class: MQTTTransport
+
+# The chain manager, responsible for the connection to MQTT
+dynamicChainManagers:
+  MQTTManager:
+    transport: MQTTTransport
+    managerConfig:
+      # WARNING: If you are using multiple MQTT bundles, make sure that each chain manager
+      # is configured with a distinct prefix to avoid unexpected behaviour
+      channelPrefix: "mqtt:"
+      brokerURL: ${MQTT_brokerURL}
+      certificateAuthorityFile: ${MQTT_certificateAuthorityFile}
+      acceptUnrecognizedCertificates: ${MQTT_acceptUnrecognizedCertificates}
+      authentication:
+        username: ${MQTT_username}
+        password: ${MQTT_password}
+        certificateFile: ${MQTT_certificateFile}
+        certificatePassword: ${MQTT_certificatePassword}
+        privateKeyFile: ${MQTT_privateKeyFile}
+
+dynamicChains:
+  # This is a sample chain definition showing how to turn a JSON message from MQTT broker to EPL events
+  MQTTChain:
+    - apama.eventMap:
+        suppressLoopback: true
+
+    #- diagnosticCodec:
+
+    - mapperCodec:
+        allowMissing: true
+        "*":
+          towardsTransport:
+            mapFrom:
+
+              # Assuming that the EPL event type (MySampleInput) has field 'myParameter'
+              # Map MQTT's topic name from the metadata to the EPL event's 'myParameter' field
+              - payload.Temperature: payload.value
+              - payload.ApamaMessage: payload.shutdownMessage  
+
+          towardsHost:
+
+            # Change 'mypackage.MySampleInput' to appropriate EPL event type according to the application
+            # If the input MQTT message maps to multiple EPL event types consider using the classifier codec
+
+            defaultValue:
+              - metadata.sag.type: Temperature
+            mapFrom:
+
+              # Assuming that the EPL event type (MySampleInput) has field 'myParameter'
+              # Map MQTT's topic name from the metadata to the EPL event's 'myParameter' field
+              - payload.value: payload.temperature
+
+              # Message fields that don't correspond to fields in the event type will go into
+              # the dictionary referred to by @ExtraFieldsDict inside EPL code
+
+    # Codec that logs message contents during testing/debugging - should be commented out in production
+    #- diagnosticCodec:
+    
+    - jsonCodec:
+    - stringCodec:
+        nullTerminated: false
+    
+    - MQTTTransport
+
