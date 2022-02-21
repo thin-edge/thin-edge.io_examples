@@ -7,7 +7,7 @@ import concurrent.futures
 import os
 
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s %(name)s %(message)s')
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(name)s %(message)s')
 logger = logging.getLogger(__name__)
 
 def setCommandExecuting(command):
@@ -24,7 +24,7 @@ def setCommandFailed(command,errorMessage):
 
 def on_message(client, obj, msg):
     message = msg.payload.decode('utf-8')
-    logger.debug("Message Received: " + msg.topic + " " + str(msg.qos) + " " + message)
+    logger.info("Message Received: " + msg.topic + " " + str(msg.qos) + " " + message)
     if message.startswith('71'):
         fields = message.split(",")
         c8y.token = fields[1]
@@ -46,12 +46,14 @@ def on_message(client, obj, msg):
                 setCommandFailed('c8y_RemoteAccessConnect',return_value)
 
 
+
+
 def remoteConnect( tcp_host,tcp_port,connection_key,base_url):
     try:
         c8y.logger.info('Starting Remote to: ' + str(tcp_host) + ':' + str(tcp_port) + ' Key: ' + str(connection_key) + ' url: ' + str(base_url))
         devProx = DeviceProxy(  tcp_host,
                                 tcp_port,
-                                None,
+                                65536,
                                 connection_key,
                                 base_url,
                                 None,
@@ -74,7 +76,8 @@ logger.info('Connection Result:' + str(connected))
 if connected != 0:
     logger.error('Connection not possible: ' + str(connected))
     exit()
+logger.info('Requesting Token' )
+c8y.client.publish("c8y/s/uat", "",0)
 
-c8y.publish("c8y/s/us", "114,c8y_RemoteAccessConnect")
 
 
