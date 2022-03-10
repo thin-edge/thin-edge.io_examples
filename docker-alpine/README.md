@@ -47,7 +47,7 @@ docker exec -it tedge bash
 
 ## Known issues
 
-`tedge connect <cloud>` always fails to stop all services. This is an example output.
+`tedge disconnect <cloud>` always fails to stop all services. This is an example output.
 
 ```shell
 Stopping tedge-mapper-az service.
