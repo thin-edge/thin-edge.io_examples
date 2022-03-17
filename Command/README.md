@@ -58,7 +58,7 @@ You can create a command you want to be executed on the device side, such as e.g
 </p>
 <br/>
 
-If you click on "Execute" thin-edge.io triggers the c8y_Conc8y_Command.py script. You can check the output of the command in the section on the right.
+If you click on "Execute" thin-edge.io triggers the c8y_Command.py script. You can check the output of the command in the section on the right.
 
 <br/><br/>
 <p style="text-indent:30px;">
