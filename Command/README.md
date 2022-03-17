@@ -12,9 +12,10 @@ To use command on a device that runs thin-edge.io, a plugin of the operation plu
 ## Installation 
 
 1. Clone this repo on the thin-edge.io device
-2. Copy c8y_Command to the following directory "/etc/tedge/operations/c8y/"
-3. Copy c8y_Command.py to the following directory "/bin/tedge/"
-4. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
+2. run pip3 install -r requirements.txt from this Command directory
+3. Copy c8y_Command to the following directory "/etc/tedge/operations/c8y/"
+4. Copy c8y_Command.py to the following directory "/bin/tedge/"
+5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
 
 
 ## Usage
