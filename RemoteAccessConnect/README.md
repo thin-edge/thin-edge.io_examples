@@ -20,7 +20,7 @@ To access a device remotely that runs thin-edge.io, a plugin of the operation pl
 1. Clone this repo on the thin-edge.io device
 2. run pip3 install -r requirements.txt from the c8y_RemoteAccessConnect directory
 3. Copy c8y_RemoteAccessConnect to the following directory "/etc/tedge/operations/c8y/"
-4. Copy c8y_RemoteAccessConnect.py to the following directory "/bin/tedge/"
+4. Copy c8y_RemoteAccessConnect.py to the following directory "/bin/"
 5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
 
 

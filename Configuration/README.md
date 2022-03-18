@@ -14,7 +14,7 @@ To configure a device that runs thin-edge.io, a plugin of the operation plugin c
 1. Clone this repo on the thin-edge.io device
 2. run pip3 install -r requirements.txt from this Configuration directory
 3. Copy c8y_Configuration to the following directory "/etc/tedge/operations/c8y/"
-4. Copy c8y_Configuration.py to the following directory "/bin/tedge/"
+4. Copy c8y_Configuration.py to the following directory "/bin/"
 5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
 
 
