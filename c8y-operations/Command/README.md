@@ -21,7 +21,7 @@ To use command on a device that runs thin-edge.io, a plugin of the operation plu
 ## Usage
 
 Make sure thin-edge.io is connected to Cumulocity.
-If installation is done properly accoording to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
+If installation is done properly according to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
 
 ```shell
 sudo tedge disconnect c8y

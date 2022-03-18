@@ -27,7 +27,7 @@ To access a device remotely that runs thin-edge.io, a plugin of the operation pl
 ## Usage
 
 Make sure thin-edge.io is connected to Cumulocity.
-If installation is done properly accoording to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoertedOperations will be updated.
+If installation is done properly according to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
 
 ```shell
 sudo tedge disconnect c8y
