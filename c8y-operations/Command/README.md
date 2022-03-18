@@ -1,6 +1,6 @@
 #  thin-edge.io Command plugin
 
-To use command on a device that runs thin-edge.io, a plugin of the operation plugin concept is used. The tedge_agent is checking for command operation and is triggering the particular plugin. You can use the Shell tab in device management to use a command. Please be aware of the power of such an feature. Somebody with access could start various shell commands. Its more designes as an idea on how the plugin mechanism works.
+To use command on a device that runs thin-edge.io, a plugin of the operation plugin concept is used. The tedge_agent is checking for command operation and is triggering the particular plugin. You can use the Shell tab in device management to use a command. Please be aware of the power of such an feature. Somebody with access could start various shell commands. Its more designed as an idea on how the plugin mechanism works.
 
 ## Requirements
 
@@ -15,13 +15,13 @@ To use command on a device that runs thin-edge.io, a plugin of the operation plu
 2. run pip3 install -r requirements.txt from this Command directory
 3. Copy c8y_Command to the following directory "/etc/tedge/operations/c8y/"
 4. Copy c8y_Command.py to the following directory "/bin/"
-5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
+5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 644 c8y_Command and chmod 555 c8y_Command.py")
 
 
 ## Usage
 
 Make sure thin-edge.io is connected to Cumulocity.
-If installation is done properly accoording to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoertedOperations will be updated.
+If installation is done properly accoording to the steps above, you hae to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
 
 ```shell
 sudo tedge disconnect c8y
@@ -31,6 +31,12 @@ and
 
 ```shell
 sudo tedge connect c8y
+```
+
+However it would also to be sufficient to restart the tedge_mapper service via e.g.:
+
+```shell
+sudo systemctl tedge_mapper restart
 ```
 
 You device within Cumulocity should look similar to this afterwards:

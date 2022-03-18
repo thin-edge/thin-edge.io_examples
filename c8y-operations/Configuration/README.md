@@ -15,7 +15,7 @@ To configure a device that runs thin-edge.io, a plugin of the operation plugin c
 2. run pip3 install -r requirements.txt from this Configuration directory
 3. Copy c8y_Configuration to the following directory "/etc/tedge/operations/c8y/"
 4. Copy c8y_Configuration.py to the following directory "/bin/"
-5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 777 FILENAME")
+5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 644 c8y_Configuration and chmod 555 c8y_Configuration.py")
 
 
 ## Usage
@@ -31,6 +31,12 @@ and
 
 ```shell
 sudo tedge connect c8y
+```
+
+However it would also to be sufficient to restart the tedge_mapper service via e.g.:
+
+```shell
+sudo systemctl tedge_mapper restart
 ```
 
 You device within Cumulocity should look similar to this afterwards:
