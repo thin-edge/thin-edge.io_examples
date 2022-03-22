@@ -1,0 +1,4 @@
+paho-mqtt
+websocket_client
+certifi
+c8ylp
