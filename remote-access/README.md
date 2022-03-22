@@ -1,12 +1,12 @@
 # thin-edge.io remote access
 
-To access a device remotely that runs thin edge, `remote_connect.py` can be used. After startup, it will connect to the Cumulocity cloud/edge instance. From that point on you can use the remote access tab in device management to access the device. In addition your can use a local proxy or connect any local port on the device.
+To access a device remotely that runs thin edge, `remote_connect.py` can be used. After startup, it will connect to the Cumulocity cloud/edge instance. From that point on you can use the remote access tab in device management to access the device. In addition you can use a local proxy or connect any local port on the device. This plugin demos how operations can be carried out using  MQTT only connection (omitting the build in operation handling of thinEdge.io)
 
 ## Requirements
 
 - Working thin edge installation
 
-- Python3 and pip3 installation (will not work on python2)
+- >=Python3.7 and pip3 installation (will not work on python2)
 
 - The Cloud Remote Access Feature is assigned to your Tenant. If not ask your Administrator to get it assigned to your Tenant. Please note that the Version must be at least 1007.2.0+
 
@@ -23,10 +23,13 @@ To access a device remotely that runs thin edge, `remote_connect.py` can be used
 
 ## Usage
 
+run 
+```bash
+sudo touch /etc/tedge/operations/c8y/c8y_RemoteAccessConnect
+```
 Make sure thin edge is connected to  Cumulocity.
 
-run 
-
+run
 ```python
 python3 remote_connect.py
 ```
