@@ -36,7 +36,7 @@ docker run -it -d --name=tedge tedge_docker_alpine
 3. Enter the container
 
 ```shell
-docker exec -it tedge bash
+docker exec -it tedge sh
 ```
 
 ## After creation of container
