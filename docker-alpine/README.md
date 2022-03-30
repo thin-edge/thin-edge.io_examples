@@ -1,31 +1,25 @@
 # Docker for Alpine
 
-## Prerequisites
-1. Cross-compile with musl. This is an example how to cross-compile for x86_64 with musl.
+By using this image,
+you will have a docker container where all thin-edge.io processes and mosquitto run inside the same container.
 
-```shell
-cargo install cross
-cross build --release --target=x86_64-unknown-linux-musl
+## Configurable parameters
+
+- This Dockerfile is supporting thin-edge.io version **0.6.1 or later**.
+  You can change the version by modifying this part of Dockerfile.
+
+```Dockerfile
+ARG VERSION=0.6.1
 ```
 
-2. Copy the binaries to respective directories.
+- The default device ID is `tedge_alpine`. This is used to create a self-signed certificate.
+  Also, you can change the version by modifying this part of Dockerfile.
 
-`tedge`, `tedge_mapper`, `tedge_agent`, and `tedge_logfile_request_plugin` -> `./bin`
-
-```shell
-cp /path/to/thin-edge.io/target/<arch>/release/tedge ./bin
-cp /path/to/thin-edge.io/target/<arch>/release/tedge_mapper ./bin
-cp /path/to/thin-edge.io/target/<arch>/release/tedge_agent ./bin
-cp /path/to/thin-edge.io/target/<arch>/release/tedge_logfile_request_plugin ./bin
+```Dockerfile
+ARG DEVICEID=tedge_alpine
 ```
 
-`tedge_dummy_plugin` -> `./etc/tedge/sm-plugins`
-
-```shell
-cp /path/to/thin-edge.io/target/<arch>/release/tedge_dummy_plugin ./etc/tedge/sm-plugins
-```
-
-## Container
+## Create a container
 
 1. Build the image
 
@@ -45,9 +39,45 @@ docker run -it -d --name=tedge tedge_docker_alpine
 docker exec -it tedge bash
 ```
 
-## Known issues
+## After creation of container
 
-`tedge connect <cloud>` always fails to stop all services. This is an example output.
+The created container has a self-signed certificate already.
+However, the certificate is not yet uploaded to your desired cloud.
+More steps need to be done inside the container.
+
+
+### Cumulocity IoT
+
+1. Configure `c8y.url` and upload certificate to Cumulocity.
+
+```shell
+sudo tedge config set c8y.url <C8YURL>
+sudo tedge cert upload --user <C8YUSER>
+```
+
+2. Run `tedge connect c8y`. This command starts `mosquitto`, `tedge-mapper-c8y`, `tedge-agent` services defined in OpenRC.
+
+```shell
+sudo tedge connect c8y
+```
+
+### Azure IoT Hub
+
+1. Configure `az.url` and do this step: [Register a device on Azure IoT Hub](https://thin-edge.github.io/thin-edge.io/html/tutorials/connect-azure.html#register-the-device-on-azure-iot-hub).
+
+2. Run `tedge connect c8y`. This command starts `mosquitto` and `tedge-mapper-az` services defined in OpenRC.
+
+```shell
+sudo tedge connect az
+```
+
+## Known issues / potential improvements
+
+(1) Supporting collectd is not yet completed.
+[The `collectd.conf` in the thin-edge.io repository](https://github.com/thin-edge/thin-edge.io/blob/main/configuration/contrib/collectd/collectd.conf) doesn't work for Alpine.
+The OpenRC script for `tedge-mapper-collectd` service is ready though. 
+
+(2) `tedge connect <cloud>` always fails to stop all services. This is an example output.
 
 ```shell
 Stopping tedge-mapper-az service.
