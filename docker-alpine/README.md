@@ -77,7 +77,17 @@ sudo tedge connect az
 [The `collectd.conf` in the thin-edge.io repository](https://github.com/thin-edge/thin-edge.io/blob/main/configuration/contrib/collectd/collectd.conf) doesn't work for Alpine.
 The OpenRC script for `tedge-mapper-collectd` service is ready though. 
 
-(2) `tedge connect <cloud>` always fails to stop all services. This is an example output.
+(2) Didn't create "APK software management plugin".
+It's possible to manage APK packages from Cumulocity if there is a APK plugin.
+If you want to place a software management plugin, add those steps in the Dockerfile.
+
+```Dockerfile
+COPY ./etc/tedge/sm-plugins/<your_plugin> /etc/tedge/sm-plugins/<your_plugin>
+RUN chown root:root /etc/tedge/sm-plugins/<your_plugin>
+RUN chmod +x /etc/tedge/sm-plugins/<your_plugin>
+```
+
+(3) `tedge connect <cloud>` always fails to stop all services. This is an example output.
 
 ```shell
 Stopping tedge-mapper-az service.
