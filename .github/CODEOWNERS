@@ -1,0 +1,12 @@
+# Thin Edge SAG Developers owns the files in root of the repo.
+/.github @thin-edge/sag-developers
+/*.md @thin-edge/sag-developers
+/*.txt @thin-edge/sag-developers
+
+# Define the owners of any file in the directory in the root of the repository
+# and any of its subdirectories.
+/remote-access/ @mstoffel-sag
+/c8y-operations/ @mbay-ODW
+/Guided-registration/ @mbay-ODW
+/Local-data-storage+visualization/ @mbay-ODW
+/StreamingAnalytics/ @sag-tgo @louiseam-sag
