@@ -52,7 +52,7 @@ More steps need to be done inside the container.
 
 ```shell
 sudo tedge config set c8y.url <C8YURL>
-sudo tedge cert upload --user <C8YUSER>
+sudo tedge cert upload c8y --user <C8YUSER>
 ```
 
 2. Run `tedge connect c8y`. This command starts `mosquitto`, `tedge-mapper-c8y`, `tedge-agent` services defined in OpenRC.
