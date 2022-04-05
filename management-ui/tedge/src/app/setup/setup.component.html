@@ -1,0 +1,62 @@
+<c8y-title>
+    {{ 'Setup' | translate }}
+</c8y-title>
+<div class="card">
+    <div class="card-block">
+        <div class="form-group" [formGroup]="configurationForm">
+            <div class="d-grid grid__col--5-2-5--md">
+                <fieldset>
+                    <div class="legend form-block">
+                        Configuration
+                    </div>
+                    <c8y-form-group class="col-lg-8">
+                        <label translate>Cloud Tenant Name</label>
+                        <input class="form-control" type="text" formControlName="tenantUrl"
+                            placeholder="your-tenant.cumulocity.com" #tenantUrlRef required
+                            [readonly]="edgeConfiguration['device.id'] && edgeConfiguration['c8y.url']" />
+                        <label title="Device ID">External Device Id</label>
+                        <input class="form-control" type="text" formControlName="deviceId"
+                            placeholder="external Device Id"
+                            [readonly]="edgeConfiguration['device.id'] && edgeConfiguration['c8y.url']"
+                            #externalDeviceIdRef required />
+                    </c8y-form-group>
+                </fieldset>
+                <div></div>
+                <fieldset>
+                    <div class="legend form-block">
+                        Credentials for certificate upload
+                    </div>
+                    <c8y-form-group class="col-lg-8">
+                        <label translate>Username</label>
+                        <input class="form-control" formControlName="username" placeholder="your username" #usernameRef
+                            required />
+                        <label translate>Password</label>
+                        <input class="form-control" formControlName="password" placeholder="your password"
+                            type="password" #passwordlRef required />
+                    </c8y-form-group>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-block">
+        <div class="button-container">
+            <div class="button-group btn-group">
+                <button class="btn btn-primary" type="button" (click)="configureEdge()">Configure Edge</button>
+                <button class="btn btn-primary" type="button" (click)="downloadCertificate()">Download
+                    Certificate</button>
+                <button class="btn btn-primary" type="button" (click)="upload()">Upload Certificate</button>
+                <button class="btn btn-primary" type="button" (click)="resetEdge()">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-block">
+        <c8y-progress-bar *ngIf="showStatusBar" [progress]="progress" [message]="message"></c8y-progress-bar>
+        <div>
+            <textarea (keydown)="onKeydown($event)" (change)="onChange($event)" class="commandTerminal" cols="100"
+                rows="20" [ngModel]="commandTerminal"></textarea>
+        </div>
+    </div>
+</div>

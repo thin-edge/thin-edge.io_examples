@@ -1,0 +1,26 @@
+<c8y-title>
+  {{ 'Status' | translate }}
+</c8y-title>
+<div class="card-group">
+  <div class="col-sm-6">
+    <div class="card">
+      <c8y-data-grid [title]="'Configuration properties' | translate" [columns]="columns" [rows]="rows$ | async"
+        [pagination]="pagination" [actionControls]="actionControls" [displayOptions]="displayOptions">
+      </c8y-data-grid>
+    </div>
+<!--     <div class="card">
+      <div class="card-header"><h4>Configuration properties</h4></div>
+      <div class="card-block my-card-body">
+        <pre>{{configuration| json}}</pre>
+      </div>
+    </div> -->
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-header"><h4>Service Status</h4></div>
+      <div class="card-block my-card-body">
+        <pre>{{serviceStatus}}</pre>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<c8y-stepper
+  class="flex-col flex-nowrap no-align-items fit-h c8y-stepper--no-btns"
+  [disableDefaultIcons]="{ edit: true, done: false }"
+  [customClasses]="['col-md-6', 'col-md-offset-3', 'p-t-16', 'p-b-32', 'flex-no-shrink']"
+  linear
+>
+  <cdk-step [stepControl]="formGroupStepOne" [label]="'New setup' | translate">
+    <div class="p-16 p-t-0 flex-no-shrink separator-bottom col-xs-12">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+          <h4 class="text-center text-medium">
+            {{ 'New setup' | translate }}
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 flex-grow no-gutter">
+      <div class="card-inner-scroll fit-h">
+        <div class="card-block p-b-0">
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+              <c8y-form-group>
+                <div [formGroup]="formGroupStepOne">
+                  <c8y-form-group>
+                    <label translate>Name</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      formControlName="name"
+                      placeholder="{{ 'e.g. Custom Certificate' | translate }} "
+                      #nameRef
+                      required
+                    />
+                    <c8y-messages>
+                      <c8y-message *ngIf="!formGroupStepOne.untouched && !nameRef.value" translate
+                        >This field is required.</c8y-message
+                      >
+                    </c8y-messages>
+                  </c8y-form-group>
+
+                  <c8y-form-group>
+                    <label translate>Description</label>
+                    <textarea
+                      class="form-control"
+                      rows="4"
+                      formControlName="description"
+                      placeholder="Brief description on what this property is about"
+                    ></textarea>
+                  </c8y-form-group>
+                  <c8y-form-group style="display:flex;">
+                    <label title="Complex Certificate" class="c8y-checkbox checkbox-inline">
+                      <input type="checkbox" formControlName="isComplex" />
+                      <span></span>
+                      <span>Complex Certificate</span>
+                    </label>
+                    <button
+                      class="btn-clean"
+                      title="{{ 'A tooltip' | translate }}"
+                      placement="right"
+                      type="button"
+                    >
+                      <i class="fa fw fa-question-circle-o text-primary"></i>
+                    </button>
+                  </c8y-form-group>
+                </div>
+              </c8y-form-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <c8y-stepper-buttons
+      class="d-block card-footer p-24 separator"
+      (onCancel)="onCancelClicked()"
+      (onNext)="onNextSelected($event)"
+      [labels]="{ next: 'Next', cancel: 'Cancel' }"
+    >
+    </c8y-stepper-buttons>
+  </cdk-step>
+  <cdk-step [label]="'Define path' | translate">
+    <div class="p-16 p-t-0 flex-no-shrink separator-bottom col-xs-12">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+          <h4 class="text-center text-medium">
+            {{ 'Define path' | translate }}
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 flex-grow no-gutter">
+      <div class="card-inner-scroll fit-h">
+        <div class="card-block p-b-0">
+          <div class="row">
+            <div class="col-md-5 col-md-offset-1 col-lg-5 col-lg-offset-1">
+              <c8y-form-group>
+                <div [formGroup]="formGroupStepTwo">
+                  <div class="legend form-block">Additional properties</div>
+
+                  <c8y-form-group  class="col-lg-12">
+                    <label translate>Path</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      formControlName="path"
+                      placeholder="{{ 'Path' | translate }} "
+                      #nameRef
+                      required
+                    />
+                    <c8y-messages>
+                      <c8y-message *ngIf="!formGroupStepTwo.untouched && !nameRef.value" translate
+                        >This field is required.</c8y-message
+                      >
+                    </c8y-messages>
+                  </c8y-form-group>
+
+                </div>
+              </c8y-form-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <c8y-stepper-buttons
+      class="d-block card-footer p-24 separator"
+      (onCancel)="onCancelClicked()"
+      (onCustom)="onSaveClicked()"
+      (onBack)="onBackSelected($event)"
+      [labels]="{ custom: 'Create Certificate' }"
+      [pending]="pendingStatus"
+    >
+    </c8y-stepper-buttons>
+  </cdk-step>
+</c8y-stepper>
+
+
+<c8y-alert *ngIf="showAlert" [type]="'danger'" [onClose]="onCloseAlert">
+  <p><span style="color:red">{{errorMsg}}</span></p>
+  <!-- <button type="button" (click)="showAlert=false">Hide alert</button> -->
+</c8y-alert>

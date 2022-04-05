@@ -1,0 +1,58 @@
+.commandTerminal {
+    background-color: #000;
+    border: 1px solid #000;
+    color: #00ff00;
+    padding: 8px;
+    font-family: courier new;
+}
+
+.btn-group button {
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+  }
+  
+  /* Clear floats (clearfix hack) */
+  .btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  /*
+  .btn-group button:not(:last-child) {
+    border-right: au; /* Prevent double borders 
+  }
+  */
+  
+  /* Add a background color on hover */
+  .btn-group button:hover {
+
+  }
+
+
+::ng-deep{
+  .button-group {
+    /*background: linear-gradient(to bottom right, #30273a, #8d78a5); */
+    padding: 5px;
+    display: flex;
+    justify-content: space-around;
+    -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      border-radius: 0px;
+      resize: none;
+     /* border:1px solid #30273a;*/
+     /* box-shadow: 0 0 10px #8d78a5; */
+     /* border-radius: 15px 15px 15px 15px;*/
+  }
+  
+  .button-container {
+      margin: 0 auto;
+      margin-top: 20px; 
+      padding: 0;
+      width: 750px;
+      max-width: 80%;
+      padding-bottom: 40px;
+      text-align: center;
+  }
+}
