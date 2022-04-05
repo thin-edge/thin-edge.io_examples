@@ -1,0 +1,47 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+tedge/dist
+tedge/node_modules
+tedge/src/app/TEST_CONFIG.ts
+tedge/etc/tedge/analyticsConfig.json
+dist
+node_modules
+/out-tsc
+
+# dependencies
+tedge/node_modules
+
+
+
+
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+.editorconfig
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+src/assets/.gitkeep
+temp
+
+package-lock.json
+tedge/package-lock.json
+tedge/tedge-ui-env
+tedge/bin
