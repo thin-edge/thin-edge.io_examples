@@ -2,7 +2,7 @@
 # coding=utf-8
 import sys
 from paho.mqtt import client as mqtt_client
-from c8ydp import DeviceProxy
+from c8ydp.device_proxy import DeviceProxy
 import os
 import logging
 import time
