@@ -1,0 +1,13 @@
+{
+  "main": "../bundles/ngx-formly-core-json-schema.umd.js",
+  "module": "../fesm5/ngx-formly-core-json-schema.js",
+  "es2015": "../fesm2015/ngx-formly-core-json-schema.js",
+  "esm5": "../esm5/json-schema/ngx-formly-core-json-schema.js",
+  "esm2015": "../esm2015/json-schema/ngx-formly-core-json-schema.js",
+  "fesm5": "../fesm5/ngx-formly-core-json-schema.js",
+  "fesm2015": "../fesm2015/ngx-formly-core-json-schema.js",
+  "typings": "ngx-formly-core-json-schema.d.ts",
+  "metadata": "ngx-formly-core-json-schema.metadata.json",
+  "sideEffects": false,
+  "name": "@ngx-formly/core/json-schema"
+}

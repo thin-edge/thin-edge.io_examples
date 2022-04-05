@@ -1,0 +1,13 @@
+{
+  "main": "../bundles/ngx-formly-core-select.umd.js",
+  "module": "../fesm5/ngx-formly-core-select.js",
+  "es2015": "../fesm2015/ngx-formly-core-select.js",
+  "esm5": "../esm5/select/ngx-formly-core-select.js",
+  "esm2015": "../esm2015/select/ngx-formly-core-select.js",
+  "fesm5": "../fesm5/ngx-formly-core-select.js",
+  "fesm2015": "../fesm2015/ngx-formly-core-select.js",
+  "typings": "ngx-formly-core-select.d.ts",
+  "metadata": "ngx-formly-core-select.metadata.json",
+  "sideEffects": false,
+  "name": "@ngx-formly/core/select"
+}
