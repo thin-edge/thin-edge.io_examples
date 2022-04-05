@@ -7,5 +7,5 @@
 # and any of its subdirectories.
 /remote-access/ @mstoffel-sag
 /c8y-operations/ @mbay-ODW
-/management-ui/ @sagPowerIoT
+/management-ui/ @sagIoTPower
 /StreamingAnalytics/ @sag-tgo @louiseam-sag
