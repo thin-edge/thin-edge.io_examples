@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+
+name=$RC_SVCNAME
+description="MQTT v3.1.1 Message Broker"
+
+command="/usr/sbin/mosquitto"
+command_args="-c /etc/mosquitto/mosquitto.conf"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME/$RC_SVCNAME.pid"
+
+depend() {
+    need net
+}
+
+start_pre() {
+    /bin/mkdir -m 740 -p /var/log/mosquitto
+    /bin/chown mosquitto:mosquitto /var/log/mosquitto
+    /bin/mkdir -m 740 -p /run/mosquitto
+    /bin/chown mosquitto:mosquitto /run/mosquitto
+}

@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+
+name=$RC_SVCNAME
+description="tedge-ui runs web ui to manage the thin edge."
+
+command="/app/tedge/start.sh"
+command_args=""
+command_user="tedge-ui"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+output_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.log"
+error_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.err"
+
+depend() {
+    need net
+}
+
+start_pre() {
+    /bin/mkdir -m 744 -p /var/log/$RC_SVCNAME
+    /bin/chown tedge-ui:tedge-ui /var/log/$RC_SVCNAME
+}

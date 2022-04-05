@@ -1,0 +1,73 @@
+version: "3.0"
+services:
+  tedge:
+    build:
+      context: ./tedge
+      args: 
+        MONGO_HOST: mongodb1
+        MONGO_PORT: 27017
+    container_name: thin-edge-setup.io
+    expose:
+      - "8883"
+      - "9080"
+    ports:
+      - "8883:8883"
+      - "9080:9080"
+    environment:
+      - MONGO_HOST=mongodb1
+      - MONGO_PORT=27017
+    depends_on:
+      - tedge_build
+      - mongodb
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  # Test version: map local directory and build angular locally (three changes are required in total)  
+  # 1. map locally
+  # 2. run in tedge cmd: npm run build to build outside of the container, the result is then mapped with the following volume mapping:  ./:/app/
+  # 3. enable entrypoint ENTRYPOINT ["/bin/bash", "/app/tedge/start.sh"] in tedge/Dockerfile
+  #  - ./:/app/
+  mqtt_collector:
+    build: ./mqtt_collector
+    container_name: mqtt_collector
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MQTT_BROKER=tedge
+      - MQTT_PORT=8883
+      - MONGO_HOST=mongodb1
+      - MONGO_PORT=27017
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb1
+    environment:
+      MONGO_REPLICA_SET_NAME: rsmongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    command:
+      [
+        "--bind_ip_all",
+        "--replSet",
+        "rsmongo",
+        "--journal",
+        "--dbpath",
+        "/data/db"
+      ]
+    volumes:
+      - ./mongo/data1/db:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
+      - ./mongo/data1/configdb:/data/configdb
+    deploy:
+      restart_policy:
+        condition: on-failure
+  mongosetup:
+    image: mongo-setup
+    build: "./mongo"
+    container_name: mongosetup
+    environment:
+      TTL_DOCUMENT: 300 # documents are automatically deleted after 300 seconds
+    depends_on:
+      - mongodb
+    volumes:
+      - ./mongo/data2:/data/

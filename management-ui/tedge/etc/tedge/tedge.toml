@@ -1,0 +1,19 @@
+[device]
+
+[c8y]
+url = 'ck2.eu-latest.cumulocity.com'
+root_cert_path = '/etc/ssl/certs'
+
+[az]
+
+[mqtt]
+external_port = 8883
+external_bind_address = '0.0.0.0'
+
+[software]
+
+[tmp]
+
+[logs]
+
+[run]
