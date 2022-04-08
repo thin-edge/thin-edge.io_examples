@@ -62,14 +62,6 @@ WORKDIR /app
 #Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
 
-#Copy binaries to /bin
-RUN cp -r  ./bin/* /bin
-RUN chown root:root /bin/tedge
-RUN chown root:root /bin/tedge_agent
-RUN chown root:root /bin/tedge_mapper
-RUN chown root:root /bin/tedge_logfile_request_plugin
-
-
 #Set init system to openRC:
 COPY ./etc/init.d/mosquitto /etc/init.d/mosquitto
 RUN chmod +x /etc/init.d/mosquitto

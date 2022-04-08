@@ -17,7 +17,6 @@ services:
       - MONGO_HOST=mongodb1
       - MONGO_PORT=27017
     depends_on:
-      - tedge_build
       - mongodb
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
