@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+name=$RC_SVCNAME
+description="tedge-agent is a thin-edge.io component to support operations.."
+
+command="/bin/tedge_agent"
+command_user="tedge-agent"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+output_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.log"
+error_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.err"
+
+depend() {
+    need net
+    need mosquitto
+}
+
+start_pre() {
+    /bin/mkdir -m 744 -p /var/log/$RC_SVCNAME
+    /bin/chown tedge-agent:tedge-agent /var/log/$RC_SVCNAME
+    /bin/mkdir -m 740 -p /run/tedge_agent
+    /bin/chown tedge-agent:tedge-agent /run/tedge_agent
+}
+

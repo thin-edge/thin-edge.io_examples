@@ -1,0 +1,13 @@
+C8Y:
+    baseUrl: https://${baseUrl}
+gateway:
+    bootstrap:
+      tenantId: ${tenantId}
+    identifier: ${gatewayIdentifier}
+    name: ${gatewayName}
+    db:
+        baseDir: ./data
+    thinEdge:
+      enabled: true
+      mqttServerURL: tcp://tedge:8883
+      deviceId: ${deviceID}

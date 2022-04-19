@@ -1,0 +1,21 @@
+### 1. Get Linux
+FROM alpine:3.11
+
+COPY ./ /app
+
+WORKDIR /app
+
+### 2. Get Java via the package manager
+RUN apk update \
+&& apk upgrade \
+&& apk add --no-cache bash \
+&& apk add --no-cache --virtual=build-dependencies unzip \
+&& apk add --no-cache curl \
+&& apk add --no-cache  openjdk11
+
+
+
+ADD application-tenant.yaml /
+ADD logging.xml /
+
+CMD /usr/bin/java -Dlogging.config=file:./logging.xml -Dspring.profiles.active=default,tenant -jar opcua-device-gateway.jar -Dspring.config.location=file:./application-tenant.yaml
