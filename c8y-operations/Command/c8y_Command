@@ -1,4 +1,4 @@
 [exec]
   topic = "c8y/s/ds"
   on_message = "511"
-  command = "/etc/c8y_Command.py"
+  command = "/bin/c8y_Command.py"
