@@ -8,7 +8,7 @@ services:
         - DEVICEID=${deviceID}
     container_name: thin-edge.io
     env_file:
-      - docker-compose.env
+      - .env
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     restart: on-failure 
@@ -22,12 +22,11 @@ services:
     container_name: opc-simulation
     restart: on-failure 
   gateway:
-    build:
-      context: ./gateway
+    image: y509177/thin-edge.io-opcua-solution_gateway:latest
     container_name: opc-gateway
     restart: always
     env_file:
-      - docker-compose.env
+      - .env
     depends_on:
       - tedge
     volumes:

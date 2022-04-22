@@ -126,7 +126,7 @@ Once the gateway scanned the OPCTree you can view its content within the device 
 
 # OPC UA Gateway
 
-The device representation of the OPC UA Gateway is a child-device for the thin-edge.io parent device.
+The device representation of the OPC UA Gateway is a child-device for the thin-edge.io parent device. The agent is currently in BETA and not meant for productive usage.
 
 To connect to the simulation OPC UA server enter url opc.tcp://opcserver:4840 or the url of the real OPC UA Server.
 
