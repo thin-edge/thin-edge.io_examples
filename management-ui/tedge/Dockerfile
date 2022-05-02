@@ -1,7 +1,7 @@
 
 FROM rust:alpine as builder
 
-ARG VERSION=0.6.1
+ARG VERSION=0.6.3
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
@@ -9,10 +9,7 @@ RUN git clone -b $VERSION https://github.com/thin-edge/thin-edge.io.git
 WORKDIR /app/thin-edge.io
 RUN cargo build --release
 
-
 FROM node:16-alpine3.15
-#FROM alpine:latest
-
 
 #Otherwise mosquitto fails
 VOLUME ["/sys/fs/cgroup"]
@@ -31,18 +28,13 @@ RUN chmod 1777 /run/lock/
 #Add user and groups
 RUN addgroup tedge-users
 RUN addgroup -S tedge
-RUN addgroup -S tedge-agent
-RUN addgroup -S tedge-mapper
 RUN addgroup -S tedge-ui
 RUN adduser -g "" -H -D tedge -G tedge
-RUN adduser -g "" -H -D tedge-mapper -G tedge-mapper
-RUN adduser -g "" -H -D tedge-agent -G tedge-agent
 RUN adduser -g "" -H -D tedge-ui -G tedge-ui
-RUN adduser tedge-mapper tedge
-RUN adduser tedge-agent tedge
+
 
 #Add tedge-agent to sudoers
-RUN echo "%tedge-agent   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge-agent
+RUN echo "%tedge   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge
 #Add tedge-ui to sudoers
 RUN echo "%tedge-ui   ALL = (ALL) NOPASSWD: ALL" >/etc/sudoers.d/tedge-ui
 
@@ -87,7 +79,7 @@ RUN chmod 444 /etc/tedge/system.toml
 
 #Create required tedge directories and files
 RUN install -g tedge -o tedge -m 755 -d /var/log/tedge
-RUN install -g tedge-agent -o tedge-agent -m 755 -d /var/log/tedge/agent
+RUN install -g tedge -o tedge -m 755 -d /var/log/tedge/agent
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/mosquitto-conf
 RUN install -g tedge-ui -o tedge-ui -m 755 -d /etc/tedge/tedge-ui
@@ -96,7 +88,7 @@ RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/c8y
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/az
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/plugins
-RUN install -g tedge-agent -o tedge-agent -m 754 -d /etc/tedge/.agent
+RUN install -g tedge -o tedge -m 754 -d /etc/tedge/.agent
 #Create sm-plugins directory
 RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
 
