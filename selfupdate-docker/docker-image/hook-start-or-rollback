@@ -1,0 +1,97 @@
+#!/bin/sh
+
+echo "tedge update hook: start or rollback"
+
+set -e
+
+# read image infromation from STDIN
+#read -r COMMAND IMAGE_NAME IMAGE_VERSION IMAGE_PATH ;
+
+# TODO: hardcoded for now in that e1xmaple
+image_name=tedge_image
+image_tag=v0.6.1-after-update
+image_path= # not needed
+
+start_container() {
+
+    # TODO: add error checks after each step!
+  
+    # remove container strated by default by SM docker plugin
+    #container=$(docker ps -a --format "{{.ID}} {{.Image}}" | grep $image_name:image_tag | awk '{print $1}')
+    #docker stop $container
+    #docker rm $container
+
+    # start container
+    echo "Starting container"
+    docker run -it -d --name=thin-edge \
+       --mount type=bind,source=/tmp/tedge-update-store,target=/tmp/tedge-update-store \
+       --mount type=bind,source=/var/run/tedge_update,target=/var/run/tedge_update \
+       --mount type=bind,source=/usr/bin/docker,target=/usr/bin/docker \
+       --mount type=bind,source=/var/run/docker.sock,target=/run/docker.sock \
+       --mount type=bind,source=/lib/ld-linux-aarch64.so.1,target=/lib/ld-linux-aarch64.so.1 \
+       --mount type=bind,source=/lib/aarch64-linux-gnu,target=/lib/aarch64-linux-gnu \
+       $image_name:$image_tag
+
+    # import config from old container
+    echo "Importing tedge config"
+    docker exec -it thin-edge cp -r  /tmp/tedge-update-store/tedge /etc
+    docker exec -it thin-edge rm -rf /tmp/tedge-update-store/tedge
+
+    # TODO
+    echo "Applying workaround for wrong cert-file permissions..."
+    docker exec -it thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-certificate.pem
+    docker exec -it thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-private-key.pem
+
+
+    # connect all clouds (in that exmaple we know C8Y was connected before)
+    # could be improved to automatically connect all clouds that were connected before
+    echo "Connecting C8Y"
+    docker exec -it thin-edge sudo tedge connect c8y
+
+    # TODO: validate health states here
+    #       also check if selfupdate would work in new container (check if docker CLI works)!
+
+    echo "Hook2 done."
+
+    # stop and remove old container
+    # TODO: old image kept left. Should be removed also.
+    #IMAGE_NAME_SNAPSHOT= ..gather image-name from container thin-edge_snapshot..
+    #docker exec -it thin-edge sh -c "docker stop thin-edge_snapshot; docker rm thin-edge_snapshot; docker rmi $IMAGE_NAME_SNAPSHOT"
+    # point of no return. Line above does not come back in good case.
+    
+    exit 0 # remove that when stop of container in line above is enabled again 
+
+    exit 1 # in case line above fails
+}
+
+do_rollback() {
+
+    echo "Starting rollback"
+
+    # stop and remove new container
+    echo "Removing new container"
+    docker rm thin-edge
+
+    # remove new imagei
+    echo "Removing new image"
+    docker stop $image_name:$image_tag
+    docker rmi  $image_name:$image_tag
+
+    # rename old container again
+    echo "Enabling old container again"
+    docker container rename "thin-edge_snapshot" "thin-edge"
+
+    # connect all clouds (in that example we know C8Y was conneced before=
+    # could be improved to automatically connect all couds that were connected before
+    echo "Connecting C8Y"
+    sudo tedge connect c8y 
+}
+
+start_container
+# in case of success that function above will not return
+do_rollback
+
+
+
+
+
