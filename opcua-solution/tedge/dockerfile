@@ -1,6 +1,6 @@
 FROM rust:alpine as builder
 
-ARG VERSION=0.6.1
+ARG VERSION=0.6.4
 
 RUN apk add --no-cache musl-dev make git
 
@@ -31,41 +31,43 @@ RUN apk update \
 RUN mkdir /run/lock
 RUN chmod 1777 /run/lock/
 
-# Add user and groups
+#Add user and groups
 RUN addgroup tedge-users
 RUN addgroup -S tedge
-RUN addgroup -S tedge-mapper
-RUN addgroup -S tedge-agent
 RUN adduser -g "" -H -D tedge -G tedge
-RUN adduser -g "" -H -D tedge-mapper -G tedge-mapper
-RUN adduser -g "" -H -D tedge-agent -G tedge-agent
-RUN adduser tedge-mapper tedge
-RUN adduser tedge-agent tedge
+
 
 # Add tedge-agent to sudoers
-RUN echo "%tedge-agent   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge-agent
+RUN echo "%tedge   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge
 
 # Move built executables from build stage
 COPY --from=builder /app/thin-edge.io/target/release/tedge /bin/tedge
 COPY --from=builder /app/thin-edge.io/target/release/tedge_mapper /bin/tedge_mapper
 COPY --from=builder /app/thin-edge.io/target/release/tedge_agent /bin/tedge_agent
 COPY --from=builder /app/thin-edge.io/target/release/tedge_logfile_request_plugin /bin/tedge_logfile_request_plugin
+COPY --from=builder /app/thin-edge.io/target/release/c8y_configuration_plugin /bin/c8y_configuration_plugin
+COPY --from=builder /app/thin-edge.io/target/release/tedge_apt_plugin /bin/tedge_apt_plugin
+
 RUN chown root:root /bin/tedge
 RUN chown root:root /bin/tedge_agent
 RUN chown root:root /bin/tedge_mapper
 RUN chown root:root /bin/tedge_logfile_request_plugin
+RUN chown root:root /bin/c8y_configuration_plugin
+RUN chown root:root /bin/tedge_apt_plugin
 
 # Create required directories by --init
 RUN tedge --init
-RUN sudo -u tedge-mapper tedge_mapper --init c8y
-RUN sudo -u tedge-mapper tedge_mapper --init az
-RUN sudo -u tedge-agent tedge_agent --init
+RUN sudo -u tedge tedge_mapper --init c8y
+RUN sudo -u tedge tedge_mapper --init az
+RUN sudo -u tedge tedge_agent --init
+RUN sudo -u tedge c8y_configuration_plugin --init
 
 COPY ./ /app
 WORKDIR /app
 
 # Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
+RUN chmod 444 /etc/mosquitto/mosquitto.conf
 
 # Set init system to OpenRC:
 COPY ./etc/init.d/mosquitto /etc/init.d/mosquitto
@@ -73,15 +75,22 @@ COPY ./etc/init.d/tedge-mapper-az /etc/init.d/tedge-mapper-az
 COPY ./etc/init.d/tedge-mapper-c8y /etc/init.d/tedge-mapper-c8y
 COPY ./etc/init.d/tedge-mapper-collectd /etc/init.d/tedge-mapper-collectd
 COPY ./etc/init.d/tedge-agent /etc/init.d/tedge-agent
+COPY ./etc/init.d/c8y-configuration-plugin /etc/init.d/c8y-configuration-plugin
 RUN chmod +x /etc/init.d/mosquitto
 RUN chmod +x /etc/init.d/tedge-mapper-az
 RUN chmod +x /etc/init.d/tedge-mapper-c8y
 RUN chmod +x /etc/init.d/tedge-mapper-collectd
 RUN chmod +x /etc/init.d/tedge-agent
+RUN chmod +x /etc/init.d/c8y-configuration-plugin
 
 # Copy system.toml
 COPY ./etc/tedge/system.toml /etc/tedge/system.toml
 RUN chmod 444 /etc/tedge/system.toml
+
+# Copy configuration.toml
+RUN sudo mkdir /etc/tedge/c8y
+COPY ./etc/tedge/plugins/c8y-configuration-plugin.toml /etc/tedge/c8y/c8y-configuration-plugin.toml
+RUN chmod 644 /etc/tedge/c8y/c8y-configuration-plugin.toml
 
 # Copy operation files
 RUN cp -r ./etc/tedge/operations/c8y/* /etc/tedge/operations/c8y
@@ -90,6 +99,11 @@ RUN chmod 644 /etc/tedge/operations/c8y/*
 
 # Create sm-plugins directory
 RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
+
+# Copy plugins to sm-plugin directory
+RUN cp -r ./etc/tedge/plugins/* /etc/tedge/sm-plugins
+RUN chown root:root /etc/tedge/sm-plugins/*
+RUN chmod 644 /etc/tedge/sm-plugins/*
 
 # Clean up installation
 RUN rm /app -r

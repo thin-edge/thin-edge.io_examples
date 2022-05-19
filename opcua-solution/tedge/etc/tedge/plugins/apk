@@ -1,0 +1,24 @@
+#!/bin/sh
+
+COMMAND="$1"
+PACKAGE_NAME="$2"
+
+case "$COMMAND" in
+    list)
+        apk list | awk '{split($0,a," "); print a[1]}' || exit 2
+        ;;
+    install)
+        apk add  $PACKAGE_NAME || exit 2
+        ;;
+    remove)
+        apk remove $PACKAGE_NAME || exit 2
+        ;;
+    prepare)
+        ;;
+    finalize)
+        ;;
+    update-list)
+        exit 1
+        ;;
+esac
+exit 0
