@@ -17,9 +17,9 @@ start_container() {
     # TODO: add error checks after each step!
   
     # remove container strated by default by SM docker plugin
-    #container=$(docker ps -a --format "{{.ID}} {{.Image}}" | grep $image_name:image_tag | awk '{print $1}')
-    #docker stop $container
-    #docker rm $container
+    container=$(docker ps -a --format "{{.ID}} {{.Image}}" | grep $image_name:$image_tag | awk '{print $1}')
+    docker stop $container
+    docker rm $container
 
     # start container
     echo "Starting container"
@@ -54,12 +54,12 @@ start_container() {
     echo "Hook2 done."
 
     # stop and remove old container
-    # TODO: old image kept left. Should be removed also.
-    #IMAGE_NAME_SNAPSHOT= ..gather image-name from container thin-edge_snapshot..
-    #docker exec -it thin-edge sh -c "docker stop thin-edge_snapshot; docker rm thin-edge_snapshot; docker rmi $IMAGE_NAME_SNAPSHOT"
+    IMAGE_NAME_SNAPSHOT=$(docker ps --filter name=thin-edge_snapshot | grep thin-edge_snapshot | awk '{print $2}')
+    echo "Removing snapshot container and it's image $IMAGE_NAME_SNAPSHOT"
+    docker exec -it thin-edge sh -c "docker stop thin-edge_snapshot; docker rm thin-edge_snapshot; docker rmi $IMAGE_NAME_SNAPSHOT"
     # point of no return. Line above does not come back in good case.
-    
-    exit 0 # remove that when stop of container in line above is enabled again 
+
+    echo "ERROR: Snapshot container unexpectedly not stopped."
 
     exit 1 # in case line above fails
 }
