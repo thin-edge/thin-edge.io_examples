@@ -17,15 +17,7 @@ RUN git config --global user.name "No One"
 RUN git pull --no-edit https://github.com/makr11st/thin-edge.io.git feature/759_self_update_agent || true
 RUN git pull --no-edit https://github.com/cstoidner/thin-edge.io.git feature-759-docker-plugin
 
-# TODO: remove both patch files
-#COPY ./tmp/repo-latest-changes.patch /tmp/
-#RUN git config --global user.email "darth@imperium.galaxy"
-#RUN git config --global user.name "Darth Vader"
-#RUN git apply /tmp/repo-latest-changes.patch
-
-# TODO: re-enable "--release"
 RUN cargo build --release
-#RUN cargo build
 
 FROM alpine:latest
 
