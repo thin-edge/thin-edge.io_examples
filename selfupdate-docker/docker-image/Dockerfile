@@ -19,7 +19,7 @@ RUN git pull --no-edit https://github.com/cstoidner/thin-edge.io.git feature-759
 
 RUN cargo build --release
 
-FROM alpine:latest
+FROM alpine:3.15
 
 # TODO: fix path
 ARG DEVICEID=tedge_alpine_selfup2
@@ -120,5 +120,4 @@ RUN tedge cert create --device-id $DEVICEID
 
 RUN ln -sf /sbin/openrc-init /sbin/init
 ENTRYPOINT ["/sbin/init"]
-#ENTRYPOINT ["/bin/echo", "Must called with epxplicit arguments to provide access to hosts docker (e.g. sockfile, binary, libs ...). Example how to call: .... /sbin/init"] 
 
