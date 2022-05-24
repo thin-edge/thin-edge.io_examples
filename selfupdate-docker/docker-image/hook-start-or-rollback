@@ -5,9 +5,9 @@ echo "tedge update hook: start or rollback"
 set -e
 
 # read image infromation from STDIN
-#read -r COMMAND IMAGE_NAME IMAGE_VERSION IMAGE_PATH ;
-
-# TODO: hardcoded for now in that e1xmaple
+#TODO: enable line below and remove assignment of those variables below
+#read -r cmd image_name image_tag image_path
+cmd= # not needed
 image_name=tedge_image
 image_tag=v0.6.1-after-update
 image_path= # not needed
@@ -23,7 +23,7 @@ start_container() {
 
     # start container
     echo "Starting container"
-    docker run -it -d --name=thin-edge \
+    docker run -d --name=thin-edge \
        --mount type=bind,source=/tmp/tedge-update-store,target=/tmp/tedge-update-store \
        --mount type=bind,source=/var/run/tedge_update,target=/var/run/tedge_update \
        --mount type=bind,source=/usr/bin/docker,target=/usr/bin/docker \
@@ -34,19 +34,19 @@ start_container() {
 
     # import config from old container
     echo "Importing tedge config"
-    docker exec -it thin-edge cp -r  /tmp/tedge-update-store/tedge /etc
-    docker exec -it thin-edge rm -rf /tmp/tedge-update-store/tedge
+    docker exec thin-edge cp -r  /tmp/tedge-update-store/tedge /etc
+    docker exec thin-edge rm -rf /tmp/tedge-update-store/tedge
 
     # TODO
     echo "Applying workaround for wrong cert-file permissions..."
-    docker exec -it thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-certificate.pem
-    docker exec -it thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-private-key.pem
+    docker exec thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-certificate.pem
+    docker exec thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-private-key.pem
 
 
     # connect all clouds (in that exmaple we know C8Y was connected before)
     # could be improved to automatically connect all clouds that were connected before
     echo "Connecting C8Y"
-    docker exec -it thin-edge sudo tedge connect c8y
+    docker exec thin-edge sudo tedge connect c8y
 
     # TODO: validate health states here
     #       also check if selfupdate would work in new container (check if docker CLI works)!
@@ -56,7 +56,7 @@ start_container() {
     # stop and remove old container
     IMAGE_NAME_SNAPSHOT=$(docker ps --filter name=thin-edge_snapshot | grep thin-edge_snapshot | awk '{print $2}')
     echo "Removing snapshot container and it's image $IMAGE_NAME_SNAPSHOT"
-    docker exec -it thin-edge sh -c "docker stop thin-edge_snapshot; docker rm thin-edge_snapshot; docker rmi $IMAGE_NAME_SNAPSHOT"
+    docker exec thin-edge sh -c "docker stop thin-edge_snapshot; docker rm thin-edge_snapshot; docker rmi $IMAGE_NAME_SNAPSHOT"
     # point of no return. Line above does not come back in good case.
 
     echo "ERROR: Snapshot container unexpectedly not stopped."
