@@ -2,8 +2,6 @@
 
 echo "tedge update hook: stop and snapshot"
 
-set -e
-
 # mark current thin-edge container for rollback
 echo "Renaming container"
 docker container rename "thin-edge" "thin-edge_snapshot"
@@ -15,7 +13,10 @@ sudo tedge disconnect c8y
 
 # export current config for new container
 echo "Exporting tedge config"
-cp -r /etc/tedge /tmp/tedge-update-store/
+mkdir -p /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/tedge.toml   /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/device-certs /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/.agent       /tmp/tedge-update-store/tedge/
 
 echo "Hook1 done"
 exit 0 # success 

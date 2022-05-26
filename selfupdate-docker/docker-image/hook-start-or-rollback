@@ -2,7 +2,6 @@
 
 echo "tedge update hook: start or rollback"
 
-set -e
 
 # read image infromation from STDIN
 #TODO: enable line below and remove assignment of those variables below
@@ -14,8 +13,9 @@ image_path= # not needed
 
 start_container() {
 
+    echo "start_container"
+
     # TODO: add error checks after each step!
-  
     # remove container strated by default by SM docker plugin
     container=$(docker ps -a --format "{{.ID}} {{.Image}}" | grep $image_name:$image_tag | awk '{print $1}')
     docker stop $container
@@ -31,6 +31,12 @@ start_container() {
        --mount type=bind,source=/lib/ld-linux-aarch64.so.1,target=/lib/ld-linux-aarch64.so.1 \
        --mount type=bind,source=/lib/aarch64-linux-gnu,target=/lib/aarch64-linux-gnu \
        $image_name:$image_tag
+    r=$?
+    if [ "$r" != "0" ]; then
+       echo "ERROR: Failed to start new container"
+       return 1
+    fi
+
 
     # import config from old container
     echo "Importing tedge config"
@@ -39,14 +45,20 @@ start_container() {
 
     # TODO
     echo "Applying workaround for wrong cert-file permissions..."
-    docker exec thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-certificate.pem
-    docker exec thin-edge chown mosquitto:mosquitto /etc/tedge/device-certs/tedge-private-key.pem
-
+    docker exec thin-edge chown mosquitto:mosquitto     /etc/tedge/device-certs/*
+    docker exec thin-edge chown tedge:tedge             /etc/tedge/tedge.toml
+    docker exec thin-edge chown -R tedge-agent:tedge-agent /etc/tedge/.agent
 
     # connect all clouds (in that exmaple we know C8Y was connected before)
     # could be improved to automatically connect all clouds that were connected before
     echo "Connecting C8Y"
     docker exec thin-edge sudo tedge connect c8y
+    r=$?
+    if [ "$r" != "0" ]; then
+	echo "ERROR: Failed to connect C8Y"
+        return 1
+    fi
+
 
     # TODO: validate health states here
     #       also check if selfupdate would work in new container (check if docker CLI works)!
@@ -70,11 +82,11 @@ do_rollback() {
 
     # stop and remove new container
     echo "Removing new container"
+    docker stop thin-edge
     docker rm thin-edge
 
-    # remove new imagei
+    # remove new image
     echo "Removing new image"
-    docker stop $image_name:$image_tag
     docker rmi  $image_name:$image_tag
 
     # rename old container again
@@ -84,14 +96,14 @@ do_rollback() {
     # connect all clouds (in that example we know C8Y was conneced before=
     # could be improved to automatically connect all couds that were connected before
     echo "Connecting C8Y"
-    sudo tedge connect c8y 
+    sudo tedge connect c8y
 }
 
-start_container
-# in case of success that function above will not return
+echo "hook called with arg .."$1".."
+if [ "$1" = "0" ]; then
+    # tedge-updater reports success, so start new container
+    start_container
+    # when container was successfuly started function above will not return
+fi
 do_rollback
-
-
-
-
 
