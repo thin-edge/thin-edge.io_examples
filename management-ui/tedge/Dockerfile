@@ -1,7 +1,7 @@
 
 FROM rust:alpine as builder
 
-ARG VERSION=0.6.3
+ARG VERSION=0.7.0
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
@@ -42,11 +42,11 @@ RUN echo "%tedge-ui   ALL = (ALL) NOPASSWD: ALL" >/etc/sudoers.d/tedge-ui
 COPY --from=builder /app/thin-edge.io/target/release/tedge /bin/tedge
 COPY --from=builder /app/thin-edge.io/target/release/tedge_mapper /bin/tedge_mapper
 COPY --from=builder /app/thin-edge.io/target/release/tedge_agent /bin/tedge_agent
-COPY --from=builder /app/thin-edge.io/target/release/tedge_logfile_request_plugin /bin/tedge_logfile_request_plugin
+COPY --from=builder /app/thin-edge.io/target/release/c8y_log_plugin /bin/c8y_log_plugin
 RUN chown root:root /bin/tedge
 RUN chown root:root /bin/tedge_agent
 RUN chown root:root /bin/tedge_mapper
-RUN chown root:root /bin/tedge_logfile_request_plugin
+RUN chown root:root /bin/c8y_log_plugin
 
 COPY ./ /app
 WORKDIR /app
