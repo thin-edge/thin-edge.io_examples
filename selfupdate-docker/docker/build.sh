@@ -1,8 +1,8 @@
+#!/bin/bash
 
 # build images
 echo "**** Building tegde docker image"
 docker build -t tedge_image:v0.6.1-before-update .
-
 
 echo "**** Copying image and changing image version text-file /image-version, to have an image to play the update process"
 sudo mkdir -p /tmp/tedge-update-store
@@ -25,10 +25,8 @@ docker rm thin-edge
 echo "**** Saving both images to files"
 mkdir -p ./files
 docker save -o ./files/tedge_image-v0.6.1-before-update.docker-image-tarx tedge_image:v0.6.1-before-update
-docker save -o ./files/tedge_image-v0.6.1-after-update.docker-image-tarx  tedge_image:v0.6.1-after-update
-
+docker save -o ./files/tedge_image-v0.6.1-after-update.docker-image-tarx tedge_image:v0.6.1-after-update
 
 # removing images from docker
 docker rmi tedge_image:v0.6.1-before-update
 docker rmi tedge_image:v0.6.1-after-update
-
