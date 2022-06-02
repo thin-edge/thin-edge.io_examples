@@ -9,7 +9,7 @@ WORKDIR /app/thin-edge.io
 RUN cargo build --release
 
 
-FROM alpine:latest
+FROM alpine:3.15
 
 ARG DEVICEID=tedge_alpine
 

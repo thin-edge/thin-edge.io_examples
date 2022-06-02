@@ -10,7 +10,7 @@ WORKDIR /app/thin-edge.io
 RUN cargo build --release
 
 
-FROM alpine:latest
+FROM alpine:3.15
 
 ARG URL
 ENV URL=$URL
@@ -101,6 +101,7 @@ RUN chmod 644 /etc/tedge/operations/c8y/*
 RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
 
 # Copy plugins to sm-plugin directory
+RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
 RUN cp -r ./etc/tedge/plugins/* /etc/tedge/sm-plugins
 RUN chown root:root /etc/tedge/sm-plugins/*
 RUN chmod 644 /etc/tedge/sm-plugins/*
