@@ -32,6 +32,7 @@ The folowing diagram show how the components (`tedge-ui`, `node` backend, `tedge
 
 # Build thin edge binaries and run solution
 
+To build the docker image the docker memory config must be set greater than 2GB, e.g. 4GB.
 To build the docker solution run:
 ```
 docker-compose up

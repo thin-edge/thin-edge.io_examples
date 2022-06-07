@@ -65,6 +65,9 @@ COPY ./etc/init.d/tedge-agent /etc/init.d/tedge-agent
 RUN chmod +x /etc/init.d/tedge-agent
 COPY ./etc/init.d/tedge-mapper-collectd /etc/init.d/tedge-mapper-collectd
 RUN chmod +x /etc/init.d/tedge-mapper-collectd
+# Prepare c8y-log-plugin
+#COPY ./etc/init.d/c8y-log-plugin /etc/init.d/c8y-log-plugin
+#RUN chmod +x /etc/init.d/c8y-log-plugin
 
 #Add configuration for tedge-ui
 COPY ./etc/init.d/tedge-ui /etc/init.d/tedge-ui

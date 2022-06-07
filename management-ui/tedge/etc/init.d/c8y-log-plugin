@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+
+name=$RC_SVCNAME
+description="c8y-log-plugin send logfiles to the connected Cumulocity cloud tenant."
+
+command="/bin/c8y-log-plugin"
+#command_args=""
+command_user="tedge"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+output_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.log"
+error_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.err"
+
+depend() {
+    need net
+    need mosquitto
+    need tedge-mapper-c8y
+}
+
+start_pre() {
+    /bin/mkdir -m 744 -p /var/log/$RC_SVCNAME
+    /bin/chown tedge:tedge /var/log/$RC_SVCNAME
+}
+
