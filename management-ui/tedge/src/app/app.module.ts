@@ -7,10 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule as ngRouterModule } from '@angular/router';
 import { CoreModule, BootstrapComponent, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AppStateService } from '@c8y/ngx-components';
 import { ICurrentTenant, IUser } from '@c8y/client';
-import { CertificateComponent } from './certificate/certificate.component';
 import { BehaviorSubject } from 'rxjs';
 import { AnalysisComponent } from './analysis/analysis.component';
-import { ManageCertificateComponent } from './manage-certificate/manage-certificate.component';
 import { CloudComponent } from './cloud/cloud.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { EdgeNavigationFactory } from './navigation.factory';
@@ -58,8 +56,8 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     },
   ],
   bootstrap: [BootstrapComponent],
-  declarations: [CertificateComponent, AnalysisComponent, 
-    ManageCertificateComponent, CloudComponent, 
+  declarations: [AnalysisComponent, 
+    CloudComponent, 
     SetupComponent, StatusComponent, 
     ControlComponent,ChartingWidget, 
     ChartingConfigComponent]

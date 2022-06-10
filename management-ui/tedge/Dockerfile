@@ -48,8 +48,8 @@ RUN chown root:root /bin/tedge_agent
 RUN chown root:root /bin/tedge_mapper
 RUN chown root:root /bin/c8y_log_plugin
 
-COPY ./ /app
-WORKDIR /app
+##COPY ./ /app
+##WORKDIR /app
 
 #Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
@@ -106,7 +106,7 @@ RUN chown root:root /etc/tedge/sm-plugins/tedge_dummy_plugin
 RUN chmod +x /etc/tedge/sm-plugins/tedge_dummy_plugin
 
 #Clean up installation
-RUN rm /app -r
+##RUN rm /app -r
 
 #Configure collectd
 COPY ./etc/tedge/contrib/collectd/collectd.conf /etc/collectd/collectd.conf
@@ -122,11 +122,11 @@ ARG MONGO_HOST ${MONGO_HOST}
 RUN echo "export MONGO_HOST=$MONGO_HOST" >/app/tedge/tedge-ui-env
 RUN echo "export MONGO_PORT=$MONGO_PORT" >>/app/tedge/tedge-ui-env
 RUN npm install -g @angular/cli && npm install
-RUN ng config -g cli.warnings.versionMismatch false
+##RUN ng config -g cli.warnings.versionMismatch false
 RUN ng build  --output-path=/app/tedge/dist/cumulocity-tedge-setup
 # # Clean up
-RUN rm -r /app/tedge/src
-RUN rm -r /app/tedge/etc
+##RUN rm -r /app/tedge/src
+##RUN rm -r /app/tedge/etc
 
 # Copy sample certificates
 #
@@ -137,3 +137,4 @@ RUN rm -r /app/tedge/etc
 
 RUN ln -sf /sbin/openrc-init /sbin/init
 ENTRYPOINT ["/sbin/init"]
+##ENTRYPOINT ["tail", "-f", "/dev/null"]
