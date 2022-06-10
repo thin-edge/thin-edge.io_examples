@@ -1,3 +1,4 @@
+import time
 import paho.mqtt.client as mqtt
 import os
 
@@ -28,13 +29,29 @@ class MQTT(object):
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.on_connect = self.on_connect
         self.mqtt_client.on_message = self.on_message
+        self.mqtt_client.on_disconnect = self.on_disconnect
+        self.mqtt_client.connected_flag=False #set flag initially
+        self.mqtt_client.bad_connection_flag=False #set flag
 
     # noinspection PyUnusedLocal
     @staticmethod
     def on_connect(client: mqtt.Client, userdata, flags, rc):
-        print("Connected MQTT")
-        for topic in MQTT_TOPICS:
-            client.subscribe(topic, MQTT_QOS)
+        if rc==0:
+            client.connected_flag=True #set flag
+            print("connected OK Returned code=",rc)
+            for topic in MQTT_TOPICS:
+                client.subscribe(topic, MQTT_QOS)
+        #client.subscribe(topic)
+        else:
+            print("Bad connection Returned code= ",rc)
+            print("Connected MQTT")
+            client.bad_connection_flag=True #set flag
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def on_disconnect(client: mqtt.Client, userdata, flags, rc=0):
+        print("Disconnected flags" + "result code " + str(rc) + "client_id")
+        client.connected_flag=False #set flag
 
     # noinspection PyUnusedLocal
     def on_message(self, client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
@@ -43,7 +60,13 @@ class MQTT(object):
 
     def run(self):
         print('Running MQTT', MQTT_BROKER, MQTT_PORT)
-        self.mqtt_client.connect(MQTT_BROKER, MQTT_PORT, MQTT_KEEPALIVE)
+        try:
+            self.mqtt_client.connect(MQTT_BROKER, MQTT_PORT, MQTT_KEEPALIVE)
+            while not self.mqtt_client.connected_flag and not self.mqtt_client.bad_connection_flag: #wait in loop
+                time.sleep(2)
+                print ("New attempt:" + str(time))
+        except:
+            print ("Connection failed")       
         self.mqtt_client.loop_start()
 
     def stop(self):
