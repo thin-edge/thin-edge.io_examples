@@ -128,3 +128,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+management-ui/mqtt_collector/.env

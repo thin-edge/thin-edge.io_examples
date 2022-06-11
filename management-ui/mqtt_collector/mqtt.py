@@ -1,24 +1,18 @@
 import time
+from datetime import datetime
 import paho.mqtt.client as mqtt
 import os
 
 from mongo import Mongo
 
 
-#MQTT_BROKER = "mosquitto"
-#MQTT_PORT = 1883
-
 MQTT_BROKER = os.environ['MQTT_BROKER']
+#print("Broker" + MQTT_BROKER)
 MQTT_PORT = int(os.environ['MQTT_PORT'])
 MQTT_KEEPALIVE = 60
 MQTT_QOS = 2
 MQTT_TOPICS = ("c8y/#",)  # Array of topics to subscribe; '#' subscribe to ALL available topics
 
-#MQTT_BROKER = os.getenv("MQTT_BROKER", MQTT_BROKER)
-#MQTT_PORT = os.getenv("MQTT_PORT", MQTT_PORT)
-#MQTT_KEEPALIVE = os.getenv("MQTT_KEEPALIVE", MQTT_KEEPALIVE)
-#MQTT_QOS = os.getenv("MQTT_QOS", MQTT_QOS)
-#MQTT_TOPICS = os.getenv("MQTT_TOPICS", MQTT_TOPICS)  # As ENV, comma separated
 if isinstance(MQTT_TOPICS, str):
     MQTT_TOPICS = [e.strip() for e in MQTT_TOPICS.split(",")]
 
@@ -64,7 +58,7 @@ class MQTT(object):
             self.mqtt_client.connect(MQTT_BROKER, MQTT_PORT, MQTT_KEEPALIVE)
             while not self.mqtt_client.connected_flag and not self.mqtt_client.bad_connection_flag: #wait in loop
                 time.sleep(2)
-                print ("New attempt:" + str(time))
+                print ("New attempt:" + str(datetime.now()))
         except:
             print ("Connection failed")       
         self.mqtt_client.loop_start()
