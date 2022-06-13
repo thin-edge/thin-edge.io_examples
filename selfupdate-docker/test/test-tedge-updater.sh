@@ -81,7 +81,7 @@ done
 # (1) Building Docker Image
 #
 
-pushd ../docker-image/ > /dev/null
+pushd ../docker/ > /dev/null
 
 if [ "$DO_BUILD" = "YES" ]; then
    test_info "About to start docker image build (two images: one image under test, another image that is used as update)" "force-wait"
