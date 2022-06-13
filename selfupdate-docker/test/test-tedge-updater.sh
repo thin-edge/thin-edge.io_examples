@@ -189,7 +189,7 @@ docker exec -it thin-edge sh -c "
 set -
 
 if [ "$DO_CONTAINER_START_FAIL" = "YES" ]; then
-   # remove share folder to force container start fail
+   # re-create share folder that was removed above to force container start to fail
    mkdir -p /tmp/tedge-update-store
 fi
 
