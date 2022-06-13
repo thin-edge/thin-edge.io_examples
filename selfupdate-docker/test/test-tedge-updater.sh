@@ -185,7 +185,7 @@ fi
 test_info "Triggering tedge_updater"
 set -x
 docker exec -it thin-edge sh -c "
-      echo -e 'install\\ttedge_image\\tv0.6.1-after-update\\t/tedge_image-v0.6.1-after-update.docker-image-tarx' | /bin/tedge_updater update-list --plugin-name /etc/tedge/sm-plugins/tedge_docker_plugin.sh"
+      echo -e 'install\\ttedge_image\\tv0.6.1-after-update\\t/tedge_image-v0.6.1-after-update.docker-image-tarx' | /bin/tedge_updater update-list --plugin-name tedge_docker_plugin.sh"
 set -
 
 if [ "$DO_CONTAINER_START_FAIL" = "YES" ]; then
