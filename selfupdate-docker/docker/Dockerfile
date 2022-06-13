@@ -107,10 +107,10 @@ RUN chmod +x /etc/tedge/sm-plugins/tedge_docker_plugin.sh
 
 # TODO: both lines below, decide about better path (Agent tries to load them as plugins)
 RUN mkdir /etc/tedge/hooks/
-COPY ./hook-start-or-rollback /etc/tedge/hooks/
-COPY ./hook-stop-and-snapshot /etc/tedge/hooks/
-RUN chmod + /etc/tedge/hooks/hook-start-or-rollback
-RUN chmod + /etc/tedge/hooks/hook-stop-and-snapshot
+COPY ./hook-start-or-rollback /etc/tedge/hooks/hook-start-or-rollback-tedge_docker_plugin.sh
+COPY ./hook-stop-and-snapshot /etc/tedge/hooks/hook-stop-and-snapshot-tedge_docker_plugin.sh
+RUN chmod + /etc/tedge/hooks/hook-start-or-rollback-tedge_docker_plugin.sh
+RUN chmod + /etc/tedge/hooks/hook-stop-and-snapshot-tedge_docker_plugin.sh
 
 # Clean up installation
 RUN rm /app -r
