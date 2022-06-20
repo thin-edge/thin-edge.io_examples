@@ -1,7 +1,7 @@
 
 FROM rust:alpine as builder
 
-ARG VERSION=0.7.0
+ARG VERSION=0.7.1
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
@@ -43,42 +43,45 @@ COPY --from=builder /app/thin-edge.io/target/release/tedge /bin/tedge
 COPY --from=builder /app/thin-edge.io/target/release/tedge_mapper /bin/tedge_mapper
 COPY --from=builder /app/thin-edge.io/target/release/tedge_agent /bin/tedge_agent
 COPY --from=builder /app/thin-edge.io/target/release/c8y_log_plugin /bin/c8y_log_plugin
-RUN chown root:root /bin/tedge
-RUN chown root:root /bin/tedge_agent
-RUN chown root:root /bin/tedge_mapper
-RUN chown root:root /bin/c8y_log_plugin
+COPY --from=builder /app/thin-edge.io/target/release/c8y_configuration_plugin /bin/c8y_configuration_plugin
+RUN chown root:root /bin/tedge*
+RUN chown root:root /bin/c8y*
 
-##COPY ./ /app
-##WORKDIR /app
+# Create required directories by --init
+RUN tedge --init
+RUN sudo -u tedge tedge_mapper --init c8y
+RUN sudo -u tedge tedge_mapper --init az
+RUN sudo -u tedge tedge_agent --init
+RUN sudo -u root c8y_log_plugin --init
+RUN sudo -u root c8y_configuration_plugin --init
+
+COPY ./ /app
+WORKDIR /app
 
 #Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
 
 #Set init system to openRC:
-COPY ./etc/init.d/mosquitto /etc/init.d/mosquitto
-RUN chmod +x /etc/init.d/mosquitto
-COPY ./etc/init.d/tedge-mapper-az /etc/init.d/tedge-mapper-az
-RUN chmod +x /etc/init.d/tedge-mapper-az
-COPY ./etc/init.d/tedge-mapper-c8y /etc/init.d/tedge-mapper-c8y
-RUN chmod +x /etc/init.d/tedge-mapper-c8y
-COPY ./etc/init.d/tedge-agent /etc/init.d/tedge-agent
-RUN chmod +x /etc/init.d/tedge-agent
-COPY ./etc/init.d/tedge-mapper-collectd /etc/init.d/tedge-mapper-collectd
-RUN chmod +x /etc/init.d/tedge-mapper-collectd
-# Prepare c8y-log-plugin
-#COPY ./etc/init.d/c8y-log-plugin /etc/init.d/c8y-log-plugin
-#RUN chmod +x /etc/init.d/c8y-log-plugin
+COPY ./etc/init.d/* /etc/init.d/
+RUN chmod +x /etc/init.d/*
 
-#Add configuration for tedge-ui
-COPY ./etc/init.d/tedge-ui /etc/init.d/tedge-ui
-RUN chmod +x /etc/init.d/tedge-ui
+# Copy system.toml
+COPY ./etc/tedge/contrib/system.toml /etc/tedge/system.toml
+RUN chmod 444 /etc/tedge/system.toml
+
+# Create sm-plugins directory
+RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
+
 # Start tedge-ui
 RUN rc-update add tedge-ui default
 
-# Copy system.toml
-COPY ./etc/tedge/system.toml /etc/tedge/system.toml
-RUN chmod 444 /etc/tedge/system.toml
+# Copy c8y-log-plugin.toml
+COPY ./etc/tedge/contrib/c8y-log-plugin.toml /etc/tedge/c8y/c8y-log-plugin.toml
+RUN chmod 444 /etc/tedge/c8y/c8y-log-plugin.toml
 
+# Copy c8y-configuration-plugin.toml
+COPY ./etc/tedge/contrib/c8y-configuration-plugin.toml /etc/tedge/c8y/c8y-configuration-plugin.toml
+RUN chmod 444 /etc/tedge/c8y/c8y-configuration-plugin.toml
 
 #Create required tedge directories and files
 RUN install -g tedge -o tedge -m 755 -d /var/log/tedge
@@ -92,8 +95,6 @@ RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/c8y
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/az
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/plugins
 RUN install -g tedge -o tedge -m 754 -d /etc/tedge/.agent
-#Create sm-plugins directory
-RUN install -g root -o root -m 755 -d /etc/tedge/sm-plugins
 
 #Copy operation files
 COPY ./etc/tedge/operations/c8y/* /etc/tedge/operations/c8y
@@ -132,8 +133,8 @@ RUN ng build  --output-path=/app/tedge/dist/cumulocity-tedge-setup
 #
 #COPY ./etc/tedge/device-certs/*  /etc/tedge/device-certs/
 #RUN chown mosquitto:mosquitto /etc/tedge/device-certs/
-#COPY ./etc/tedge/tedge.toml  /etc/tedge/
-#RUN chown tedge:tedge  /etc/tedge/tedge.toml
+COPY ./etc/tedge/contrib/tedge.toml  /etc/tedge/
+RUN chown tedge:tedge  /etc/tedge/tedge.toml
 
 RUN ln -sf /sbin/openrc-init /sbin/init
 ENTRYPOINT ["/sbin/init"]

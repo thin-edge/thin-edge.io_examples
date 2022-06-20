@@ -1,9 +1,9 @@
 #!/sbin/openrc-run
 
 name=$RC_SVCNAME
-description="c8y-log-plugin send logfiles to the connected Cumulocity cloud tenant."
+description="c8y-configuration-plugin allows to configure thin edge from Cumulocity cloud tenant."
 
-command="/bin/c8y_log_plugin"
+command="/bin/c8y_configuration_plugin"
 #command_args=""
 command_user="tedge"
 command_background="yes"

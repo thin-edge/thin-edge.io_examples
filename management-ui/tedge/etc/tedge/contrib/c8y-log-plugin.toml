@@ -1,0 +1,11 @@
+files = [
+  { type = "software-management", path = "/var/log/tedge/agent/software-*" },
+  { type = "mosquitto", path = "/var/log/mosquitto/mosquitto.log" },
+  { type = "daemon", path = "/var/log/daemon.log" },
+  { type = "user", path = "/var/log/user.log" },
+  { type = "apt-history", path = "/var/log/apt/history.log" },
+  { type = "apt-term", path = "/var/log/apt/term.log" },
+  { type = "auth", path = "/var/log/auth.log" },
+  { type = "dpkg", path = "/var/log/dpkg.log" },
+  { type = "kern", path = "/var/log/kern.log" }
+]
