@@ -10,7 +10,7 @@
 ## Installation
 
 * Check out this repo or copy content of the apk file
-* Install perl where since its needed by the plugin, e.g. `apk add perl`
+~~* Install perl where since its needed by the plugin, e.g. `apk add perl`~~ Perl not needed anymore, thanks @https://github.com/reubenmiller
 
 For the plugin to be installed correctly and used by `thin-edge.io`, you need to copy the file `apk` to `thin-edge.io` into the sm-plugins directory. You can find that in /etc/tedge/sm-plugins.
 
