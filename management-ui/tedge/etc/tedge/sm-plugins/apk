@@ -34,7 +34,7 @@ extract_image_tag_from_args() {
         case "$1" in
             --module-version)
                 IMAGE_VERSION="$2"
-                IMAGE_TAG=$IMAGE_NAME:$IMAGE_VERSION
+                IMAGE_TAG=$IMAGE_NAME=$IMAGE_VERSION
                 shift 2  # Pop --version and the version value from the args list
                 ;;
             *)
@@ -75,11 +75,9 @@ case "$COMMAND" in
         apk add $IMAGE_TAG || exit 2
         ;;
     remove)
-        # Extract the apk image tag into the IMAGE_TAG variable
-        extract_image_tag_from_args $@
-
+        unsupported_args_check $@
         # Removing
-        apk del $IMAGE_TAG || exit 2
+        apk del $IMAGE_NAME || exit 2
         ;;
     finalize)
         unsupported_args_check $@
