@@ -213,7 +213,8 @@ class ThinEdgeBackend {
             var stdoutChunks = [];
             //const child = spawn('top', ['-b', '-n', '1']);
             //const child = spawn('sh', ['-c', 'ps o state=,pid=,command=,time=|sed -E -n "/ sed -E -n/d;/^[^ZT] +[0-9]+ .*$@/p";']);
-            const child = spawn('ps')
+            //const child = spawn('ps')
+            const child = spawn('rc-status', ['--servicelist'])
 
             child.stdout.on('data', (data) => {
                 stdoutChunks = stdoutChunks.concat(data);
@@ -234,7 +235,7 @@ class ThinEdgeBackend {
                 console.log('Output stdout:', Buffer.concat(stdoutChunks).toString());
                 if (!sent) {
                     let stdoutContent = Buffer.concat(stdoutChunks).toString();
-                    stdoutContent = stdoutContent.replace( /.*defunct.*\n/g, '')
+                    //stdoutContent = stdoutContent.replace( /.*defunct.*\n/g, '')
                     res.status(200).send({result: stdoutContent});
                 }
             });
@@ -348,6 +349,35 @@ class ThinEdgeBackend {
             console.error(`The following error occured: ${err.message}`)
         }
     }
+
+    restartPlugins() {
+        try {
+            console.log('Restart plugins  ...')
+            const tasks = [
+                {
+                    cmd: 'sudo',
+                    args: ["/sbin/rc-service", "c8y-configuration-plugin", "restart"]
+                },
+                {
+                    cmd: 'sudo',
+                    args: ["/sbin/rc-service", "c8y-log-plugin", "restart"]
+                },]
+            if (!this.cmdInProgress) {
+                taskQueue.queueTasks(tasks, true)
+                taskQueue.registerNotifier(this.notifier)
+                taskQueue.start()
+            } else {
+                this.socket.emit('cmd-progress', {
+                    status: 'ignore',
+                    progress: 0,
+                    total: 0
+                });
+            }
+        } catch (err) {
+            console.error(`The following error occured: ${err.message}`)
+        }
+    }
+
 
     configure(msg) {
         let deviceId = msg.deviceId

@@ -159,6 +159,8 @@ io.on('connection', function (socket) {
             backend.reset();
         } else if (message.cmd == 'upload') {
             backend.uploadCertificate();
+        } else if (message.cmd == 'restartPlugins‚') {
+            backend.restartPlugins();
         } else {
             socket.emit('cmd-progress', {
                 status: 'ignore',

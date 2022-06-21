@@ -55,9 +55,6 @@ RUN sudo -u tedge tedge_agent --init
 RUN sudo -u root c8y_log_plugin --init
 RUN sudo -u root c8y_configuration_plugin --init
 
-COPY ./ /app
-WORKDIR /app
-
 #Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
 
@@ -84,22 +81,17 @@ COPY ./etc/tedge/contrib/c8y-configuration-plugin.toml /etc/tedge/c8y/c8y-config
 RUN chmod 444 /etc/tedge/c8y/c8y-configuration-plugin.toml
 
 #Create required tedge directories and files
-RUN install -g tedge -o tedge -m 755 -d /var/log/tedge
-RUN install -g tedge -o tedge -m 755 -d /var/log/tedge/agent
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/mosquitto-conf
 RUN install -g tedge-ui -o tedge-ui -m 755 -d /etc/tedge/tedge-ui
 RUN install -g mosquitto -o mosquitto -m 755 -d /etc/tedge/device-certs
-RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations
-RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/c8y
-RUN install -g tedge -o tedge -m 755 -d /etc/tedge/operations/az
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/plugins
 RUN install -g tedge -o tedge -m 754 -d /etc/tedge/.agent
 
 #Copy operation files
-COPY ./etc/tedge/operations/c8y/* /etc/tedge/operations/c8y
-RUN chown -R root:root /etc/tedge/operations/c8y
-RUN chmod -R 644 /etc/tedge/operations/c8y
+#COPY ./etc/tedge/operations/c8y/* /etc/tedge/operations/c8y
+#RUN chown -R root:root /etc/tedge/operations/c8y
+#RUN chmod -R 644 /etc/tedge/operations/c8y
 
 #Copy sm dummy plugin
 COPY ./etc/tedge/sm-plugins/tedge_dummy_plugin /etc/tedge/sm-plugins/tedge_dummy_plugin

@@ -73,6 +73,12 @@ export class ControlComponent implements OnInit {
     this.commandTerminal = "Stopping Thin Edge ..."
   }
 
+  restartPlugins() {
+    this.initalizeTerminal('restartPlugins')
+    this.edgeService.sendCMDToEdge({ cmd: this.command })
+    this.commandTerminal = "Restarting plugins  ..."
+  }
+
   getNewConfiguration() {
     this.edgeService.getEdgeConfiguration().then ( config => {
       this.edgeConfiguration = config

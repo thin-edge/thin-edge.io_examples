@@ -49,6 +49,7 @@
     "@angular/language-service": "11.1.2",
     "@c8y/cli": "1011.0.15",
     "@types/luxon": "^2.3.1",
+    "@types/webpack": "^5.28.0",
     "http-proxy-middleware": "^2.0.1",
     "typescript": "~4.1.2"
   },
@@ -60,7 +61,7 @@
       "indexTemplate": "src/index.html",
       "key": "application-application-key",
       "icon": {
-        "url": "url(/assets/simple.svg)"
+        "url": "url(assets/app-icon.png)"
       }
     }
   }

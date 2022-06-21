@@ -66,6 +66,7 @@ export class StatusComponent implements OnInit {
         header: 'Name',
         path: 'name',
         filterable: true,
+        cellCSSClassName: 'small-font'
       },
       {
         header: 'Value',
@@ -74,6 +75,7 @@ export class StatusComponent implements OnInit {
         filterable: true,
         path: 'value',
         dataType: ColumnDataType.TextShort,
+        cellCSSClassName: 'small-font',
       },
     ];
   }
