@@ -94,9 +94,9 @@ RUN install -g tedge -o tedge -m 754 -d /etc/tedge/.agent
 #RUN chmod -R 644 /etc/tedge/operations/c8y
 
 #Copy sm dummy plugin
-COPY ./etc/tedge/sm-plugins/tedge_dummy_plugin /etc/tedge/sm-plugins/tedge_dummy_plugin
-RUN chown root:root /etc/tedge/sm-plugins/tedge_dummy_plugin
-RUN chmod +x /etc/tedge/sm-plugins/tedge_dummy_plugin
+COPY ./etc/tedge/sm-plugins/* /etc/tedge/sm-plugins/
+RUN chown root:root /etc/tedge/sm-plugins/*
+RUN chmod +x /etc/tedge/sm-plugins/*
 
 #Clean up installation
 ##RUN rm /app -r
