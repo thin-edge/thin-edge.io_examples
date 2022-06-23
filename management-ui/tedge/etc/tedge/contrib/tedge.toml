@@ -1,7 +1,6 @@
 [device]
 
 [c8y]
-url = 'ck2.eu-latest.cumulocity.com'
 root_cert_path = '/etc/ssl/certs'
 
 [az]
