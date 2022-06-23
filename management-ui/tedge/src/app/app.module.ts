@@ -31,6 +31,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     ngRouterModule.forRoot(
       [{ path: 'analysis', component: AnalysisComponent }, 
       { path: 'cloud', component: CloudComponent },
+      { path: '', component: SetupComponent },   // set default route
       { path: 'setup', component: SetupComponent },
       { path: 'status', component: StatusComponent },
       { path: 'control', component: ControlComponent }],
