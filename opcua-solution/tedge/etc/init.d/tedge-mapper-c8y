@@ -20,5 +20,7 @@ start_pre() {
     /bin/mkdir -m 744 -p /var/log/$RC_SVCNAME
     /bin/chown tedge:tedge /var/log/$RC_SVCNAME
     /sbin/rc-service c8y-configuration-plugin start
+    /sbin/rc-service c8y-log-plugin start
+    /sbin/rc-service tedge-mapper-collectd start
 }
 

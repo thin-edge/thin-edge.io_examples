@@ -1,6 +1,0 @@
-files = [
-    { path = '/etc/tedge/tedge.toml' },
-    { path = '/etc/tedge/mosquitto-conf/c8y-bridge.conf' },
-    { path = '/etc/tedge/mosquitto-conf/tedge-mosquitto.conf' },
-    { path = '/etc/mosquitto/mosquitto.conf' }
-  ]
