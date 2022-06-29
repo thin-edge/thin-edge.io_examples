@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //import { AppRoutingModule } from './app-routing.module';
 import { RouterModule as ngRouterModule } from '@angular/router';
-import { CoreModule, BootstrapComponent, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AppStateService } from '@c8y/ngx-components';
+import { CoreModule, BootstrapComponent, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AppStateService, AlertModule } from '@c8y/ngx-components';
 import { ICurrentTenant, IUser } from '@c8y/client';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CloudComponent } from './cloud/cloud.component';
@@ -41,6 +41,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     ),
     CoreModule.forRoot(),
     FormsModule,
+    AlertModule,
     ReactiveFormsModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,
