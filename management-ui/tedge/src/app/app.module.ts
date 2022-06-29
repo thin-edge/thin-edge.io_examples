@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule as ngRouterModule } from '@angular/router';
 import { CoreModule, BootstrapComponent, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AppStateService } from '@c8y/ngx-components';
 import { ICurrentTenant, IUser } from '@c8y/client';
-import { BehaviorSubject } from 'rxjs';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CloudComponent } from './cloud/cloud.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -16,6 +15,7 @@ import { SetupComponent } from './setup/setup.component';
 import { StatusComponent } from './status/status.component';
 import { ControlComponent } from './control/control.component';
 import { ChartingWidget } from './analysis/charting-widget.component';
+import { AppComponent } from './boot/app.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartingConfigComponent } from './analysis/charting-config.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -29,12 +29,14 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     BrowserModule,
     RouterModule.forRoot(),
     ngRouterModule.forRoot(
-      [{ path: 'analysis', component: AnalysisComponent }, 
-      { path: 'cloud', component: CloudComponent },
+      [
       { path: '', component: SetupComponent },   // set default route
+      { path: 'analysis', component: AnalysisComponent }, 
+      { path: 'cloud', component: CloudComponent },
       { path: 'setup', component: SetupComponent },
       { path: 'status', component: StatusComponent },
-      { path: 'control', component: ControlComponent }],
+      { path: 'control', component: ControlComponent }
+      ],
       { enableTracing: false, useHash: true }
     ),
     CoreModule.forRoot(),
@@ -49,23 +51,24 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
   
   providers: [
     { provide: HOOK_NAVIGATOR_NODES, useClass: EdgeNavigationFactory, multi: true },
-    {
+/*     {
       provide: APP_INITIALIZER,
       useFactory: initAppState,
       multi: true,
       deps: [AppStateService],
-    },
+    }, */
   ],
-  bootstrap: [BootstrapComponent],
+  bootstrap: [AppComponent],
+  //  bootstrap: [BootstrapComponent],
   declarations: [AnalysisComponent, 
-    CloudComponent, 
+    CloudComponent, AppComponent,
     SetupComponent, StatusComponent, 
     ControlComponent,ChartingWidget, 
     ChartingConfigComponent]
  })
 export class AppModule { }
 
-export function initAppState(appStateService: AppStateService) {
+/* export function initAppState(appStateService: AppStateService) {
   return () => {
     const iuser: IUser = {
       id: "tedge",
@@ -94,15 +97,5 @@ export function initAppState(appStateService: AppStateService) {
       customProperties : ["userOrigin"]
       }
     appStateService.currentTenant = new BehaviorSubject <ICurrentTenant> ( edgeTenant);
-  };
-}
-
-/* export function initServicesFactory(
-  edgeService: EdgeService
-) {
-  return async () => {
-    console.log('initServicesFactory - started');
-    const config = await edgeService.loadConfiguration();
-    console.log('initServicesFactory - completed');
   };
 } */
