@@ -206,7 +206,7 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     }
   }
   public async updateDisplayMode() {
-    console.log("UpdateDisplayMode called!")
+    console.log("UpdateDisplayMode called:", this.displaySpanIndex)
     this.stopRealtime();
     if (this.displaySpanIndex == 0) {
       // realtime data is displayed
@@ -214,7 +214,8 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
       this.resetChart();
       this.startRealtime();
     } else  {
-      // if historical data to be displayed  
+      // if historical data to be displayed 
+      console.log("UpdateDisplayMode:",this.displaySpanIndex, spanList, spanList[this.displaySpanIndex]) 
       this.x_fixed.time.unit = spanList[this.displaySpanIndex].displayUnit
       this.chartOptions.scales['x'] = this.x_fixed;
       this.resetChart();

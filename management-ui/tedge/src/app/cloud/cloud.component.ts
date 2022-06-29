@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionControl, AlertService, Column, ColumnDataType, DisplayOptions, Pagination } from '@c8y/ngx-components';
+import { ActionControl, AlertService, Column, ColumnDataType, DisplayOptions, Pagination, Row } from '@c8y/ngx-components';
 import { Observable } from 'rxjs';
 import { EdgeService } from '../edge.service';
 import { RowStructure } from '../property.model';
@@ -20,7 +20,7 @@ export class CloudComponent implements OnInit {
 
   loginForm: FormGroup;
   edgeConfiguration: any = {}
-  rows$: Observable<RowStructure[]>;
+  rows$: Observable<Row[]>;
   pagination: Pagination = {
     pageSize: 30,
     currentPage: 1,
@@ -84,18 +84,19 @@ export class CloudComponent implements OnInit {
 
     try {
       const data = await this.edgeService.getDetailsCloudDevice(this.edgeConfiguration['device.id'])
-      let rows: RowStructure[] = [];
+      let rows: Row[] = [];
       // ignore those values that are object,because they look ugly when printed    
       Object.keys(data)
         .filter(key => typeof data[key] != 'object')
         .forEach(key => {
           rows.push(
             {
+              id:properCase(unCamelCase(key)),
               name: properCase(unCamelCase(key)),
               value: data[key]
             })
         });
-      this.rows$ = new Observable<RowStructure[]>(observer => {
+      this.rows$ = new Observable<Row[]>(observer => {
         observer.next(rows);
         observer.complete();
       })

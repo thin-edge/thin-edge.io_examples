@@ -78,9 +78,11 @@ class Mongo(object):
             time = datetime.now()
             try:        
                 payload = json.loads(msg.payload)
-                # use time from message 
-                if time in payload:
-                    time = payload.time
+                # use time from message
+                # TODO ignore time in payload for now since the timezone is not considered
+                #if time in payload:
+                #    time = payload.time
+                #    print("Time from payload", str(time))
             except Exception as ex:
                 print("Could not parse payload as json", ex)
                 payload = msg.payload

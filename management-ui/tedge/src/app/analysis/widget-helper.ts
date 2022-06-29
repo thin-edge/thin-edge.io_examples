@@ -44,7 +44,7 @@ export const spanList: SpanListItem[] = [
   { text: "Realtime", spanInSeconds: 0},
   { text: "Last minute", spanInSeconds: 60, displayUnit: "second"},
   { text: "Last 5 minutes", spanInSeconds: 300, displayUnit: "minute"},
-  { text: "Last 30 minutes", spanInSeconds: 1800, displayUnit: "hour"},
+  { text: "Last 30 minutes", spanInSeconds: 1800, displayUnit: "minute"},
   { text: "Custom", spanInSeconds: -1, displayUnit: "hour"},
 ];
 

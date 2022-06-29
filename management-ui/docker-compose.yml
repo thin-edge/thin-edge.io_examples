@@ -24,7 +24,7 @@ services:
   # 1. map locally
   # 2. run in tedge cmd: npm run build to build outside of the container, the result is then mapped with the following volume mapping:  ./:/app/
   # 3. enable entrypoint ENTRYPOINT ["/bin/bash", "/app/tedge/start.sh"] in tedge/Dockerfile
-  #  - ./:/app/
+  ##  - ./:/app/
   mqtt_collector:
     build: ./mqtt_collector
     container_name: mqtt_collector

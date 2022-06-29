@@ -54,7 +54,7 @@ export class AnalysisComponent implements OnInit, OnDestroy {
     console.log("Date from:",this.dateFrom)
   }
   updateTo() {
-    console.log("Date to:",this.dateFrom)
+    console.log("Date to:",this.dateTo)
   }
 
   updateRangeUnitCount(event)
