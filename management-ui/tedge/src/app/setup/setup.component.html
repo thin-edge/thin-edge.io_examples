@@ -3,7 +3,7 @@
 </c8y-title>
 <div class="card">
     <div class="card-block">
-        <div class="form-group" [formGroup]="configurationForm">
+        <form class="form-group" [formGroup]="configurationForm" autocomplete="on">
             <div class="d-grid grid__col--5-2-5--md">
                 <fieldset>
                     <div class="legend form-block">
@@ -11,11 +11,11 @@
                     </div>
                     <c8y-form-group class="col-lg-8">
                         <label translate>Cloud Tenant Name</label>
-                        <input class="form-control" type="text" formControlName="tenantUrl"
+                        <input class="form-control" type="text" formControlName="tenantUrl" name="tenantUrl"
                             placeholder="your-tenant.cumulocity.com" #tenantUrlRef required
                             [readonly]="edgeConfiguration['device.id'] && edgeConfiguration['c8y.url']" />
                         <label title="Device ID">External Device Id</label>
-                        <input class="form-control" type="text" formControlName="deviceId"
+                        <input class="form-control" type="text" formControlName="deviceId" name="deviceId"
                             placeholder="external Device Id"
                             [readonly]="edgeConfiguration['device.id'] && edgeConfiguration['c8y.url']"
                             #externalDeviceIdRef required />
@@ -28,15 +28,15 @@
                     </div>
                     <c8y-form-group class="col-lg-8">
                         <label translate>Username</label>
-                        <input class="form-control" formControlName="username" placeholder="your username" #usernameRef
+                        <input class="form-control" name="username"  formControlName="username" placeholder="your username" #usernameRef
                             required />
                         <label translate>Password</label>
-                        <input class="form-control" formControlName="password" placeholder="your password"
+                        <input class="form-control" name="password" formControlName="password" placeholder="your password"
                             type="password" #passwordlRef required />
                     </c8y-form-group>
                 </fieldset>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
