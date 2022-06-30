@@ -35,7 +35,7 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
         let Analysis: NavigatorNode = new NavigatorNode({
             path: '/analysis',
             label: _('Analysis'),
-            priority: 300,
+            priority: 200,
             icon: 'area-chart',
             routerLinkExact: false
         });
@@ -51,7 +51,7 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
         let Edge: NavigatorNode = new NavigatorNode({
             label: _('Edge'),
             name: 'egde',
-            priority: 200,
+            priority: 300,
             children: [Setup, Control, Status],
             icon: 'upload',
             routerLinkExact: false

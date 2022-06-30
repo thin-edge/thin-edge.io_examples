@@ -38,7 +38,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-src/assets/.gitkeep
+src/branding/.gitkeep
 temp
 
 package-lock.json

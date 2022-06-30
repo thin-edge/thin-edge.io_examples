@@ -18,10 +18,10 @@ export class AppComponent {
   ) {
     headerService.toggleNavigator();
     this.ui
-    .map(({ lang }) => lang)
+/*     .map(({ lang }) => lang)
     .pipe(distinctUntilChanged())
     .subscribe(() => {
       this.actionBar.refresh();
-    });
+    }); */
   }
 }
