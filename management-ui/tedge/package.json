@@ -49,6 +49,7 @@
     "@angular/compiler-cli": "12.2.14",
     "@angular/language-service": "12.2.14",
     "@c8y/cli": "1013.0.160",
+    "@types/lodash": "^4.14.182",
     "@types/luxon": "^2.3.1",
     "@types/webpack": "^5.28.0",
     "http-proxy-middleware": "^2.0.1",
