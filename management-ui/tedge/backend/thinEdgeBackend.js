@@ -121,10 +121,21 @@ class ThinEdgeBackend {
             });
         } else {
             console.log("Measurement query (from,to):", dateFrom, dateTo);
+            //TODO correct this for other timezones
+            let dateFrom_date = new Date(dateFrom);
+            let dateFrom_utc = Date.UTC(dateFrom_date.getUTCFullYear(), dateFrom_date.getUTCMonth(),
+                dateFrom_date.getUTCDate(), dateFrom_date.getUTCHours()-2,
+                dateFrom_date.getUTCMinutes(), dateFrom_date.getUTCSeconds());
+            let dateTo_date = new Date(dateTo);
+            let dateTo_utc = Date.UTC(dateTo_date.getUTCFullYear(), dateTo_date.getUTCMonth(),
+                dateTo_date.getUTCDate(), dateTo_date.getUTCHours()-2,
+                dateTo_date.getUTCMinutes(), dateTo_date.getUTCSeconds());
+
+            console.log("Measurement query (dateFrom_utc,dateTo_utc):", new Date(dateFrom_utc), new Date (dateTo_utc));
             let query = {
                 datetime: { // 18 minutes ago (from now)
-                    $gt: new Date(dateFrom),
-                    $lt: new Date(dateTo)
+                    $gt: new Date(dateFrom_utc),
+                    $lt: new Date(dateTo_utc)
                 }
             }
             ThinEdgeBackend.measurementCollection.find(query).limit(MAX_MEASUREMENT).sort({datetime: 1}).toArray(function(err, items) {

@@ -14,7 +14,7 @@ export class ChartingConfigComponent implements OnInit {
 
   @Output() onChangeConfig = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
-  @Input() config: { fillCurve: boolean; fitAxis: boolean; rangeLow: any; rangeHigh: any; };
+  @Input() config: { fillCurve: boolean; fitAxis: boolean; rangeLow: any; rangeHigh: any; diagramName: string};
   measurementTypes: MeasurmentType[] = []
   isHidden: boolean = false;
 

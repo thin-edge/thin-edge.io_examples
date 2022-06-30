@@ -23,6 +23,7 @@ export interface RawMeasurment {
   timestamp?: number
 }
 export interface MeasurmentType {
+  name:string
   type: string
   series: string[]
 }

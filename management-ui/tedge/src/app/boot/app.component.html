@@ -1,0 +1,64 @@
+<div [class.head-open]="headerService.navigatorOpen$ | async">
+    <div class="app-main-header" [class.open]="headerService.navigatorOpen$ | async">
+        <div class="header-bar">
+            <button type="button" class="navigator-toggle main-header-button" title="Toggle navigator"
+                (click)="headerService.toggleNavigator()">
+                <i c8yIcon="dedent-right"></i>
+            </button>
+            <!-- <c8y-search-outlet
+        [search]="searchService.items$ | async"
+        class="main-header-item"
+      ></c8y-search-outlet> -->
+            <div class="app-view">
+                <div class="spinner" *ngIf="(ui.state$ | async).isLoading">
+                    <div class="rect1"></div>
+                    <div class="rect2"></div>
+                    <div class="rect3"></div>
+                    <div class="rect4"></div>
+                    <div class="rect5"></div>
+                </div>
+                <span class="page-header">
+                    <c8y-title-outlet></c8y-title-outlet>
+                    <c8y-breadcrumb-outlet [breadcrumbs]="breadcrumbService.items$ | async" class="app-breadcrumbs">
+                    </c8y-breadcrumb-outlet>
+                </span>
+            </div>
+        </div>
+    </div>
+    <c8y-navigator-outlet [nodes]="navigator.items$ | async" [open]="headerService.navigatorOpen$ | async">
+        <header class="title navigator-slot-top">
+            <a href="#" class="d-block">
+                <div class="tenant-brand"></div>
+            </a>
+            <c8y-app-icon class="c8y-app-icon">
+                <i class="c8y-icon c8y-icon-duocolor"
+                    style="background-repeat: no-repeat; background-size: contain; height: 36px; width: 36px; background-image: url(&quot;assets/app-icon.png&quot;);"></i>
+            </c8y-app-icon>
+            <span translate>Thin Edge</span>
+        </header>
+        <div class="powered-by navigator-slot-bottom" style="cursor:default" placement="top">
+            <p translate>powered by Cumulocity</p>
+        </div>
+    </c8y-navigator-outlet>
+    <c8y-action-bar #actionBarComponent [navigatorOpen]="headerService.navigatorOpen$ | async"
+         [items$]="actionBar.items$">
+    </c8y-action-bar>
+    <div class="alerts">
+        <c8y-alert-outlet></c8y-alert-outlet>
+    </div>
+    <!-- <c8y-tabs-outlet
+      #tabsComponent
+      [tabs]="tabs.items$ | async"
+      [navigatorOpen]="headerService.navigatorOpen$ | async"
+      [orientation]="tabsOrientation"
+    >
+    </c8y-tabs-outlet> -->
+
+    <div class="mcontainer horizontal-tabs" [class.open]="headerService.navigatorOpen$ | async">
+        <div class="container-fluid c8y-docs">
+            <div class="p-l-8">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

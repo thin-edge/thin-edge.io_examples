@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { tick } from '@angular/core/testing';
 import { Chart, ChartOptions, ChartConfiguration, UpdateMode } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import StreamingPlugin from 'chartjs-plugin-streaming';
@@ -7,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
 import { RawMeasurment } from '../property.model';
 import { flatten, generateNextColor, unitList, spanList } from './widget-helper';
+import * as _ from 'lodash';
 
 Chart.register(StreamingPlugin);
 
@@ -168,7 +168,10 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
       const changedProp = changes[propName];
       if (propName == "config") {
         console.log("Changed property", changedProp, propName, parseInt(changedProp.currentValue.rangeLow))
-        if (changedProp.currentValue.fillCurve) {
+        //if (changedProp.currentValue.fillCurve) {
+        console.log("Checking on property fillCurve", changedProp.currentValue.fillCurve, _.has(changedProp.currentValue, 'fillCurve'))
+        if (_.has(changedProp.currentValue, 'fillCurve')) {
+          //console.log("Changed property fillCurve", changedProp.currentValue.fillCurve)
           this.fillCurve = changedProp.currentValue.fillCurve
         }
         if (parseInt(changedProp.currentValue.rangeLow)) {
@@ -177,7 +180,8 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
         if (parseInt(changedProp.currentValue.rangeHigh)) {
           this.chartOptions.scales.y.max = parseInt(changedProp.currentValue.rangeHigh)
         }
-        console.log("New Chart options Display", this.chartOptions);
+        this.resetChart();
+        console.log("New chart options:", this.chartOptions, " fillCurce:", this.fillCurve);
         //console.log("Now can change config", changedProp.currentValue.rangeLow, changedProp.currentValue.rangeHigh)
       } else if (propName == "rangeUnitCount") {
         this.rangeUnitCount = parseInt(changedProp.currentValue)
@@ -206,7 +210,7 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     }
   }
   public async updateDisplayMode() {
-    console.log("UpdateDisplayMode called!")
+    console.log("UpdateDisplayMode called:", this.displaySpanIndex)
     this.stopRealtime();
     if (this.displaySpanIndex == 0) {
       // realtime data is displayed
@@ -214,7 +218,8 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
       this.resetChart();
       this.startRealtime();
     } else  {
-      // if historical data to be displayed  
+      // if historical data to be displayed 
+      console.log("UpdateDisplayMode:",this.displaySpanIndex, spanList, spanList[this.displaySpanIndex]) 
       this.x_fixed.time.unit = spanList[this.displaySpanIndex].displayUnit
       this.chartOptions.scales['x'] = this.x_fixed;
       this.resetChart();

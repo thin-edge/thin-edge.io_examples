@@ -98,9 +98,6 @@ COPY ./etc/tedge/sm-plugins/* /etc/tedge/sm-plugins/
 RUN chown root:root /etc/tedge/sm-plugins/*
 RUN chmod +x /etc/tedge/sm-plugins/*
 
-#Clean up installation
-##RUN rm /app -r
-
 #Configure collectd
 COPY ./etc/tedge/contrib/collectd/collectd.conf /etc/collectd/collectd.conf
 
@@ -108,26 +105,23 @@ COPY ./etc/tedge/contrib/collectd/collectd.conf /etc/collectd/collectd.conf
 # build angular app
 WORKDIR /app/tedge
 COPY ./ /app/tedge
+
 # Set environment MONGO_HOTS, MONGO_PORT variavle in /app/tedge/tedge-ui-env
-#ARG MONGO_HOST
 ARG MONGO_PORT ${MONGO_PORT}
 ARG MONGO_HOST ${MONGO_HOST}
 RUN echo "export MONGO_HOST=$MONGO_HOST" >/app/tedge/tedge-ui-env
 RUN echo "export MONGO_PORT=$MONGO_PORT" >>/app/tedge/tedge-ui-env
 RUN npm install -g @angular/cli && npm install
-##RUN ng config -g cli.warnings.versionMismatch false
-RUN ng build  --output-path=/app/tedge/dist/cumulocity-tedge-setup
+#RUN ng build  --output-path=/app/tedge/dist/cumulocity-tedge-setup
+RUN npm run build
+
 # # Clean up
 ##RUN rm -r /app/tedge/src
 ##RUN rm -r /app/tedge/etc
 
-# Copy sample certificates
-#
-#COPY ./etc/tedge/device-certs/*  /etc/tedge/device-certs/
-#RUN chown mosquitto:mosquitto /etc/tedge/device-certs/
 COPY ./etc/tedge/contrib/tedge.toml  /etc/tedge/
 RUN chown tedge:tedge  /etc/tedge/tedge.toml
 
 RUN ln -sf /sbin/openrc-init /sbin/init
 ENTRYPOINT ["/sbin/init"]
-##ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
