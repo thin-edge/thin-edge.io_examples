@@ -16,7 +16,7 @@ export class SetupComponent implements OnInit {
   public showCreateCertificate: boolean = false;
   edgeCMDProgress$: Observable<EdgeCMDProgress>;
   edgeCMDResult$: Observable<string>;
-  subscriptionProgress: Subscription; 
+  subscriptionProgress: Subscription;
   subscriptionResult: Subscription
   showStatusBar: boolean = false;
   message: string
@@ -27,7 +27,7 @@ export class SetupComponent implements OnInit {
   edgeConfiguration: any = {}
 
   constructor(private edgeService: EdgeService, private alertService: AlertService, private formBuilder: FormBuilder) {
-   }
+  }
 
   ngOnInit() {
     this.initalizeTerminal('')
@@ -69,8 +69,8 @@ export class SetupComponent implements OnInit {
 
   getC() {
     return {
-      tenantUrl: (this.edgeConfiguration['c8y.url'] ? this.edgeConfiguration['c8y.url']: ''),
-      deviceId: (this.edgeConfiguration['device.id'] ? this.edgeConfiguration['device.id']: ''),
+      tenantUrl: (this.edgeConfiguration['c8y.url'] ? this.edgeConfiguration['c8y.url'] : ''),
+      deviceId: (this.edgeConfiguration['device.id'] ? this.edgeConfiguration['device.id'] : ''),
       username: this.edgeConfiguration.username ? this.edgeConfiguration.username : '',
       password: this.edgeConfiguration.password ? this.edgeConfiguration.password : '',
     }
@@ -93,9 +93,9 @@ export class SetupComponent implements OnInit {
       'device.id': this.configurationForm.value.deviceId,
       'c8y.url': this.configurationForm.value.tenantUrl,
     }
-    this.edgeService.updateEdgeConfiguration (up);
+    this.edgeService.updateEdgeConfiguration(up);
     this.initalizeTerminal('configure')
-    let url =  this.configurationForm.controls['tenantUrl'].value.replace('https://','').replace('/', '')
+    let url = this.configurationForm.controls['tenantUrl'].value.replace('https://', '').replace('/', '')
     this.edgeService.sendCMDToEdge({
       cmd: this.command,
       deviceId: this.configurationForm.value.deviceId,
@@ -115,7 +115,7 @@ export class SetupComponent implements OnInit {
     this.commandTerminal = "Download Certificate  ..."
     try {
       const data = await this.edgeService.downloadCertificate("blob")
-      const url= window.URL.createObjectURL(data);
+      const url = window.URL.createObjectURL(data);
       window.open(url);
       console.log("New download:", url)
       //window.location.assign(res.url);
@@ -125,7 +125,7 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  async updateCloudConfiguration(){
+  async updateCloudConfiguration() {
     const up = {
       'c8y.url': this.configurationForm.value.tenantUrl,
       username: this.configurationForm.value.username,
@@ -141,7 +141,7 @@ export class SetupComponent implements OnInit {
     try {
       const res = await this.edgeService.uploadCertificate()
       console.log("Upload response:", res)
-      if (res.status < 300){
+      if (res.status < 300) {
         this.alertService.success("Uploaded certificate to cloud tenant")
       } else {
         this.alertService.danger("Failed to upload certificate!")
@@ -151,14 +151,14 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  onChange (event) {
+  onChange(event) {
     console.log("Change event:", event)
   }
-  onKeydown (event) {
+  onKeydown(event) {
     if (event.key === "Enter") {
-      console.log("Execute:",event);
+      console.log("Execute:", event);
     } else {
-    console.log("Ignoring:", event)
+      console.log("Ignoring:", event)
     }
   }
 
