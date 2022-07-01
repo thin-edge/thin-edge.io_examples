@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IExternalIdentity, Client, BasicAuth, FetchClient, IFetchOptions, IFetchResponse, IdentityService, InventoryService, IdReference } from '@c8y/client';
+import { Client, BasicAuth, FetchClient, IFetchOptions, IFetchResponse } from '@c8y/client';
 import { EdgeCMDProgress, MeasurmentType, RawMeasurment } from './property.model';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
@@ -8,7 +8,6 @@ import { map } from "rxjs/operators"
 
 const C8Y_URL = 'c8y';
 const INVENTORY_URL = '/inventory/managedObjects';
-const IDENTITY_URL = '/identity/externalIds';
 const LOGIN_URL = `/tenant/currentTenant`
 const EDGE_CONFIGURATION_URL = '/api/configuration/edge'
 const ANALYTICS_CONFIGURATION_URL = '/api/configuration/analytics'
@@ -54,8 +53,8 @@ export class EdgeService {
     const promise = new Promise<any[]>((resolve, reject) => {
       const params = new HttpParams({
         fromObject: {
-          dateFrom: dateFrom.toString(),
-          dateTo: dateTo.toString(),
+          dateFrom: dateFrom.toISOString(),
+          dateTo: dateTo.toISOString(),
         }
       });
       this.http

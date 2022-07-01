@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
 import { RawListItem, SpanListItem } from '../property.model';
 import { unitList, spanList } from './widget-helper';
@@ -8,7 +7,6 @@ import { unitList, spanList } from './widget-helper';
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.less']
-//  styleUrls: ['../../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css']
 })
 export class AnalysisComponent implements OnInit, OnDestroy {
 

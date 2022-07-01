@@ -65,7 +65,7 @@ services:
     build: "./mongo"
     container_name: mongosetup
     environment:
-      TTL_DOCUMENT: 300 # documents are automatically deleted after 300 seconds
+      TTL_DOCUMENT: 3600 # documents are automatically deleted after 3600 seconds / 1 h
     depends_on:
       - mongodb
     volumes:
