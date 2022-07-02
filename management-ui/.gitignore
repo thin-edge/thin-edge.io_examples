@@ -45,3 +45,5 @@ package-lock.json
 tedge/package-lock.json
 tedge/tedge-ui-env
 tedge/bin
+mongo/data1
+mongo/data2

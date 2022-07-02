@@ -106,7 +106,7 @@ class ThinEdgeBackend {
         let dateFrom = req.query.dateFrom;
         let dateTo = req.query.dateTo;
         if (displaySpan) {
-            console.log("Measurement query (last):", displaySpan);
+            console.log("Measurement query (last, after):", displaySpan, new Date(Date.now() - 1000 * parseInt(displaySpan)));
             let query = {
                 datetime: { // 18 minutes ago (from now)
                     $gt: new Date(Date.now() - 1000 * parseInt(displaySpan))
@@ -405,7 +405,7 @@ class ThinEdgeBackend {
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service", "collectd", "start"]
+                    args: ["/sbin/rc-service", "collectd", "restart"]
                 },
             ]
             if (!this.cmdInProgress) {
@@ -477,6 +477,11 @@ class ThinEdgeBackend {
                 {
                     cmd: 'sudo',
                     args: ['tedge', 'connect', 'c8y'],
+                    continueOnError: true
+                },
+                {
+                    cmd: 'sudo',
+                    args: ["/sbin/rc-service", "collectd", "start"],
                     continueOnError: true
                 },
                 {

@@ -16,28 +16,30 @@ Chart.register(StreamingPlugin);
   styleUrls: ["./charting-widget.component.css"],
 })
 export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
-  
+
   constructor(
     private edgeService: EdgeService,
-    ) { }
-    
-    ngOnInit(): void {
-    }
-    
-    @ViewChild('analytic') private lineChartCanvas: ElementRef;
-    
-    @Input() config: any;
-    @Input() displaySpanIndex: number;   // default of diagram is always realtime
-    @Input() dateFrom: Date;
-    @Input() dateTo: Date;
-    @Input() rangeUnitCount: number;
-    @Input() rangeUnit: number;
-    
-    subscriptionMongoMeasurement: Subscription
-    measurements$: Observable<RawMeasurment>
-    chartDataPointList: { [name: string]: number } = { index: 0 }
-    lineChart: Chart;
-    fillCurve: boolean;
+  ) { }
+
+  ngOnInit(): void {
+  }
+
+  @ViewChild('analyticRealtime') private lineChartRealtimeCanvas: ElementRef;
+  @ViewChild('analyticHistoric') private lineChartHistoricCanvas: ElementRef;
+
+  @Input() config: any;
+  @Input() displaySpanIndex: number = 0;   // default of diagram is always realtime
+  @Input() dateFrom: Date;
+  @Input() dateTo: Date;
+  @Input() rangeUnitCount: number;
+  @Input() rangeUnit: number;
+
+  subscriptionMongoMeasurement: Subscription
+  measurements$: Observable<RawMeasurment>
+  chartDataPointList: { [name: string]: number } = { index: 0 }
+  lineChartHistoric: Chart;
+  lineChartRealtime: Chart;
+  fillCurve: boolean;
 
   x_realtime: any = {
     type: 'realtime',
@@ -54,7 +56,24 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     }
   };
 
-  chartOptions: ChartOptions = {
+  chartHistoricOptions: ChartOptions = {
+    scales: {
+      x: this.x_fixed,
+      y: {}
+    },
+    //parsing: false
+  };
+
+  chartHistoricConfiguration: ChartConfiguration = {
+    type: 'line',
+    data: {
+      datasets: []
+    },
+    options: this.chartHistoricOptions
+  }
+
+
+  chartRealtimeOptions: ChartOptions = {
     scales: {
       x: this.x_realtime,
       y: {}
@@ -62,21 +81,23 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     //parsing: false
   };
 
-  chartConfiguration: ChartConfiguration = {
+  chartRealtimeConfiguration: ChartConfiguration = {
     type: 'line',
     data: {
       datasets: []
     },
-    options: this.chartOptions
+    options: this.chartRealtimeOptions
   }
 
   ngAfterViewInit(): void {
-    if (this.lineChartCanvas) {
-      this.lineChart = new Chart(this.lineChartCanvas.nativeElement, this.chartConfiguration)
-      console.log("Chart initialized!")
-    } else {
-      console.log("Chart not initialized!")
+    if (this.lineChartRealtimeCanvas) {
+      this.lineChartRealtime = new Chart(this.lineChartRealtimeCanvas.nativeElement, this.chartRealtimeConfiguration)
+      console.log("ChartRealtime initialized!")
     }
+    if (this.lineChartHistoricCanvas) {
+      this.lineChartHistoric = new Chart(this.lineChartHistoricCanvas.nativeElement, this.chartHistoricConfiguration)
+      console.log("ChartHistoric initialized!")
+    } 
   }
 
   startRealtime() {
@@ -84,12 +105,12 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     this.measurements$ = this.edgeService.getRealtimeMeasurements()
     this.subscriptionMongoMeasurement = this.measurements$.subscribe((m: RawMeasurment) => {
       //console.log("New Mongo Measurement", m)
-      this.pushEventToChartData(m)
-      this.updateChart("show")
+      this.pushEventToCharData(m, this.lineChartRealtime)
+      this.updateChart(this.lineChartRealtime)
     })
   }
 
-  private pushEventToChartData(event: RawMeasurment): void {
+  private pushEventToCharData(event: RawMeasurment, chart: Chart): void {
 
     // test for event with payload
     if (event && event.payload) {
@@ -101,14 +122,8 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
           // test if key is already in chartDataPoint
           // add new series
           if (this.chartDataPointList[key] === undefined) {
-            //   label: 'Dataset 1',
-            //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            //   borderColor: 'rgb(255, 99, 132)',
-            //   borderDash: [8, 4],
-            //   fill: true,
-            //   data: []
             let nextColor = generateNextColor(this.chartDataPointList.index)
-            this.lineChart.data.datasets.push(
+            chart.data.datasets.push(
               {
                 label: key.replace(".value", ""),
                 //backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -120,18 +135,17 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
             )
 
             this.chartDataPointList[key] = this.chartDataPointList.index
-            console.log("Adding key", this.chartDataPointList[key], key, this.lineChart.data.datasets);
+            console.log("Adding key", this.chartDataPointList[key], key, chart.data.datasets);
             ++this.chartDataPointList.index
 
           }
-          //(_chartData[this.chartDataPointList[key]].data as ChartPoint[]).push(dp)
           let p = {
             x: event.datetime,
             //x: event.timestamp,
             y: flat[key]
           } as any
           //console.log("New DataPoint", event, p, this.chartDataPointList[key] ); 
-          this.lineChart.data.datasets[this.chartDataPointList[key]].data.push(p)
+          chart.data.datasets[this.chartDataPointList[key]].data.push(p)
         } else {
           //console.log("Ignore key", this.chartDataPointList[key], key);
         }
@@ -139,23 +153,22 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     }
   }
 
-  private resetChart() {
-    if (this.lineChart) {
+  private resetChart(chart: Chart, options: ChartOptions) {
+    if (chart) {
       this.chartDataPointList = { index: 0 };
-      this.lineChart.data.datasets = [];
-      this.lineChart.options = this.chartOptions
+      chart.data.datasets = [];
+      chart.data.labels = [];
+      chart.legend.update();
+      chart.options = options;
     }
   }
 
-  private updateChart(mode:UpdateMode) {
-    if (this.lineChart) {
+  private updateChart(chart: Chart) {
+    if (chart) {
       console.log("UpdateChart called!")
-      this.lineChart.update(mode);
-    } else {
-      //console.log("UpdateChart sorry empty!")
-    }
+      chart.update();
+    } 
   }
-
 
   private stopRealtime() {
     //console.log("Realtime stopped!")
@@ -175,38 +188,36 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
           this.fillCurve = changedProp.currentValue.fillCurve
         }
         if (parseInt(changedProp.currentValue.rangeLow)) {
-          this.chartOptions.scales.y.min = parseInt(changedProp.currentValue.rangeLow)
+          this.chartRealtimeOptions.scales.y.min = parseInt(changedProp.currentValue.rangeLow)
+          this.chartHistoricOptions.scales.y.min = parseInt(changedProp.currentValue.rangeLow)
         }
         if (parseInt(changedProp.currentValue.rangeHigh)) {
-          this.chartOptions.scales.y.max = parseInt(changedProp.currentValue.rangeHigh)
+          this.chartRealtimeOptions.scales.y.max = parseInt(changedProp.currentValue.rangeHigh)
+          this.chartHistoricOptions.scales.y.max = parseInt(changedProp.currentValue.rangeHigh)
         }
-        this.resetChart();
-        console.log("New chart options:", this.chartOptions, " fillCurce:", this.fillCurve);
         //console.log("Now can change config", changedProp.currentValue.rangeLow, changedProp.currentValue.rangeHigh)
       } else if (propName == "rangeUnitCount") {
         this.rangeUnitCount = parseInt(changedProp.currentValue)
         console.log("Changed rangeUnitCount", this.rangeUnitCount);
         this.x_realtime.realtime.duration = unitList[this.rangeUnit].id * this.rangeUnitCount * 1000;
-        this.updateDisplayMode();
+        this.chartRealtimeConfiguration.options.scales.x['realtime'].duration = unitList[this.rangeUnit].id * this.rangeUnitCount * 1000;
       } else if (propName == "rangeUnit") {
         this.rangeUnit = parseInt(changedProp.currentValue)
         console.log("Changed rangeUnit", this.rangeUnit);
         this.x_realtime.realtime.duration = unitList[this.rangeUnit].id * this.rangeUnitCount * 1000;
-        this.updateDisplayMode();
+        this.chartRealtimeConfiguration.options.scales.x['realtime'].duration = unitList[this.rangeUnit].id * this.rangeUnitCount * 1000;
       } else if (propName == "displaySpanIndex") {
         this.displaySpanIndex = parseInt(changedProp.currentValue)
-        console.log("Changed displaySpanIndex", this.displaySpanIndex, this.x_fixed.time.unit);
-        this.updateDisplayMode();
+        console.log("Changed displaySpanIndex", this.displaySpanIndex, spanList[this.displaySpanIndex].displayUnit);
       } else if (propName == "dateFrom") {
         this.dateFrom = changedProp.currentValue
         console.log("Changed dateFrom", this.dateFrom);
         // only update if to range is set
-        this.updateDisplayMode();
       } else if (propName == "dateTo") {
         this.dateTo = changedProp.currentValue
         console.log("Changed dateTo", this.dateTo);
-        this.updateDisplayMode();
       }
+      this.updateDisplayMode();
     }
   }
   public async updateDisplayMode() {
@@ -214,15 +225,16 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
     this.stopRealtime();
     if (this.displaySpanIndex == 0) {
       // realtime data is displayed
-      this.chartOptions.scales['x'] = this.x_realtime;
-      this.resetChart();
+      console.log("UpdateDisplayMode == 0:", this.displaySpanIndex, spanList[this.displaySpanIndex])
+      this.resetChart(this.lineChartRealtime, this.chartRealtimeOptions);
       this.startRealtime();
-    } else  {
+      this.updateChart(this.lineChartRealtime)
+    } else {
       // if historical data to be displayed 
-      console.log("UpdateDisplayMode:",this.displaySpanIndex, spanList, spanList[this.displaySpanIndex]) 
-      this.x_fixed.time.unit = spanList[this.displaySpanIndex].displayUnit
-      this.chartOptions.scales['x'] = this.x_fixed;
-      this.resetChart();
+      console.log("UpdateDisplayMode <> 0:", this.displaySpanIndex, spanList[this.displaySpanIndex])
+      //this.x_fixed.time.unit = spanList[this.displaySpanIndex].displayUnit
+      //this.resetChart(this.lineChartHistoric);
+      this.resetChart(this.lineChartHistoric, this.chartHistoricOptions);
       let ob: any[]
       if (this.displaySpanIndex == 4) {
         // if historical data is an interval 
@@ -230,15 +242,19 @@ export class ChartingWidget implements OnDestroy, OnInit, OnChanges {
       } else {
         ob = await this.edgeService.getLastMeasurements(spanList[this.displaySpanIndex].spanInSeconds);
       }
-      ob.forEach(m => this.pushEventToChartData(m))
-      // console.log("New history", ob)
-      this.updateChart("none")
+      ob.forEach(m => this.pushEventToCharData(m, this.lineChartHistoric))
+      // log size
+      // this.lineChart.data.datasets.forEach(ds => {
+      //   console.log("Dataset: (name,size):", ds.label, ds.data.length);
+      // })
+      this.updateChart(this.lineChartHistoric)
     }
   }
 
   ngOnDestroy() {
     this.stopRealtime();
     console.log("Destroy called.")
-    this.lineChart.destroy();
+    this.lineChartHistoric.destroy();
+    this.lineChartRealtime.destroy();
   }
 }
