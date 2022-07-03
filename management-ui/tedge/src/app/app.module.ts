@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //import { AppRoutingModule } from './app-routing.module';
 import { RouterModule as ngRouterModule } from '@angular/router';
-import { CoreModule, BootstrapComponent, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AppStateService, AlertModule } from '@c8y/ngx-components';
-import { ICurrentTenant, IUser } from '@c8y/client';
+import { CoreModule, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AlertModule } from '@c8y/ngx-components';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CloudComponent } from './cloud/cloud.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -14,12 +13,11 @@ import { EdgeNavigationFactory } from './navigation.factory';
 import { SetupComponent } from './setup/setup.component';
 import { StatusComponent } from './status/status.component';
 import { ControlComponent } from './control/control.component';
-import { ChartingWidget } from './analysis/charting-widget.component';
 import { AppComponent } from './boot/app.component';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartingConfigComponent } from './analysis/charting-config.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { AnalysisModule } from './analysis/analysis.module';
 
 const config: SocketIoConfig = { url: location.origin, options: {} };
 
@@ -43,6 +41,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     FormsModule,
     AlertModule,
     ReactiveFormsModule,
+    AnalysisModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,
     BsDatepickerModule.forRoot(),
@@ -52,51 +51,11 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
   
   providers: [
     { provide: HOOK_NAVIGATOR_NODES, useClass: EdgeNavigationFactory, multi: true },
-/*     {
-      provide: APP_INITIALIZER,
-      useFactory: initAppState,
-      multi: true,
-      deps: [AppStateService],
-    }, */
   ],
   bootstrap: [AppComponent],
-  //  bootstrap: [BootstrapComponent],
-  declarations: [AnalysisComponent, 
+  declarations: [
     CloudComponent, AppComponent,
     SetupComponent, StatusComponent, 
-    ControlComponent,ChartingWidget, 
-    ChartingConfigComponent]
+    ControlComponent]
  })
 export class AppModule { }
-
-/* export function initAppState(appStateService: AppStateService) {
-  return () => {
-    const iuser: IUser = {
-      id: "tedge",
-      userName: "tedgeUser",
-      displayName: "tedgeUser",
-      email: "tedge@cumulocity.com",
-      enabled: true,
-      firstName: "Edge",
-      lastName: "User",
-      customProperties: [],
-      applications: [{
-        id: "10000",
-        key: "Thin Edge"
-      }]
-
-    }
-    const userInfo = {
-      user: iuser,
-      supportUserName: "christof"
-    }
-    appStateService.setUser(userInfo);
-    const edgeTenant = {
-      name: "thinEdge",
-      domainName: "thinEdge",
-      allowCreateTenants: false,
-      customProperties : ["userOrigin"]
-      }
-    appStateService.currentTenant = new BehaviorSubject <ICurrentTenant> ( edgeTenant);
-  };
-} */

@@ -32,14 +32,6 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
             routerLinkExact: false
         });
        
-        let Analysis: NavigatorNode = new NavigatorNode({
-            path: '/analysis',
-            label: _('Analysis'),
-            priority: 200,
-            icon: 'area-chart',
-            routerLinkExact: false
-        });
-        
         let Cloud: NavigatorNode = new NavigatorNode({
             path: '/cloud',
             label: _('Cloud'),
@@ -56,7 +48,7 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
             icon: 'upload',
             routerLinkExact: false
         });
-        this.nav.push(Analysis, Edge, Cloud);
+        this.nav.push(Edge, Cloud);
     }
 
     get() {
