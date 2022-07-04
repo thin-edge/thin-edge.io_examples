@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { EdgeService } from '../edge.service';
 import { RawListItem, SpanListItem } from '../property.model';
 import { unitList, spanList } from './widget-helper';
@@ -20,14 +21,17 @@ export class AnalysisComponent implements OnInit, OnDestroy {
   }
   rangeUnit: number =  1;
   rangeUnitCount : number = 2;  // defaults to 5 minutes
-  displaySpanIndex: number = 0;       // realtime
+  displaySpanIndex;
   dateFrom: Date = new Date();
   dateTo: Date = new Date();
   bsConfig = {containerClass: "theme-orange", dateInputFormat: 'DD-MM-YYYY'};
   showMeridian = false;
   showSpinners = false;
+  type: string;
 
-  constructor(private edgeService: EdgeService) { }
+  constructor(
+    private edgeService: EdgeService,
+    private router: Router )  { }
     
   async ngOnInit() {
     let c = await this.edgeService.getAnalyticsConfiguration()
@@ -35,6 +39,16 @@ export class AnalysisComponent implements OnInit, OnDestroy {
     this.config = {
       ...this.config,
       ...c
+    }
+
+    //this.router.url == "/analysis/realtime"
+    let sp = this.router.url.split("/");
+    this.type = sp[sp.length-1];
+    console.log("Chart type:", this.type);
+    if (this.type == "realtime"){
+      this.displaySpanIndex = 0;
+    } else {
+      this.displaySpanIndex = 1;
     }
   }
 

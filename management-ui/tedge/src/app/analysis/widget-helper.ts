@@ -41,11 +41,11 @@ export const unitList: RawListItem[] = [
 
 
 export const spanList: SpanListItem[] = [
-  { text: "Realtime", spanInSeconds: 0},
-  { text: "Last minute", spanInSeconds: 60, displayUnit: "second"},
-  { text: "Last 5 minutes", spanInSeconds: 300, displayUnit: "minute"},
-  { text: "Last 30 minutes", spanInSeconds: 1800, displayUnit: "minute"},
-  { text: "Custom", spanInSeconds: -1, displayUnit: "hour"},
+  { text: "Realtime", spanInSeconds: 0, type : "realtime"},
+  { text: "Last minute", spanInSeconds: 60, displayUnit: "second", type : "historic"},
+  { text: "Last 5 minutes", spanInSeconds: 300, displayUnit: "minute",  type : "historic"},
+  { text: "Last 30 minutes", spanInSeconds: 1800, displayUnit: "minute", type : "historic"},
+  { text: "Custom", spanInSeconds: -1, displayUnit: "hour" , type : "historic"},
 ];
 
 export const flatten = function(data) {

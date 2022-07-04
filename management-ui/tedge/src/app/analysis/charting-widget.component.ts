@@ -24,16 +24,20 @@ export class ChartingWidgetComponent implements OnDestroy, OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
+    //this.router.url == "/analysis/realtime"
+    let sp = this.router.url.split("/");
+    this.type = sp[sp.length-1];
   }
 
   @ViewChild('analytic') private lineChartCanvas: ElementRef;
 
   @Input() config: any;
-  @Input() displaySpanIndex: number = 0;   // default of diagram is always realtime
+  @Input() displaySpanIndex;   // default of diagram is always realtime
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
   @Input() rangeUnitCount: number;
   @Input() rangeUnit: number;
+  type: string;
 
   subscriptionMongoMeasurement: Subscription
   measurements$: Observable<RawMeasurment>
@@ -91,12 +95,12 @@ export class ChartingWidgetComponent implements OnDestroy, OnInit, OnChanges {
 
   ngAfterViewInit(): void {
     console.log(this.router.url); //  /routename
-    if (this.lineChartCanvas &&  this.router.url == "/analysis/realtime") {
+    if (this.lineChartCanvas &&  this.type == "realtime") {
       this.lineChart = new Chart(this.lineChartCanvas.nativeElement, this.chartRealtimeConfiguration)
       this.displaySpanIndex = 0;
       console.log("ChartRealtime initialized!")
     }
-    if (this.lineChartCanvas &&  this.router.url == "/analysis/historic") {
+    if (this.lineChartCanvas &&  this.type == "historic") {
       this.lineChart = new Chart(this.lineChartCanvas.nativeElement, this.chartHistoricConfiguration)
       this.displaySpanIndex = 1;
       console.log("ChartHistoric initialized!")

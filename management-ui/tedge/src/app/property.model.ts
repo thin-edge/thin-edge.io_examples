@@ -39,6 +39,7 @@ export interface SpanListItem {
   text: string;
   spanInSeconds: number;
   displayUnit?: string;
+  type: string;
 }
 
 export interface RowStructure {

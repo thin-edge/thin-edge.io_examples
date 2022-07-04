@@ -12,7 +12,7 @@
    
             <div class="c8y-select-wrapper d-inline-block form-inlinev" style="margin-left: 20px;">
               <select class="form-control" name="spanSelector" [(ngModel)]="displaySpanIndex">
-                <option *ngFor="let span of spanList; let i = index" [value]="i">
+                <option *ngFor="let span of spanList; let i = index" [value]="i" [disabled]="span.type !== type">
                   <span>
                     {{span.text}}
                   </span>
