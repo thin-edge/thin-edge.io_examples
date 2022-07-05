@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-//import { AppRoutingModule } from './app-routing.module';
 import { RouterModule as ngRouterModule } from '@angular/router';
 import { CoreModule, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AlertModule } from '@c8y/ngx-components';
 import { AnalysisComponent } from './analysis/analysis.component';

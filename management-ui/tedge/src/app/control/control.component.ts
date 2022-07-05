@@ -16,7 +16,8 @@ export class ControlComponent implements OnInit {
   public showCreateCertificate: boolean = false;
   edgeCMDProgress$: Observable<EdgeCMDProgress>;
   edgeCMDResult$: Observable<string>;
-  subscriptionProgress; subscriptionResult: Subscription
+  subscriptionProgress: Subscription;
+  subscriptionResult: Subscription;
   showStatusBar: boolean = false;
   message: string
   progress: number;

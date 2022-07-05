@@ -300,32 +300,16 @@ class ThinEdgeBackend {
                     args: ["tedge", "cert", "remove"]
                 },
                 {
-                    cmd: 'echo',
-                    args: ["Starting disconnecting c8y via subproces"]
-                },
-                {
                     cmd: 'sudo',
                     args: ["tedge", "disconnect", "c8y"]
-                },
-                {
-                    cmd: 'echo',
-                    args: ["Starting kill mosquitto via subproces"]
                 },
                 {
                     cmd: 'sudo',
                     args: ["/sbin/rc-service", "mosquitto", "stop"]
                 },
                 {
-                    cmd: 'echo',
-                    args: ["Starting kill tedge via subprocess"]
-                },
-                {
                     cmd: 'sudo',
                     args: ["/sbin/rc-service", "tedge-mapper-c8y", "stop"]
-                },
-                {
-                    cmd: 'echo',
-                    args: ["Starting kill tedge agent via subprocess"]
                 },
                 {
                     cmd: 'sudo',
