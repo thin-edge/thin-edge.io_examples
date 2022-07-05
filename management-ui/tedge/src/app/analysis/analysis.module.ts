@@ -7,6 +7,7 @@ import { ChartingWidgetComponent } from './charting-widget.component';
 import { AnalysisComponent } from './analysis.component';
 import { AnalysisNavigationFactory } from './analysis-navigation.factory';
 import { ChartingConfigComponent } from './charting-config.component';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 /**
  * Angular Routes.
@@ -33,6 +34,7 @@ const routes: Routes = [
     CoreModule,
     BsDatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
+    CollapseModule.forRoot(),
   ],
   /**
    * Adding the hooks to the providers:

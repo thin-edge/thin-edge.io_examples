@@ -20,8 +20,6 @@ export class ChartingConfigComponent implements OnInit {
   measurementTypes: MeasurmentType[] = []
   isHidden: boolean = false;
 
-
-
   form = new FormGroup({});
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [

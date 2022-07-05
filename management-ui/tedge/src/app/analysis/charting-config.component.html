@@ -58,18 +58,23 @@
         <div class="card">
             <div class="card-header">Measurement Types</div>
             <div class="card-block">
-                <c8y-list-group *ngIf="measurementTypes.length">
-                    <c8y-li *ngFor="let mType of measurementTypes" #li>
-                        <c8y-li-icon [icon]="'caret-right'"></c8y-li-icon>
-                        <button class="btn-clean" (click)="li.collapsed = !li.collapsed">{{mType.name}} (with series)
+                <ul class="list-group">
+                    <li class="list-group-item collapsible" *ngFor="let mType of measurementTypes"
+                        [ngClass]="{ expanded: isDetailOpen }" #li>
+                        <button type="button" title="{{ 'Expand' | translate }}" class="collapse-btn"
+                            [ngClass]="{ active: li.collapsed }" (click)="li.collapsed = !li.collapsed">
+                            <i c8yIcon="chevron-down"></i>
                         </button>
-                        <c8y-li-collapse>
-                            <c8y-list-group *ngFor="let serie of mType.series; index as i;">
-                                <c8y-li>{{i}}. &nbsp;{{serie}}</c8y-li>
-                            </c8y-list-group>
-                        </c8y-li-collapse>
-                    </c8y-li>
-                </c8y-list-group>
+                        <span>{{mType.name}} (with series)</span>
+                        <div [collapse]="li.collapsed" [isAnimated]="true">
+                            <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let serie of mType.series; index as i;">
+                                    {{i}}. &nbsp;{{serie}}
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
