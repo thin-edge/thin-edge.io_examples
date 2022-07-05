@@ -30,7 +30,6 @@ export class ChartingConfigComponent implements OnInit {
         label: 'Digram Name',
         description: 'Name of diagram.',
         required: true,
-        change: (field, $event) => console.warn(field, $event),
       },
     },
     {
@@ -41,7 +40,6 @@ export class ChartingConfigComponent implements OnInit {
         description: 'Fit Axis',
         readonly: false,
         change: (field, $event) => {
-          console.warn(field, $event)
           this.updateFitAxis();
         },
       }
@@ -53,7 +51,6 @@ export class ChartingConfigComponent implements OnInit {
         label: 'Fill Curve',
         description: 'Fill Curve',
         readonly: false,
-        change: (field, $event) => console.warn(field, $event),
       }
     },
     {
@@ -65,7 +62,6 @@ export class ChartingConfigComponent implements OnInit {
         description: 'Low Range',
         type: 'number',
         readonly: false,
-        change: (field, $event) => console.warn(field, $event),
       }
     },
     {
@@ -77,7 +73,6 @@ export class ChartingConfigComponent implements OnInit {
         description: 'High Range',
         type: 'number',
         readonly: false,
-        change: (field, $event) => console.warn(field, $event),
       }
     },
     
@@ -93,14 +88,6 @@ export class ChartingConfigComponent implements OnInit {
 
   public onCloseClicked(): void {
     this.onClose.emit();
-  }
-
-  public updateConfig(): void {
-    console.log("Update configuration", this.config)
-  }
-  
-  public updateFillCurve(): void {
-    console.log("Update configuration fill curve", this.config)
   }
 
   public updateFitAxis() {

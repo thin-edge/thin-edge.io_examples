@@ -22,8 +22,8 @@ export class AnalysisComponent implements OnInit, OnDestroy {
   rangeUnit: number =  1;
   rangeUnitCount : number = 2;  // defaults to 5 minutes
   displaySpanIndex;
-  dateFrom: Date = new Date();
-  dateTo: Date = new Date();
+  dateFrom: Date;
+  dateTo: Date;
   bsConfig = {containerClass: "theme-orange", dateInputFormat: 'DD-MM-YYYY'};
   showMeridian = false;
   showSpinners = false;
@@ -50,6 +50,10 @@ export class AnalysisComponent implements OnInit, OnDestroy {
     } else {
       this.displaySpanIndex = 1;
     }
+
+    this.dateTo= new Date();
+    this.dateFrom = new Date();
+    this.dateFrom.setMinutes(this.dateFrom.getMinutes() - 5);
   }
 
   configurationChanged(event) {
