@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //import { AppRoutingModule } from './app-routing.module';
@@ -15,8 +15,6 @@ import { StatusComponent } from './status/status.component';
 import { ControlComponent } from './control/control.component';
 import { AppComponent } from './boot/app.component';
 import { NgChartsModule } from 'ng2-charts';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { AnalysisModule } from './analysis/analysis.module';
 
 const config: SocketIoConfig = { url: location.origin, options: {} };
@@ -44,8 +42,6 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     AnalysisModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,
-    BsDatepickerModule.forRoot(),
-    TimepickerModule.forRoot(),
     CommonModule
   ],
   

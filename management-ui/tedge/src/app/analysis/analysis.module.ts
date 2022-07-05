@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { CoreModule, HOOK_NAVIGATOR_NODES } from '@c8y/ngx-components';
 import { ChartingWidgetComponent } from './charting-widget.component';
 import { AnalysisComponent } from './analysis.component';
@@ -27,7 +29,11 @@ const routes: Routes = [
     ChartingConfigComponent,
     AnalysisComponent
   ],
-  imports: [RouterModule.forChild(routes), CoreModule],
+  imports: [RouterModule.forChild(routes), 
+    CoreModule,
+    BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
+  ],
   /**
    * Adding the hooks to the providers:
    */

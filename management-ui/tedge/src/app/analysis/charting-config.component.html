@@ -1,44 +1,57 @@
 <div class="card-group">
     <div class="col-sm-6">
         <div class="card">
-            <div class="card-header">Diagram properties</div>
-            <div class="card-block">
+            <form [formGroup]="form">
+                <div class="card-header">Diagram properties</div>
+                <!--             <div class="card-block">
                 <form class="form">
                     <div class="form-group">
                         <label translate>Diagram Name</label>
                         <div style="width:50%">
-                            <input name="diagramName" class="form-control" [(ngModel)]="config.diagramName" placeholder="diagram name"
-                                required />
+                            <input name="diagramName" class="form-control" [(ngModel)]="config.diagramName"
+                                placeholder="diagram name" required />
                         </div>
                     </div>
                     <div class="form-group form-inline">
-                        <label translate style="margin-right: 10px;">Fit Axis</label>
-                        <input id="fitAxis" name="fitAxis" type="checkbox"
-                            [(ngModel)]="config.fitAxis" (click)="updateFitAxis()" />
+                        <label class="c8y-checkbox">
+                            <input id="fitAxis" name="fitAxis" type="checkbox" [(ngModel)]="config.fitAxis"
+                                (click)="updateFitAxis()" />
+                            <span>Fit Axis</span>
+                        </label>
                     </div>
                     <div class="form-group form-inline">
                         <label translate style="margin-right: 10px;">Fill Curve</label>
-                        <input id="fillCurve" name="fillCurve" type="checkbox"
-                            [(ngModel)]="config.fillCurve" (click)="updateFillCurve()"/>
+                        <input id="fillCurve" name="fillCurve" type="checkbox" [(ngModel)]="config.fillCurve"
+                            (click)="updateFillCurve()" />
                     </div>
                     <div [hidden]="config.fitAxis">
                         <div class="form-group">
                             <label translate>Lower range y-axis</label>
                             <div style="width:50%">
                                 <input class="form-control" name="rangeLow" [(ngModel)]="config.rangeLow"
-                                    placeholder="restrict y axis to interval, here lower border" type="number" required />
+                                    placeholder="restrict y axis to interval, here lower border" type="number"
+                                    required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label translate>Upper range y-axis</label>
                             <div style="width:50%">
-                                <input class="form-control" name="rangeHigh"  [(ngModel)]="config.rangeHigh"
-                                    placeholder="restrict y axis to interval, here upper border" type="number" required />
+                                <input class="form-control" name="rangeHigh" [(ngModel)]="config.rangeHigh"
+                                    placeholder="restrict y axis to interval, here upper border" type="number"
+                                    required />
                             </div>
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> -->
+                <div class="card-block">
+                    <formly-form [model]="config" [fields]="fields" [options]="options" [form]="form"></formly-form>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" (click)="onSaveClicked()">Save</button>
+                    <button type="button" class="btn btn-primary" (click)="onCloseClicked()">Close</button>
+                </div>
+            </form>
         </div>
     </div>
     <div class="col-sm-6">
@@ -58,19 +71,6 @@
                     </c8y-li>
                 </c8y-list-group>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-1">
-        <div style="margin-left: 20px">
-            <button type="button" class="btn btn-primary" (click)="onSaveClicked()">Save</button>
-        </div>
-    </div>
-    <div class="col-sm-1">
-        <div style="margin-left: 20px">
-            <button type="button" class="btn btn-primary" (click)="onCloseClicked()">Close</button>
         </div>
     </div>
 </div>

@@ -2,6 +2,8 @@
 import { Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
 import { EdgeService } from '../edge.service';
 import { MeasurmentType } from '../property.model';
+import { FormGroup } from '@angular/forms';
+import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
   selector: 'charting-config',
@@ -18,6 +20,70 @@ export class ChartingConfigComponent implements OnInit {
   measurementTypes: MeasurmentType[] = []
   isHidden: boolean = false;
 
+
+
+  form = new FormGroup({});
+  options: FormlyFormOptions = {};
+  fields: FormlyFieldConfig[] = [
+    {
+      key: 'diagramName',
+      type: 'input',
+      templateOptions: {
+        label: 'Digram Name',
+        description: 'Name of diagram.',
+        required: true,
+        change: (field, $event) => console.warn(field, $event),
+      },
+    },
+    {
+      key: 'fitAxis',
+      type: 'checkbox',
+      templateOptions: {
+        label: 'Fit Axis',
+        description: 'Fit Axis',
+        readonly: false,
+        change: (field, $event) => {
+          console.warn(field, $event)
+          this.updateFitAxis();
+        },
+      }
+    },
+    {
+      key: 'fillCurve',
+      type: 'checkbox',
+      templateOptions: {
+        label: 'Fill Curve',
+        description: 'Fill Curve',
+        readonly: false,
+        change: (field, $event) => console.warn(field, $event),
+      }
+    },
+    {
+      key: 'rangeLow',
+      type: 'input',
+      hideExpression: 'model.fitAxis',
+      templateOptions: {
+        label: 'Lower range y-axis',
+        description: 'Low Range',
+        type: 'number',
+        readonly: false,
+        change: (field, $event) => console.warn(field, $event),
+      }
+    },
+    {
+      key: 'rangeHigh',
+      type: 'input',
+      hideExpression: 'model.fitAxis',
+      templateOptions: {
+        label: 'Higher range y-axis',
+        description: 'High Range',
+        type: 'number',
+        readonly: false,
+        change: (field, $event) => console.warn(field, $event),
+      }
+    },
+    
+  ];
   async ngOnInit() {
     this.measurementTypes = await this.edgeService.getSeries();
     console.log("This config:", this.config)
@@ -37,17 +103,14 @@ export class ChartingConfigComponent implements OnInit {
   
   public updateFillCurve(): void {
     console.log("Update configuration fill curve", this.config)
-    this.config.fillCurve = !this.config.fillCurve
   }
 
   public updateFitAxis() {
     console.log("Adapting fit, before:", this.config)
-    this.config.fitAxis = !this.config.fitAxis
     if (this.config.fitAxis) {
       delete this.config.rangeLow;
       delete this.config.rangeHigh;
     }
     console.log("Adapting fit, after:", this.config)
   }
-
 }
