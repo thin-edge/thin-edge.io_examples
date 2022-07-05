@@ -11,14 +11,14 @@ export class AnalysisNavigationFactory implements NavigatorNodeFactory {
             path: '/analysis/realtime',
             priority: 1000,
             label: 'Realtime',
-            icon: 'angellist',
+            icon: 'arrow-advance',
             routerLinkExact: false
         });
         let Historic: NavigatorNode = new NavigatorNode({
             path: '/analysis/historic',
             priority: 1000,
             label: 'Historic',
-            icon: 'angellist',
+            icon: 'timeline',
             routerLinkExact: false
         });
         let Analysis: NavigatorNode = new NavigatorNode({

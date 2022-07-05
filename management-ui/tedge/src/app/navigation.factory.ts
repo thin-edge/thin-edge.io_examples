@@ -45,7 +45,7 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
             name: 'egde',
             priority: 300,
             children: [Setup, Control, Status],
-            icon: 'upload',
+            icon: 'thin-client',
             routerLinkExact: false
         });
         this.nav.push(Edge, Cloud);
