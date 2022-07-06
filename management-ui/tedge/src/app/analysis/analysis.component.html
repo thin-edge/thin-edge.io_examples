@@ -1,67 +1,65 @@
 <c8y-title>
   {{ 'Analytics'| translate }}
 </c8y-title>
-<div class="card-group">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header">
-        <h4>{{config.diagramName}}</h4>
+<div class="card">
+  <div class="card-header">
+    <h4>{{config.diagramName}}</h4>
+  </div>
+  <div class="card-block my-card-body">
+    <form class="form-inline top-chart-bar flex-row ">
+
+      <div class="c8y-select-wrapper d-inline-block form-inlinev" style="margin-left: 20px;">
+        <select class="form-control" name="spanSelector" [(ngModel)]="displaySpanIndex">
+          <option *ngFor="let span of spanList; let i = index" [value]="i" [disabled]="span.type !== type">
+            <span>
+              {{span.text}}
+            </span>
+          </option>
+        </select>
       </div>
-      <div class="card-block my-card-body">
-        <form class="form-inline top-chart-bar flex-row ">
-   
-            <div class="c8y-select-wrapper d-inline-block form-inlinev" style="margin-left: 20px;">
-              <select class="form-control" name="spanSelector" [(ngModel)]="displaySpanIndex">
-                <option *ngFor="let span of spanList; let i = index" [value]="i" [disabled]="span.type !== type">
-                  <span>
-                    {{span.text}}
-                  </span>
-                </option>
-              </select>
-            </div>
-            <div *ngIf="displaySpanIndex == 4" class="measurements-time-control">
-              <div class="measurements-date-from" style="margin-left: 20px;">
-                <label class="small m-r-4">From</label>
-                <div class="d-inline-block form-inline datepicker">
-                  <input type="text" name="dateFromDate" placeholder="Range" class="form-control" bsDatepicker [(ngModel)]="dateFrom"
-                    [bsConfig]="bsConfig" (bsValueChange)="updateFrom()">
-                </div>
-                <timepicker class="form-group"  name="dateFromTime" [(ngModel)]="dateFrom" [showMeridian]="showMeridian"
-                  [showSpinners]="showSpinners" (bsValueChange)="updateFrom()"></timepicker>
-              </div>
-              <div class="measurements-date-to" style="margin-left: 20px;">
-                <label class="small m-r-4">To</label>
-                <div class="d-inline-block form-inline datepicker">
-                  <input type="text" name="dateToDate" placeholder="Range" class="form-control" [minDate]="dateFrom" bsDatepicker
-                    [(ngModel)]="dateTo" [bsConfig]="bsConfig" (bsValueChange)="updateTo()">
-                </div>
-                <timepicker class="form-group"  name="dateToTime" [(ngModel)]="dateTo" [showMeridian]="showMeridian"
-                  [showSpinners]="showSpinners" (bsValueChange)="updateTo()"></timepicker>
-              </div>
-            </div>
-  
-            <div *ngIf="displaySpanIndex == 0" class="d-inline-block form-group">
-              <label class="col-sm-4" style="max-width:30%" for="ruc">Range Unit Count</label>
-              <input [(ngModel)]="rangeUnitCount" #ruc  class="col-sm-2" name="rangeUnitCount" style="padding-top: 3px; padding-bottom: 3px;"
-                placeholder="number of range units, e.g. number of seconds, minutes, ..." required type="number">
-              <label class="col-sm-3" style="max-width:20%" for="ru">Range Unit</label>
-               <div class="c8y-select-wrapper" #ru>
-                <select class="form-control" name="rangeSelector" [(ngModel)]="rangeUnit">
-                  <option *ngFor="let un of unitList; index as i;" [ngValue]="i">
-                    {{ un.text }}
-                  </option>
-                </select>
-              </div>
-            </div>
-     
-        </form>
-         <charting-widget [config]="config" [displaySpanIndex]="displaySpanIndex" [dateFrom]="dateFrom"
-          [dateTo]="dateTo" [rangeUnitCount]="rangeUnitCount" [rangeUnit]="rangeUnit">
-        </charting-widget>
+      <div *ngIf="displaySpanIndex == 4" class="measurements-time-control">
+        <div class="measurements-date-from" style="margin-left: 20px;">
+          <label class="small m-r-4">From</label>
+          <div class="d-inline-block form-inline datepicker">
+            <input type="text" name="dateFromDate" placeholder="Range" class="form-control" bsDatepicker
+              [(ngModel)]="dateFrom" [bsConfig]="bsConfig" (bsValueChange)="updateFrom()">
+          </div>
+          <timepicker class="form-group" name="dateFromTime" [(ngModel)]="dateFrom" [showMeridian]="showMeridian"
+            [showSpinners]="showSpinners" (bsValueChange)="updateFrom()"></timepicker>
+        </div>
+        <div class="measurements-date-to" style="margin-left: 20px;">
+          <label class="small m-r-4">To</label>
+          <div class="d-inline-block form-inline datepicker">
+            <input type="text" name="dateToDate" placeholder="Range" class="form-control" [minDate]="dateFrom"
+              bsDatepicker [(ngModel)]="dateTo" [bsConfig]="bsConfig" (bsValueChange)="updateTo()">
+          </div>
+          <timepicker class="form-group" name="dateToTime" [(ngModel)]="dateTo" [showMeridian]="showMeridian"
+            [showSpinners]="showSpinners" (bsValueChange)="updateTo()"></timepicker>
+        </div>
       </div>
-    </div>
+
+      <div *ngIf="displaySpanIndex == 0" class="d-inline-block form-group">
+        <label class="col-sm-4" style="max-width:30%" for="ruc">Range Unit Count</label>
+        <input [(ngModel)]="rangeUnitCount" #ruc class="col-sm-2" name="rangeUnitCount"
+          style="padding-top: 3px; padding-bottom: 3px;"
+          placeholder="number of range units, e.g. number of seconds, minutes, ..." required type="number">
+        <label class="col-sm-3" style="max-width:20%" for="ru">Range Unit</label>
+        <div class="c8y-select-wrapper" #ru>
+          <select class="form-control" name="rangeSelector" [(ngModel)]="rangeUnit">
+            <option *ngFor="let un of unitList; index as i;" [ngValue]="i">
+              {{ un.text }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+    </form>
+    <charting-widget [config]="config" [displaySpanIndex]="displaySpanIndex" [dateFrom]="dateFrom" [dateTo]="dateTo"
+      [rangeUnitCount]="rangeUnitCount" [rangeUnit]="rangeUnit">
+    </charting-widget>
   </div>
 </div>
+
 
 <c8y-action-bar-item [placement]="'right'">
   <button class="btn btn-link" title="{{ 'Configure diagram' | translate }}" (click)="showDialog = !showDialog">
@@ -73,8 +71,8 @@
 
 <div [ngClass]="{ drawerOpen: showDialog }">
   <div class="bottom-drawer">
-    <charting-config (onChangeConfig)="configurationChanged($event)"
-      (onClose)="showDialog = !showDialog" *ngIf="showDialog" class="d-contents" [config]="config">
+    <charting-config (onChangeConfig)="configurationChanged($event)" (onClose)="showDialog = !showDialog"
+      *ngIf="showDialog" class="d-contents" [config]="config">
     </charting-config>
 
   </div>
