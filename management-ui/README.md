@@ -58,7 +58,7 @@ The edge processes are started and the thin edge is registered in the cloud tena
 ![Setup](resource/01-Cloud.png)
 
 The registration to the cloud can be verified here as well:
-![Setup](resource/02-Cloud.png)
+![Setup](resource/04-Setup.png)
 
 Then you can access the analytics dashboard : http://localhost:9080/#/analytics
 
