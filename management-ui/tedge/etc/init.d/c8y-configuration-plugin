@@ -13,8 +13,6 @@ error_log="/var/log/$RC_SVCNAME/$RC_SVCNAME.err"
 
 depend() {
     need net
-    need mosquitto
-    need tedge-mapper-c8y
 }
 
 start_pre() {

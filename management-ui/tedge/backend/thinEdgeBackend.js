@@ -419,23 +419,28 @@ class ThinEdgeBackend {
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service", "mosquitto", "stop"]
+                    args: ["/sbin/rc-service", "mosquitto", "stop"],
+                    continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service", "tedge-mapper-c8y", "stop"]
+                    args: ["/sbin/rc-service", "tedge-mapper-c8y", "stop"],
+                    continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","tedge-agent", "stop"]
+                    args: ["/sbin/rc-service","tedge-agent", "stop"],
+                    continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","collectd", "stop"]
+                    args: ["/sbin/rc-service","collectd", "stop"],
+                    continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","tedge-mapper-collectd", "stop"]
+                    args: ["/sbin/rc-service","tedge-mapper-collectd", "stop"],
+                    continueOnError: true
                 }
             ]
             if (!this.cmdInProgress) {
