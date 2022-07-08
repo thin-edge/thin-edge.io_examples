@@ -28,11 +28,11 @@
                     </div>
                     <c8y-form-group class="col-lg-8">
                         <label translate>Username</label>
-                        <input class="form-control" name="username"  formControlName="username" placeholder="your username" #usernameRef
-                            required />
+                        <input class="form-control" name="username" formControlName="username"
+                            placeholder="your username" #usernameRef required />
                         <label translate>Password</label>
-                        <input class="form-control" name="password" formControlName="password" placeholder="your password"
-                            type="password" #passwordlRef required />
+                        <input class="form-control" name="password" formControlName="password"
+                            placeholder="your password" type="password" #passwordlRef required />
                     </c8y-form-group>
                 </fieldset>
             </div>
@@ -42,21 +42,21 @@
 
 <div class="card">
     <div class="card-block">
-        <div class="button-container">
-            <div class="button-group btn-group">
-                <button class="btn btn-primary" type="button" (click)="configureEdge()">Configure Edge</button>
-                <button class="btn btn-primary" type="button" (click)="downloadCertificate()">Download
+        <div class="btn-group btn-group-justified" role="group">
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="configureEdge()">Configure Edge</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="downloadCertificate()">Download
                     Certificate</button>
-                <button class="btn btn-primary" type="button" (click)="upload()">Upload Certificate</button>
-                <button class="btn btn-primary" type="button" (click)="resetEdge()">Reset</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="upload()">Upload Certificate</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="resetEdge()">Reset</button>
             </div>
         </div>
     </div>
-    <div class="card-block">
-        <c8y-progress-bar *ngIf="showStatusBar" [progress]="progress" [message]="message"></c8y-progress-bar>
-        <div>
-            <textarea (keydown)="onKeydown($event)" (change)="onChange($event)" class="commandTerminal" cols="100"
-                rows="20" [ngModel]="commandTerminal"></textarea>
-        </div>
-    </div>
+    <app-terminal></app-terminal>
 </div>

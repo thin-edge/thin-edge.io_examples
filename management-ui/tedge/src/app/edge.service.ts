@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Client, BasicAuth, FetchClient, IFetchOptions, IFetchResponse } from '@c8y/client';
-import { EdgeCMDProgress, MeasurmentType, RawMeasurment } from './property.model';
+import { BackendCommand, EdgeCMDProgress, MeasurmentType, RawMeasurment } from './property.model';
 import { Socket } from 'ngx-socket-io';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { map } from "rxjs/operators"
 
 const C8Y_URL = 'c8y';
@@ -22,6 +22,8 @@ const SERVICE_URL = "/api/services";
 export class EdgeService {
   private fetchClient: FetchClient;
   private edgeConfiguration: any = {}
+  public commandChange$ : ReplaySubject<BackendCommand> = new ReplaySubject(1);
+
 
   constructor(private http: HttpClient,
     private socket: Socket) { }

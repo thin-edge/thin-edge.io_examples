@@ -46,3 +46,10 @@ export interface RowStructure {
   name: string;
   value: string;
 };
+
+export interface BackendCommand {
+  cmd: string;
+  promptText: string;
+  deviceId?: string;
+  tenantUrl?: string
+};

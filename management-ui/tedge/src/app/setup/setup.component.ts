@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '@c8y/ngx-components';
 import { Observable, Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
-import { EdgeCMDProgress } from '../property.model';
+import { BackendCommand, EdgeCMDProgress } from '../property.model';
 
 
 @Component({
@@ -12,17 +12,6 @@ import { EdgeCMDProgress } from '../property.model';
   styleUrls: ['./setup.component.scss']
 })
 export class SetupComponent implements OnInit {
-  refresh: EventEmitter<any> = new EventEmitter();
-  public showCreateCertificate: boolean = false;
-  edgeCMDProgress$: Observable<EdgeCMDProgress>;
-  edgeCMDResult$: Observable<string>;
-  subscriptionProgress: Subscription;
-  subscriptionResult: Subscription
-  showStatusBar: boolean = false;
-  message: string
-  progress: number;
-  commandTerminal: string
-  command: string
   configurationForm: FormGroup
   edgeConfiguration: any = {}
 
@@ -30,29 +19,7 @@ export class SetupComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initalizeTerminal('')
     this.initForm()
-    this.edgeCMDProgress$ = this.edgeService.getCMDProgress()
-    this.subscriptionProgress = this.edgeCMDProgress$.subscribe((st: EdgeCMDProgress) => {
-      if (st.status == 'error') {
-        this.message = "failed"
-        this.alertService.danger(`Running command ${this.command} failed at step: ${st.progress}`)
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# "
-        this.showStatusBar = false
-      } else if (st.status == 'end-job') {
-        this.message = "success"
-        this.alertService.success(`Successfully completed command ${this.command}`)
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# "
-        this.showStatusBar = false
-      } else if (st.cmd) {
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# " + st.cmd + "\r\n"
-      }
-      this.progress = 100 * (st.progress + 1) / st.total
-    })
-    this.edgeCMDResult$ = this.edgeService.getCMDResult()
-    this.subscriptionResult = this.edgeCMDResult$.subscribe((st: string) => {
-      this.commandTerminal = this.commandTerminal + st
-    })
   }
 
   async initForm() {
@@ -76,43 +43,44 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  startEdge() {
-    this.initalizeTerminal('start')
-    this.edgeService.sendCMDToEdge({ cmd: this.command })
-    this.commandTerminal = "Starting Thin Edge ..."
+  async startEdge() {
+    const bc: BackendCommand = {cmd: 'start', promptText: 'Starting Thin Edge ...' };
+    this.edgeService.commandChange$.next(bc);
   }
 
-  stopEdge() {
-    this.initalizeTerminal('stop')
-    this.edgeService.sendCMDToEdge({ cmd: this.command })
-    this.commandTerminal = "Stopping Thin Edge ..."
+  async stopEdge() {
+    const bc: BackendCommand = {cmd: 'stop', promptText: 'Stopping Thin Edge ...' };
+    this.edgeService.commandChange$.next(bc);
   }
 
-  configureEdge() {
+  async configureEdge() {
     const up = {
       'device.id': this.configurationForm.value.deviceId,
       'c8y.url': this.configurationForm.value.tenantUrl,
     }
     this.edgeService.updateEdgeConfiguration(up);
-    this.initalizeTerminal('configure')
-    let url = this.configurationForm.controls['tenantUrl'].value.replace('https://', '').replace('/', '')
-    this.edgeService.sendCMDToEdge({
-      cmd: this.command,
+    let url = this.configurationForm.controls['tenantUrl'].value.replace('https://', '').replace('/', '') as string;
+    const bc: BackendCommand = {
+      cmd: 'configure',
+      promptText: 'Configure Thin Edge ...',
       deviceId: this.configurationForm.value.deviceId,
       tenantUrl: url
-    })
-    this.commandTerminal = "Configure Thin Edge ..."
+     };
+    this.edgeService.commandChange$.next(bc);
   }
 
-  resetEdge() {
-    this.initalizeTerminal('reset')
-    this.edgeService.sendCMDToEdge({ cmd: this.command })
+  async resetEdge() {
     this.initForm()
-    this.commandTerminal = "Resetting Thin Edge ..."
+    const bc: BackendCommand = {
+      cmd: 'reset',
+      promptText: 'Resetting Thin Edge ...',
+     };
+    this.edgeService.commandChange$.next(bc);
   }
 
   async downloadCertificate() {
-    this.commandTerminal = "Download Certificate  ..."
+    const bc: BackendCommand = {cmd: 'empty', promptText: 'Download Certificate  ...' };
+    this.edgeService.commandChange$.next(bc);
     try {
       const data = await this.edgeService.downloadCertificate("blob")
       const url = window.URL.createObjectURL(data);
@@ -151,26 +119,4 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  onChange(event) {
-    console.log("Change event:", event)
-  }
-  onKeydown(event) {
-    if (event.key === "Enter") {
-      console.log("Execute:", event);
-    } else {
-      console.log("Ignoring:", event)
-    }
-  }
-
-  initalizeTerminal(cmd) {
-    this.command = cmd
-    this.showStatusBar = true
-    this.commandTerminal = "# "
-    this.message = ""
-  }
-
-  ngOnDestroy() {
-    this.subscriptionResult.unsubscribe();
-    this.subscriptionProgress.unsubscribe();
-  }
 }

@@ -1,21 +1,20 @@
 <c8y-title>
     {{ 'Control' | translate }}
-  </c8y-title>
+</c8y-title>
 
 <div class="card">
     <div class="card-block">
-        <div class="button-container">
-            <div class="button-group btn-group">
-                <button class="btn btn-primary" type="button" (click)="startEdge()">Start Edge</button>
-                <button class="btn btn-primary" type="button" (click)="stopEdge()">Stop Edge</button>
-                <button class="btn btn-primary" type="button" (click)="restartPlugins()">Restart Plugins</button>
+        <div class="btn-group btn-group-justified" role="group">
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="startEdge()">Start Edge</button>
+            </div>
+            <div class="btn-group" role="group">                
+                <button class="btn btn-default" type="button" (click)="stopEdge()">Stop Edge</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" type="button" (click)="restartPlugins()">Restart Plugins</button>
             </div>
         </div>
     </div>
-    <div class="card-block">
-        <c8y-progress-bar *ngIf="showStatusBar" [progress]="progress" [message]="message"></c8y-progress-bar>
-        <div>
-            <textarea (keydown)="onKeydown($event)" (change)="onChange($event)" class="commandTerminal" cols="100" rows="20"  [ngModel]="commandTerminal"></textarea>
-        </div>
-    </div>
+    <app-terminal></app-terminal>
 </div>

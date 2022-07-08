@@ -32,10 +32,10 @@ export class StatusComponent implements OnInit {
     gridHeader: true
   };
 
+
   constructor(private edgeService: EdgeService) {
     this.columns = this.getDefaultColumns();
   }
-
   ngOnInit() {
     this.edgeService.getEdgeConfiguration().then(data => {
       console.log ("Result configuration", data )

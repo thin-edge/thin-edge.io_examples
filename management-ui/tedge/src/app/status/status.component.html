@@ -8,18 +8,13 @@
         [pagination]="pagination" [actionControls]="actionControls" [displayOptions]="displayOptions">
       </c8y-data-grid>
     </div>
-<!--     <div class="card">
-      <div class="card-header"><h4>Configuration properties</h4></div>
-      <div class="card-block my-card-body">
-        <pre>{{configuration| json}}</pre>
-      </div>
-    </div> -->
   </div>
   <div class="col-sm-6">
     <div class="card">
       <div class="card-header"><h4>Service Status</h4></div>
       <div class="card-block my-card-body">
-        <pre>{{serviceStatus}}</pre>
+<!--         <pre statusColoring>{{serviceStatus}}</pre>  -->
+        <pre [innerHTML]="serviceStatus | applyStatusColoring"></pre>
       </div>
     </div>
   </div>
