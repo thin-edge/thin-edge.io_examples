@@ -6,6 +6,7 @@ class TaskQueue {
     // emmitter to signal completion of current task
     taskReady;
     tasks = [];
+    job;
     notifier;
     taskRunning = false;
     jobNumber = 0;
@@ -26,7 +27,7 @@ class TaskQueue {
         // check error
         if (parseInt(exitCode) !== 0) {
             console.error(`Error (event exit): ${exitCode} on task ${task.id}`)
-            this.notifier.sendError(task, exitCode)
+            this.notifier.sendError(this.job, task, exitCode)
 
             //continue if task failure is accepted
             if (task.continueOnError) {
@@ -34,7 +35,7 @@ class TaskQueue {
                 this.taskReady.emit('next-task')
                 // send job end when last task in job
                 if (task.id == task.total) {
-                    this.notifier.sendJobEnd(task)
+                    this.notifier.sendJobEnd(this.job, task)
                 }
             } else {
             // delete all tasks from queue
@@ -46,7 +47,7 @@ class TaskQueue {
             this.taskReady.emit('next-task')
             // send job end when last task in job
             if ((task.id + 1) == task.total) {
-                this.notifier.sendJobEnd(task)
+                this.notifier.sendJobEnd(this.job, task)
             }
         }
     }
@@ -56,8 +57,8 @@ class TaskQueue {
             //console.log("Currently queued tasks", this.tasks)
             this.taskRunning = true;
             let nextTask = this.tasks.shift();
-            console.log(`Start processing task: ${JSON.stringify(nextTask)}, ${nextTask.job}:${nextTask.id}`);
-            this.notifier.sendProgress(nextTask)
+            console.log(`Start processing task: ${JSON.stringify(nextTask)}, ${nextTask.jobNumber}:${nextTask.id}`);
+            this.notifier.sendProgress(this.job, nextTask)
             var taskSpawn = spawn(nextTask.cmd, nextTask.args);
             taskSpawn.stdout.on('data', (data) => {
                 var buffer = new Buffer.from(data).toString();
@@ -81,16 +82,17 @@ class TaskQueue {
         }
     }
 
-    queueTasks(newTasks, continueOnError) {
+    queueTasks(job, newTasks, continueOnError) {
         console.log("Queued tasks", this.tasks)
         let l = newTasks.length
+        this.job = job
         this.jobNumber++
         newTasks.forEach((element, i) => {
             this.tasks.push({
                 ...element,
                 id: i,
                 total: l,
-                job: this.jobNumber,
+                jobNumber: this.jobNumber,
                 continueOnError: element.continueOnError ? element.continueOnError : continueOnError
             })
         });
@@ -98,7 +100,7 @@ class TaskQueue {
     }
 
     start() {
-        this.notifier.sendJobStart(this.tasks[0].total)
+        this.notifier.sendJobStart(this.job, this.tasks[0].total)
         this.taskReady.emit('next-task')
     }
 

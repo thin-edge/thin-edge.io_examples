@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Client, BasicAuth, FetchClient, IFetchOptions, IFetchResponse } from '@c8y/client';
-import { BackendCommand, EdgeCMDProgress, MeasurmentType, RawMeasurment } from './property.model';
+import { BackendCommand, BackendCommandProgress, MeasurmentType, RawMeasurment } from './property.model';
 import { Socket } from 'ngx-socket-io';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from "rxjs/operators"
 
 const C8Y_URL = 'c8y';
@@ -22,8 +22,7 @@ const SERVICE_URL = "/api/services";
 export class EdgeService {
   private fetchClient: FetchClient;
   private edgeConfiguration: any = {}
-  public commandChange$ : ReplaySubject<BackendCommand> = new ReplaySubject(1);
-
+  public commandExecute$ : Subject<BackendCommand> = new Subject();
 
   constructor(private http: HttpClient,
     private socket: Socket) { }
@@ -75,12 +74,11 @@ export class EdgeService {
     return promise;
   }
 
-  sendCMDToEdge(msg) {
+  sendBackendCommand(msg) {
     this.socket.emit('cmd-in', msg);
   }
 
-  getCMDProgress(): Observable<EdgeCMDProgress> {
-    // return this.socket.fromEvent('cmd-edge').pipe(map((data) => JSON.stringify(data)));
+  getCommandProgress(): Observable<BackendCommandProgress> {
     return this.socket.fromEvent('cmd-progress');
   }
 
@@ -94,7 +92,7 @@ export class EdgeService {
     this.socket.emit('new-measurement', 'stop');
   }
 
-  getCMDResult(): Observable<string> {
+  getCommandOutput(): Observable<string> {
     return this.socket.fromEvent('cmd-result');
   }
 

@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '@c8y/ngx-components';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+
 import { EdgeService } from '../edge.service';
-import { BackendCommand, EdgeCMDProgress } from '../property.model';
+import { BackendCommand, BackendCommandProgress } from '../property.model';
 
 
 @Component({
@@ -13,13 +14,22 @@ import { BackendCommand, EdgeCMDProgress } from '../property.model';
 })
 export class SetupComponent implements OnInit {
   configurationForm: FormGroup
+  subscriptionProgress: Subscription
   edgeConfiguration: any = {}
+  pendingCommand: string = "";
 
   constructor(private edgeService: EdgeService, private alertService: AlertService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
     this.initForm()
+
+    this.subscriptionProgress = this.edgeService.getCommandProgress().subscribe((st: BackendCommandProgress) => {
+      //console.log("CommandProgress:", st);
+      if (st.status == 'error' || st.status == 'end-job') {
+        this.pendingCommand = '';
+      }
+    })
   }
 
   async initForm() {
@@ -43,15 +53,6 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  async startEdge() {
-    const bc: BackendCommand = {cmd: 'start', promptText: 'Starting Thin Edge ...' };
-    this.edgeService.commandChange$.next(bc);
-  }
-
-  async stopEdge() {
-    const bc: BackendCommand = {cmd: 'stop', promptText: 'Stopping Thin Edge ...' };
-    this.edgeService.commandChange$.next(bc);
-  }
 
   async configureEdge() {
     const up = {
@@ -60,27 +61,29 @@ export class SetupComponent implements OnInit {
     }
     this.edgeService.updateEdgeConfiguration(up);
     let url = this.configurationForm.controls['tenantUrl'].value.replace('https://', '').replace('/', '') as string;
+    this.pendingCommand = 'configure';
     const bc: BackendCommand = {
-      cmd: 'configure',
+      job: 'configure',
       promptText: 'Configure Thin Edge ...',
       deviceId: this.configurationForm.value.deviceId,
       tenantUrl: url
      };
-    this.edgeService.commandChange$.next(bc);
+    this.edgeService.commandExecute$.next(bc);
   }
 
   async resetEdge() {
     this.initForm()
+    this.pendingCommand = 'reset';
     const bc: BackendCommand = {
-      cmd: 'reset',
+      job: 'reset',
       promptText: 'Resetting Thin Edge ...',
      };
-    this.edgeService.commandChange$.next(bc);
+    this.edgeService.commandExecute$.next(bc);
   }
 
   async downloadCertificate() {
-    const bc: BackendCommand = {cmd: 'empty', promptText: 'Download Certificate  ...' };
-    this.edgeService.commandChange$.next(bc);
+    const bc: BackendCommand = {job: 'empty', promptText: 'Download Certificate  ...' };
+    this.edgeService.commandExecute$.next(bc);
     try {
       const data = await this.edgeService.downloadCertificate("blob")
       const url = window.URL.createObjectURL(data);
@@ -117,6 +120,10 @@ export class SetupComponent implements OnInit {
     } catch (err) {
       this.alertService.danger("Failed to upload certificate: " + err.message)
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptionProgress.unsubscribe();
   }
 
 }

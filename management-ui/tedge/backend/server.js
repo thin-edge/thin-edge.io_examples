@@ -149,18 +149,18 @@ io.on('connection', function (socket) {
 /*         msg = JSON.parse(message)
         message = msg */
 
-        console.log(`New cmd: ${message}`, message.cmd);
-        if (message.cmd == 'start') {
+        console.log(`New cmd: ${message}`, message.job);
+        if (message.job == 'start') {
             backend.start();
-        } else if (message.cmd == 'stop') {
+        } else if (message.job == 'stop') {
             backend.stop(message);
-        } else if (message.cmd == 'configure') {
+        } else if (message.job == 'configure') {
             backend.configure(message);
-        } else if (message.cmd == 'reset') {
+        } else if (message.job == 'reset') {
             backend.reset();
-        } else if (message.cmd == 'upload') {
+        } else if (message.job == 'upload') {
             backend.uploadCertificate();
-        } else if (message.cmd == 'restartPlugins') {
+        } else if (message.job == 'restartPlugins') {
             backend.restartPlugins();
         } else {
             socket.emit('cmd-progress', {

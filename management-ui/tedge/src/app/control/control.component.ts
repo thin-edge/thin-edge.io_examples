@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertService } from '@c8y/ngx-components';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
-import { EdgeCMDProgress, BackendCommand } from '../property.model';
+import { BackendCommand, BackendCommandProgress } from '../property.model';
 
 @Component({
   selector: 'app-control',
@@ -12,7 +11,9 @@ import { EdgeCMDProgress, BackendCommand } from '../property.model';
 })
 export class ControlComponent implements OnInit {
   configurationForm: FormGroup
+  subscriptionProgress: Subscription
   edgeConfiguration: any = {}
+  pendingCommand: string = "";
 
   constructor(private edgeService: EdgeService, private formBuilder: FormBuilder) {
    }
@@ -20,6 +21,13 @@ export class ControlComponent implements OnInit {
   ngOnInit() {
     this.getNewConfiguration()
     this.initForm()
+
+    this.subscriptionProgress = this.edgeService.getCommandProgress().subscribe((st: BackendCommandProgress) => {
+      //console.log("CommandProgress:", st);
+      if (st.status == 'error' || st.status == 'end-job') {
+        this.pendingCommand = '';
+      }
+    })
   }
 
   initForm() {
@@ -30,18 +38,21 @@ export class ControlComponent implements OnInit {
   }
 
   async startEdge() {
-    const bc: BackendCommand = {cmd: 'start', promptText: 'Starting Thin Edge ...' };
-    this.edgeService.commandChange$.next(bc);
+    this.pendingCommand = 'start';
+    const bc: BackendCommand = {job: 'start', promptText: 'Starting Thin Edge ...' };
+    this.edgeService.commandExecute$.next(bc);
   }
 
   async stopEdge(){
-    const bc: BackendCommand = {cmd: 'stop', promptText: 'Stopping Thin Edge ...' };
-    this.edgeService.commandChange$.next(bc);
+    this.pendingCommand = 'stop';
+    const bc: BackendCommand = {job: 'stop', promptText: 'Stopping Thin Edge ...' };
+    this.edgeService.commandExecute$.next(bc);
   }
 
   async restartPlugins() {
-    const bc: BackendCommand = {cmd: 'restartPlugins', promptText: 'Restarting Plugins  ...' };
-    this.edgeService.commandChange$.next(bc);
+    this.pendingCommand = 'restartPlugins';
+    const bc: BackendCommand = {job: 'restartPlugins', promptText: 'Restarting Plugins  ...' };
+    this.edgeService.commandExecute$.next(bc);
   }
 
   getNewConfiguration() {
@@ -52,5 +63,9 @@ export class ControlComponent implements OnInit {
         deviceId: this.edgeConfiguration['device.id'] ? this.edgeConfiguration['device.id']: '',
       })
     })
+  }
+
+  ngOnDestroy() {
+    this.subscriptionProgress.unsubscribe();
   }
 }

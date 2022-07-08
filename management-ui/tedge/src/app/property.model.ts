@@ -1,18 +1,3 @@
-
-export class CustomCertificate {
-  isComplex: boolean;
-  description: string;
-  name: string;
-  path: string;
-}
-
-export interface EdgeCMDProgress {
-  status: string
-  progress: number
-  total: number
-  cmd: string
-}
-
 export interface RawMeasurment {
   _id?: string
   topic?: string
@@ -48,8 +33,17 @@ export interface RowStructure {
 };
 
 export interface BackendCommand {
-  cmd: string;
+  job: string;
   promptText: string;
   deviceId?: string;
   tenantUrl?: string
 };
+
+export interface BackendCommandProgress {
+  cmd: string
+  job: string
+  promptText: string
+  status: string
+  progress: number
+  total: number
+}

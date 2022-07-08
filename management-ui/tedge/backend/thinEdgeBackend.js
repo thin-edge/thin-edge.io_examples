@@ -36,39 +36,43 @@ class ThinEdgeBackend {
     }
 
     notifier = {
-        sendProgress: function (task) {
+        sendProgress: function (job, task) {
             this.socket.emit('cmd-progress', {
                 status: 'processing',
                 progress: task.id,
                 total: task.total,
+                job: job,
                 cmd: task.cmd + " " + task.args.join(' ')
             });
         },
         sendResult: function (result) {
             this.socket.emit('cmd-result', result);
         },
-        sendError: function (task, exitCode) {
+        sendError: function (job, task, exitCode) {
             this.cmdInProgress = false;
             this.socket.emit('cmd-result', `${exitCode} (task ${task.id})`);
             this.socket.emit('cmd-progress', {
                 status: 'error',
                 progress: task.id,
+                job: job,
                 total: task.total
             });
         },
-        sendJobStart: function (length) {
+        sendJobStart: function (job, length) {
             this.cmdInProgress = true;
             this.socket.emit('cmd-progress', {
                 status: 'start-job',
                 progress: 0,
+                job: job,
                 total: length
             });
         },
-        sendJobEnd: function (task) {
+        sendJobEnd: function (job, task) {
             this.cmdInProgress = false;
             this.socket.emit('cmd-progress', {
                 status: 'end-job',
                 progress: task.id,
+                job: job,
                 total: task.length
             });
         }
@@ -320,7 +324,7 @@ class ThinEdgeBackend {
                     args: ["Finished resetting edge"]
                 }]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(tasks, true)
+                taskQueue.queueTasks("reset", tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -348,7 +352,7 @@ class ThinEdgeBackend {
                     args: ["/sbin/rc-service", "c8y-log-plugin", "restart"]
                 },]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(tasks, true)
+                taskQueue.queueTasks("restartPlugins", tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -393,7 +397,7 @@ class ThinEdgeBackend {
                 },
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(tasks, false)
+                taskQueue.queueTasks("configure", tasks, false)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -444,7 +448,7 @@ class ThinEdgeBackend {
                 }
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(tasks, true)
+                taskQueue.queueTasks("stop", tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -480,7 +484,7 @@ class ThinEdgeBackend {
             ]
 
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(tasks, false)
+                taskQueue.queueTasks("start", tasks, false)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {

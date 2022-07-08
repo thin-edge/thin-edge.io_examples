@@ -20,11 +20,11 @@ export class StatusColloringPipe  implements PipeTransform {
         let crashed = "<span style='color:red'>crashed</span>";
         let started = "<span style='color:green'>started</span>";
         let org: string = text;
-        console.log ("Formatted highlight:", org)
+        //console.log ("Formatted highlight:", org)
         let fmt: string = org.replace(/stopped/g, stopped)
             .replace(/crashed/g, crashed)
             .replace(/started/g, started);
-        console.log ("Formatted status exit:", fmt)
+        //console.log ("Formatted status exit:", fmt)
         return fmt;
       }
 }
