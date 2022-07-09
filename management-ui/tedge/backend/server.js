@@ -151,17 +151,17 @@ io.on('connection', function (socket) {
 
         console.log(`New cmd: ${message}`, message.job);
         if (message.job == 'start') {
-            backend.start();
+            backend.start(message);
         } else if (message.job == 'stop') {
             backend.stop(message);
         } else if (message.job == 'configure') {
             backend.configure(message);
         } else if (message.job == 'reset') {
-            backend.reset();
+            backend.reset(message);
         } else if (message.job == 'upload') {
             backend.uploadCertificate();
         } else if (message.job == 'restartPlugins') {
-            backend.restartPlugins();
+            backend.restartPlugins(message);
         } else {
             socket.emit('cmd-progress', {
                 status: 'ignore',

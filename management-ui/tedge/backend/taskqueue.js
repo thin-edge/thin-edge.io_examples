@@ -7,6 +7,7 @@ class TaskQueue {
     taskReady;
     tasks = [];
     job;
+    promptText;
     notifier;
     taskRunning = false;
     jobNumber = 0;
@@ -82,10 +83,11 @@ class TaskQueue {
         }
     }
 
-    queueTasks(job, newTasks, continueOnError) {
+    queueTasks(job, promptText, newTasks, continueOnError) {
         console.log("Queued tasks", this.tasks)
         let l = newTasks.length
         this.job = job
+        this.promptText = promptText
         this.jobNumber++
         newTasks.forEach((element, i) => {
             this.tasks.push({
@@ -100,7 +102,7 @@ class TaskQueue {
     }
 
     start() {
-        this.notifier.sendJobStart(this.job, this.tasks[0].total)
+        this.notifier.sendJobStart(this.job, this.promptText, this.tasks[0].total)
         this.taskReady.emit('next-task')
     }
 

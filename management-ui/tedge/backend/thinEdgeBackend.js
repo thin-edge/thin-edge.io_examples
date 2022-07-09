@@ -58,12 +58,13 @@ class ThinEdgeBackend {
                 total: task.total
             });
         },
-        sendJobStart: function (job, length) {
+        sendJobStart: function (job, promptText, length) {
             this.cmdInProgress = true;
             this.socket.emit('cmd-progress', {
                 status: 'start-job',
                 progress: 0,
                 job: job,
+                promptText: promptText,
                 total: length
             });
         },
@@ -73,7 +74,7 @@ class ThinEdgeBackend {
                 status: 'end-job',
                 progress: task.id,
                 job: job,
-                total: task.length
+                total: task.total
             });
         }
     }
@@ -295,7 +296,7 @@ class ThinEdgeBackend {
         }
     }
     
-    reset() {
+    reset(msg) {
         try {
             console.log('Starting resetting ...')
             const tasks = [
@@ -324,7 +325,7 @@ class ThinEdgeBackend {
                     args: ["Finished resetting edge"]
                 }]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks("reset", tasks, true)
+                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -339,7 +340,7 @@ class ThinEdgeBackend {
         }
     }
 
-    restartPlugins() {
+    restartPlugins(msg) {
         try {
             console.log('Restart plugins  ...')
             const tasks = [
@@ -352,7 +353,7 @@ class ThinEdgeBackend {
                     args: ["/sbin/rc-service", "c8y-log-plugin", "restart"]
                 },]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks("restartPlugins", tasks, true)
+                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -369,19 +370,17 @@ class ThinEdgeBackend {
 
 
     configure(msg) {
-        let deviceId = msg.deviceId
-        let tenantUrl = msg.tenantUrl
         try {
-            console.log(`Starting configuration of edge: ${deviceId}, ${tenantUrl}`)
+            console.log(`Starting configuration of edge: ${msg.deviceId}, ${msg.tenantUrl}`)
 
             const tasks = [
                 {
                     cmd: 'sudo',
-                    args: ["tedge", "cert", "create", "--device-id", deviceId]
+                    args: ["tedge", "cert", "create", "--device-id", msg.deviceId]
                 },
                 {
                     cmd: 'sudo',
-                    args: ["tedge", "config", "set", "c8y.url", tenantUrl]
+                    args: ["tedge", "config", "set", "c8y.url", msg.tenantUrl]
                 },
                 {
                     cmd: 'sudo',
@@ -397,7 +396,7 @@ class ThinEdgeBackend {
                 },
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks("configure", tasks, false)
+                taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -412,7 +411,7 @@ class ThinEdgeBackend {
         }
     }
 
-    stop() {
+    stop(msg) {
         try {
             console.log(`Stopping edge processes ${this.cmdInProgress}...`)
             const tasks = [
@@ -448,7 +447,7 @@ class ThinEdgeBackend {
                 }
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks("stop", tasks, true)
+                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
@@ -463,7 +462,7 @@ class ThinEdgeBackend {
         } 
     }
 
-    start() {
+    start(msg) {
         try {
             console.log(`Starting edge ${this.cmdInProgress}...`)
             const tasks = [
@@ -484,7 +483,7 @@ class ThinEdgeBackend {
             ]
 
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks("start", tasks, false)
+                taskQueue.queueTasks(msg.job, msg.promptText,tasks, false)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {

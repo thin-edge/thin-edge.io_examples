@@ -68,7 +68,7 @@ export class SetupComponent implements OnInit {
       deviceId: this.configurationForm.value.deviceId,
       tenantUrl: url
      };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
   }
 
   async resetEdge() {
@@ -78,12 +78,12 @@ export class SetupComponent implements OnInit {
       job: 'reset',
       promptText: 'Resetting Thin Edge ...',
      };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
   }
 
   async downloadCertificate() {
     const bc: BackendCommand = {job: 'empty', promptText: 'Download Certificate  ...' };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
     try {
       const data = await this.edgeService.downloadCertificate("blob")
       const url = window.URL.createObjectURL(data);

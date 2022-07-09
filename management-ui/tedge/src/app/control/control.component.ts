@@ -40,19 +40,19 @@ export class ControlComponent implements OnInit {
   async startEdge() {
     this.pendingCommand = 'start';
     const bc: BackendCommand = {job: 'start', promptText: 'Starting Thin Edge ...' };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
   }
 
   async stopEdge(){
     this.pendingCommand = 'stop';
     const bc: BackendCommand = {job: 'stop', promptText: 'Stopping Thin Edge ...' };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
   }
 
   async restartPlugins() {
     this.pendingCommand = 'restartPlugins';
     const bc: BackendCommand = {job: 'restartPlugins', promptText: 'Restarting Plugins  ...' };
-    this.edgeService.commandExecute$.next(bc);
+    this.edgeService.sendBackendCommand(bc);
   }
 
   getNewConfiguration() {

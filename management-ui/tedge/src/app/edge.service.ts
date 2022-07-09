@@ -22,8 +22,6 @@ const SERVICE_URL = "/api/services";
 export class EdgeService {
   private fetchClient: FetchClient;
   private edgeConfiguration: any = {}
-  public commandExecute$ : Subject<BackendCommand> = new Subject();
-
   constructor(private http: HttpClient,
     private socket: Socket) { }
 
