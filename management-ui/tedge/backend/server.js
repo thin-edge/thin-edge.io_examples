@@ -3,13 +3,9 @@ require('console-stamp')(console, '[HH:MM:ss.l]');
 // Use Express
 const express = require("express");
 const http = require('http');
-// Use body-parser
-const bodyParser = require("body-parser");
+
 //proxy
 const { createProxyMiddleware } = require('http-proxy-middleware');
-// spawn
-const { spawn } = require("child_process");
-const events = require('events');
 const socketIO = require('socket.io')
 // Create new instance of the express server
 const app = express();
@@ -144,7 +140,7 @@ app.get("/application/*", function (req, res) {
 io.on('connection', function (socket) {
     console.log(`New connection from web ui: ${socket.id}`);
     backend = new thinEdgeBackend.ThinEdgeBackend(socket)
-    socket.on('cmd-in', function (message) {
+    socket.on('job-input', function (message) {
         
 /*         msg = JSON.parse(message)
         message = msg */
@@ -163,7 +159,7 @@ io.on('connection', function (socket) {
         } else if (message.job == 'restartPlugins') {
             backend.restartPlugins(message);
         } else {
-            socket.emit('cmd-progress', {
+            socket.emit('job-progress', {
                 status: 'ignore',
                 progress: 0,
                 total: 0

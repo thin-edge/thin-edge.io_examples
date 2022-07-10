@@ -1,10 +1,9 @@
 // spawn
 const { spawn } = require('child_process');
-const events = require('events');
 const { TaskQueue } = require('./taskqueue');
 const fs = require('fs');
 // emmitter to signal completion of current task
-const taskQueue = new TaskQueue()
+
 const propertiesToJSON = require('properties-to-json');
 const MongoClient = require('mongodb').MongoClient;
 
@@ -12,7 +11,7 @@ const MONGO_URL = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}
 const MONGO_MEASUEMENT_COLLECTION = 'measurement'
 const MONGO_SERIES_COLLECTION = 'serie'
 const MONGO_DB = 'localDB'
-const ANALYTICS_CONFIG ='/etc/tedge/tedge-ui/analyticsConfig.json'
+const ANALYTICS_CONFIG = '/etc/tedge/tedge-ui/analyticsConfig.json'
 const MAX_MEASUREMENT = 2000;
 
 class ThinEdgeBackend {
@@ -20,6 +19,10 @@ class ThinEdgeBackend {
     static cmdInProgress = false;
     static measurementCollection = null;
     static seriesCollection = null;
+    shell = null;
+    taskQueue = null;
+
+
     constructor(socket) {
         this.socket = socket;
 
@@ -33,11 +36,40 @@ class ThinEdgeBackend {
         } else {
             this.watchMeasurementCollection();
         }
+
+        this.shell  = spawn('sh');
+        this.initShell(this.shell, this.socket);
+        this.taskQueue = new TaskQueue(this.shell)
+    }
+
+    initShell(sh, so) {
+        const socket = so;
+        const shell = sh;
+
+        this.socket.on('shell-input', function (data) {
+            console.log("New shell-input:",data)
+            shell.stdin.write(data + "\n");
+            socket.emit('shell-cmd', Buffer.from( data + "\n"  + "# "));
+        });
+
+        shell.stdout.on('data', function (data) {
+            console.log("New shell-ouput:",data)
+            socket.emit('shell-output', Buffer.concat([data, Buffer.from ("# ")]));
+        });
+
+        shell.stderr.on('data', function (data) {
+            socket.emit('shell-output', Buffer.concat([data, Buffer.from ("# ")]));
+        });
+
+        shell.on('exit', function (code) {
+            socket.emit('shell-exit', '** Shell exited: ' + code + ' **');
+        });
+        return shell;
     }
 
     notifier = {
         sendProgress: function (job, task) {
-            this.socket.emit('cmd-progress', {
+            this.socket.emit('job-progress', {
                 status: 'processing',
                 progress: task.id,
                 total: task.total,
@@ -46,12 +78,12 @@ class ThinEdgeBackend {
             });
         },
         sendResult: function (result) {
-            this.socket.emit('cmd-result', result);
+            this.socket.emit('job-output', result);
         },
         sendError: function (job, task, exitCode) {
             this.cmdInProgress = false;
-            this.socket.emit('cmd-result', `${exitCode} (task ${task.id})`);
-            this.socket.emit('cmd-progress', {
+            this.socket.emit('job-output', `${exitCode} (task ${task.id})`);
+            this.socket.emit('job-progress', {
                 status: 'error',
                 progress: task.id,
                 job: job,
@@ -60,7 +92,7 @@ class ThinEdgeBackend {
         },
         sendJobStart: function (job, promptText, length) {
             this.cmdInProgress = true;
-            this.socket.emit('cmd-progress', {
+            this.socket.emit('job-progress', {
                 status: 'start-job',
                 progress: 0,
                 job: job,
@@ -70,7 +102,7 @@ class ThinEdgeBackend {
         },
         sendJobEnd: function (job, task) {
             this.cmdInProgress = false;
-            this.socket.emit('cmd-progress', {
+            this.socket.emit('job-progress', {
                 status: 'end-job',
                 progress: task.id,
                 job: job,
@@ -86,27 +118,27 @@ class ThinEdgeBackend {
         localSocket.on('new-measurement', function (message) {
             console.log(`New measurement cmd: ${message}`);
             // only start new changed stream if no old noe exists
-            if (message == 'start' && !changeStream)  {
+            if (message == 'start' && !changeStream) {
                 console.log(`Really starting measurement cmd: ${message}`);
                 changeStream = ThinEdgeBackend.measurementCollection.watch()
-                changeStream.on("change",function(change){
+                changeStream.on("change", function (change) {
                     // console.log("changed", JSON.stringify(change.fullDocument));
                     // let obj = JSON.parse(change.fullDocument.payload)
                     // change.fullDocument.payload = obj
                     // console.log("changed", JSON.stringify(change.fullDocument));
                     localSocket.emit('new-measurement', JSON.stringify(change.fullDocument))
                 });
-            } else if (message == 'stop')  {
-                if ( changeStream) {
+            } else if (message == 'stop') {
+                if (changeStream) {
                     console.log(`Stop message stream: ${message}`);
                     changeStream.close()
                     changeStream = undefined;
                 }
-            } 
+            }
         });
     }
 
-    static getMeasurements( req, res ) {
+    static getMeasurements(req, res) {
         let displaySpan = req.query.displaySpan;
         let dateFrom = req.query.dateFrom;
         let dateTo = req.query.dateTo;
@@ -117,9 +149,9 @@ class ThinEdgeBackend {
                     $gt: new Date(Date.now() - 1000 * parseInt(displaySpan))
                 }
             }
-            ThinEdgeBackend.measurementCollection.find(query).limit(MAX_MEASUREMENT).sort({datetime: 1}).toArray(function(err, items) {
+            ThinEdgeBackend.measurementCollection.find(query).limit(MAX_MEASUREMENT).sort({ datetime: 1 }).toArray(function (err, items) {
                 if (err) {
-                    console.error ("Can't retrieve measurements!")
+                    console.error("Can't retrieve measurements!")
                     throw err;
                 }
                 res.status(200).json(items);
@@ -132,9 +164,9 @@ class ThinEdgeBackend {
                     $lt: new Date(dateTo)
                 }
             }
-            ThinEdgeBackend.measurementCollection.find(query).limit(MAX_MEASUREMENT).sort({datetime: 1}).toArray(function(err, items) {
+            ThinEdgeBackend.measurementCollection.find(query).limit(MAX_MEASUREMENT).sort({ datetime: 1 }).toArray(function (err, items) {
                 if (err) {
-                    console.error ("Can't retrieve measurements!")
+                    console.error("Can't retrieve measurements!")
                     throw err;
                 }
                 res.status(200).json(items);
@@ -144,35 +176,35 @@ class ThinEdgeBackend {
 
     static connect2Mongo() {
         if (ThinEdgeBackend.measurementCollection == null || ThinEdgeBackend.seriesCollection == null) {
-           console.log('Connecting to mongo ...'); 
-            MongoClient.connect(MONGO_URL, function(err, client) {
+            console.log('Connecting to mongo ...');
+            MongoClient.connect(MONGO_URL, function (err, client) {
                 if (err) throw err;
                 let dbo = client.db(MONGO_DB);
-                ThinEdgeBackend.measurementCollection = dbo.collection(MONGO_MEASUEMENT_COLLECTION) 
-                ThinEdgeBackend.seriesCollection = dbo.collection(MONGO_SERIES_COLLECTION)        
+                ThinEdgeBackend.measurementCollection = dbo.collection(MONGO_MEASUEMENT_COLLECTION)
+                ThinEdgeBackend.seriesCollection = dbo.collection(MONGO_SERIES_COLLECTION)
             });
         }
     }
 
     static getSeries(req, res) {
-        ThinEdgeBackend.seriesCollection.find().toArray(function(err, items) {
-          let result = []
-          for (let index = 0; index < items.length; index++) {
-            if (err) throw err;
-            const item = items[index];
-            let series = []
-            for (const property in item) {
-                if (property != '_id' && property != 'type' && property != 'time' )
-                    series.push(property)
+        ThinEdgeBackend.seriesCollection.find().toArray(function (err, items) {
+            let result = []
+            for (let index = 0; index < items.length; index++) {
+                if (err) throw err;
+                const item = items[index];
+                let series = []
+                for (const property in item) {
+                    if (property != '_id' && property != 'type' && property != 'time')
+                        series.push(property)
+                }
+                const measurement = {
+                    name: item.type,
+                    series: series
+                }
+                result.push(measurement)
+                //onsole.log('Series from mongo', item, serie); 
             }
-            const measurement = {
-                name: item.type,
-                series: series
-            }
-            result.push(measurement)
-            //onsole.log('Series from mongo', item, serie); 
-          }
-          res.status(200).json(result);
+            res.status(200).json(result);
         });
     }
 
@@ -190,18 +222,18 @@ class ThinEdgeBackend {
                 res.status(500).json(data);
                 sent = true;
             });
-    
+
             child.on('error', function (err) {
                 console.error('Error : ' + err);
                 res.status(500).json(err);
                 sent = true;
             });
-    
+
             child.stdout.on('end', (data) => {
                 console.log('Output stdout:', Buffer.concat(stdoutChunks).toString());
                 if (!sent) {
                     let stdoutContent = Buffer.concat(stdoutChunks).toString();
-                    let config = propertiesToJSON (stdoutContent)
+                    let config = propertiesToJSON(stdoutContent)
                     res.status(200).json(config);
                 }
             });
@@ -216,10 +248,7 @@ class ThinEdgeBackend {
         try {
             let sent = false;
             var stdoutChunks = [];
-            //const child = spawn('top', ['-b', '-n', '1']);
-            //const child = spawn('sh', ['-c', 'ps o state=,pid=,command=,time=|sed -E -n "/ sed -E -n/d;/^[^ZT] +[0-9]+ .*$@/p";']);
-            //const child = spawn('ps')
-            //const child = spawn('rc-status', ['--servicelist'])
+
             const child = spawn('sh', ['-c', 'rc-status -s | sed -r "s/ {30}//" | sort'])
 
             child.stdout.on('data', (data) => {
@@ -230,19 +259,19 @@ class ThinEdgeBackend {
                 res.status(500).json(data);
                 sent = true;
             });
-    
+
             child.on('error', function (err) {
                 console.error('Error : ' + err);
                 res.status(500).json(err);
                 sent = true;
             });
-    
+
             child.stdout.on('end', (data) => {
                 console.log('Output stdout:', Buffer.concat(stdoutChunks).toString());
                 if (!sent) {
                     let stdoutContent = Buffer.concat(stdoutChunks).toString();
                     //stdoutContent = stdoutContent.replace( /.*defunct.*\n/g, '')
-                    res.status(200).send({result: stdoutContent});
+                    res.status(200).send({ result: stdoutContent });
                 }
             });
             console.log('Retrieved job status')
@@ -253,11 +282,11 @@ class ThinEdgeBackend {
     }
 
     static async getAnalyticsConfiguration(req, res) {
-        let configuration 
+        let configuration
         try {
             let ex = await ThinEdgeBackend.fileExists(ANALYTICS_CONFIG)
-            if ( !ex) {
-                await fs.promises.writeFile(ANALYTICS_CONFIG, "{}");
+            if (!ex) {
+                await fs.promises.writeFile(ANALYTICS_CONFIG, '{"expertMode": false}');
             }
             let rawdata = await fs.promises.readFile(ANALYTICS_CONFIG);
             let str = rawdata.toString()
@@ -295,7 +324,7 @@ class ThinEdgeBackend {
             }
         }
     }
-    
+
     reset(msg) {
         try {
             console.log('Starting resetting ...')
@@ -329,7 +358,7 @@ class ThinEdgeBackend {
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
-                this.socket.emit('cmd-progress', {
+                this.socket.emit('job-progress', {
                     status: 'ignore',
                     progress: 0,
                     total: 0
@@ -357,7 +386,7 @@ class ThinEdgeBackend {
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
-                this.socket.emit('cmd-progress', {
+                this.socket.emit('job-progress', {
                     status: 'ignore',
                     progress: 0,
                     total: 0
@@ -400,7 +429,7 @@ class ThinEdgeBackend {
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
-                this.socket.emit('cmd-progress', {
+                this.socket.emit('job-progress', {
                     status: 'ignore',
                     progress: 0,
                     total: 0
@@ -432,17 +461,17 @@ class ThinEdgeBackend {
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","tedge-agent", "stop"],
+                    args: ["/sbin/rc-service", "tedge-agent", "stop"],
                     continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","collectd", "stop"],
+                    args: ["/sbin/rc-service", "collectd", "stop"],
                     continueOnError: true
                 },
                 {
                     cmd: 'sudo',
-                    args: ["/sbin/rc-service","tedge-mapper-collectd", "stop"],
+                    args: ["/sbin/rc-service", "tedge-mapper-collectd", "stop"],
                     continueOnError: true
                 }
             ]
@@ -451,7 +480,7 @@ class ThinEdgeBackend {
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
-                this.socket.emit('cmd-progress', {
+                this.socket.emit('job-progress', {
                     status: 'ignore',
                     progress: 0,
                     total: 0
@@ -459,7 +488,7 @@ class ThinEdgeBackend {
             }
         } catch (err) {
             console.error(`The following error occured: ${err.message}`)
-        } 
+        }
     }
 
     start(msg) {
@@ -483,11 +512,11 @@ class ThinEdgeBackend {
             ]
 
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText,tasks, false)
+                taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
                 taskQueue.registerNotifier(this.notifier)
                 taskQueue.start()
             } else {
-                this.socket.emit('cmd-progress', {
+                this.socket.emit('job-progress', {
                     status: 'ignore',
                     progress: 0,
                     total: 0

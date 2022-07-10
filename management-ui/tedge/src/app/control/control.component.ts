@@ -22,7 +22,7 @@ export class ControlComponent implements OnInit {
     this.getNewConfiguration()
     this.initForm()
 
-    this.subscriptionProgress = this.edgeService.getCommandProgress().subscribe((st: BackendCommandProgress) => {
+    this.subscriptionProgress = this.edgeService.getJobProgress().subscribe((st: BackendCommandProgress) => {
       //console.log("CommandProgress:", st);
       if (st.status == 'error' || st.status == 'end-job') {
         this.pendingCommand = '';
@@ -40,19 +40,19 @@ export class ControlComponent implements OnInit {
   async startEdge() {
     this.pendingCommand = 'start';
     const bc: BackendCommand = {job: 'start', promptText: 'Starting Thin Edge ...' };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
   }
 
   async stopEdge(){
     this.pendingCommand = 'stop';
     const bc: BackendCommand = {job: 'stop', promptText: 'Stopping Thin Edge ...' };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
   }
 
   async restartPlugins() {
     this.pendingCommand = 'restartPlugins';
     const bc: BackendCommand = {job: 'restartPlugins', promptText: 'Restarting Plugins  ...' };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
   }
 
   getNewConfiguration() {

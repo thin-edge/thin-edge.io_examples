@@ -32,7 +32,7 @@ export class ChartingWidgetComponent implements OnDestroy, OnInit, OnChanges {
   @ViewChild('analytic') private lineChartCanvas: ElementRef;
 
   @Input() config: any;
-  @Input() displaySpanIndex;   // default of diagram is always realtime
+  @Input() displaySpanIndex = 0;   // default of diagram is always realtime
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
   @Input() rangeUnitCount: number;

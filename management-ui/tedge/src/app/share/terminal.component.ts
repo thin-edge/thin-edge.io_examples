@@ -22,26 +22,26 @@ export class TerminalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscriptionProgress = this.edgeService.getCommandProgress().subscribe((st: BackendCommandProgress) => {
-      console.log("CommandProgress:", st);
+    this.subscriptionProgress = this.edgeService.getJobProgress().subscribe((st: BackendCommandProgress) => {
+      console.log("JobProgress:", st);
       this.progress = 100 * (st.progress + 1) / st.total
       if (st.status == 'error') {
         this.alertService.danger(`Running command ${st.job} failed at step: ${st.progress}`)
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# "
+        this.commandTerminal = this.commandTerminal + "\n" + "# "
         this.progress = 0
       } else if (st.status == 'end-job') {
         this.alertService.success(`Successfully completed command ${st.job}`)
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# "
+        this.commandTerminal = this.commandTerminal + "\n" + "# "
         this.progress = 0
       } else if (st.status == 'start-job') {
         this.progress = 0
         this.resetTerminal();
         this.commandTerminal = this.commandTerminal + ( st.promptText && st.promptText !== "" ? "# " + st.promptText : "")
       } else if (st.status == 'processing') {
-        this.commandTerminal = this.commandTerminal + "\r\n" + "# " + st.cmd + "\r\n"
+        this.commandTerminal = this.commandTerminal + "\n" + "# " + st.cmd + "\n"
       }
     })
-    this.subscriptionOutput = this.edgeService.getCommandOutput().subscribe((st: string) => {
+    this.subscriptionOutput = this.edgeService. getJobOutput().subscribe((st: string) => {
       this.commandTerminal = this.commandTerminal + st
     })
 
@@ -54,7 +54,7 @@ export class TerminalComponent implements OnInit {
   onKeydown(e){
     console.log ("Keydown:", e);
     if (e.key == 'Enter') {
-      this.commandTerminal = this.commandTerminal + this.currentLine + "\r\n" + "# "
+      this.commandTerminal = this.commandTerminal + this.currentLine + "\n" + "# "
       console.log ("CommandTerminal:", this.commandTerminal);
       if (this.currentLine == "clear") {
         this.resetTerminal();

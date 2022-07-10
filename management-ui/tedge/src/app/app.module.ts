@@ -17,6 +17,7 @@ import { TerminalComponent } from './share/terminal.component';
 import { AnalysisModule } from './analysis/analysis.module';
 import { StatusColloringDirective } from './share/status.directive';
 import { StatusColloringPipe } from './share/status.pipe';
+import { ShellModule } from './terminal/shell.module';
 
 
 const config: SocketIoConfig = { url: location.origin, options: {} };
@@ -31,9 +32,9 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
       { path: '', component: SetupComponent },   // set default route
       { path: 'analysis', component: AnalysisComponent }, 
       { path: 'cloud', component: CloudComponent },
-      { path: 'setup', component: SetupComponent },
-      { path: 'status', component: StatusComponent },
-      { path: 'control', component: ControlComponent }
+      { path: 'edge/setup', component: SetupComponent },
+      { path: 'edge/status', component: StatusComponent },
+      { path: 'edge/control', component: ControlComponent }
       ],
       { enableTracing: false, useHash: true }
     ),
@@ -42,6 +43,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     AlertModule,
     ReactiveFormsModule,
     AnalysisModule,
+    ShellModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,
     CommonModule

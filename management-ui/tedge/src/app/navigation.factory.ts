@@ -11,38 +11,38 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
         let Setup: NavigatorNode = new NavigatorNode({
             label: _('Setup'),
             icon: 'c8y-administration',
-            path: '/setup',
-            priority: 2,
+            path: '/edge/setup',
+            priority: 80,
             routerLinkExact: false
         });
 
         let Control: NavigatorNode = new NavigatorNode({
             label: _('Control'),
             icon: 'rocket',
-            path: '/control',
-            priority: 2,
+            path: '/edge/control',
+            priority: 40,
             routerLinkExact: false
         });
 
         let Status: NavigatorNode = new NavigatorNode({
             label: _('Status'),
             icon: 'info-circle',
-            path: '/status',
-            priority: 2,
+            path: '/edge/status',
+            priority: 20,
             routerLinkExact: false
         });
        
         let Cloud: NavigatorNode = new NavigatorNode({
             path: '/cloud',
             label: _('Cloud'),
-            name: 'cloud',
+            name: 'Cloud',
             priority: 100,
             icon: 'cloud',
             routerLinkExact: false
         });
         let Edge: NavigatorNode = new NavigatorNode({
             label: _('Edge'),
-            name: 'egde',
+            name: 'Edge',
             priority: 300,
             children: [Setup, Control, Status],
             icon: 'thin-client',

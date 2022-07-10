@@ -5,14 +5,13 @@ const events = require('events');
 class TaskQueue {
     // emmitter to signal completion of current task
     taskReady;
-    tasks = [];
-    job;
-    promptText;
-    notifier;
     taskRunning = false;
+    tasks = [];
+    notifier;
+    job;
     jobNumber = 0;
 
-    constructor() {
+    constructor(shell) {
         this.taskReady = new events.EventEmitter();
         this.runNextTask = this.runNextTask.bind(this);
         this.finishedTask = this.finishedTask.bind(this);
@@ -39,8 +38,8 @@ class TaskQueue {
                     this.notifier.sendJobEnd(this.job, task)
                 }
             } else {
-            // delete all tasks from queue
-            this.tasks = [];
+                // delete all tasks from queue
+                this.tasks = [];
             }
         } else {
             console.log(`After processing task: ${JSON.stringify(task)}, ${task.id}`);

@@ -21,7 +21,7 @@ export class AnalysisComponent implements OnInit, OnDestroy {
   }
   rangeUnit: number =  1;
   rangeUnitCount : number = 2;  // defaults to 5 minutes
-  displaySpanIndex;
+  displaySpanIndex: number = 0;
   dateFrom: Date;
   dateTo: Date;
   bsConfig = {containerClass: "theme-orange", dateInputFormat: 'DD-MM-YYYY'};

@@ -24,7 +24,7 @@ export class SetupComponent implements OnInit {
   ngOnInit() {
     this.initForm()
 
-    this.subscriptionProgress = this.edgeService.getCommandProgress().subscribe((st: BackendCommandProgress) => {
+    this.subscriptionProgress = this.edgeService.getJobProgress().subscribe((st: BackendCommandProgress) => {
       //console.log("CommandProgress:", st);
       if (st.status == 'error' || st.status == 'end-job') {
         this.pendingCommand = '';
@@ -68,7 +68,7 @@ export class SetupComponent implements OnInit {
       deviceId: this.configurationForm.value.deviceId,
       tenantUrl: url
      };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
   }
 
   async resetEdge() {
@@ -78,12 +78,12 @@ export class SetupComponent implements OnInit {
       job: 'reset',
       promptText: 'Resetting Thin Edge ...',
      };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
   }
 
   async downloadCertificate() {
     const bc: BackendCommand = {job: 'empty', promptText: 'Download Certificate  ...' };
-    this.edgeService.sendBackendCommand(bc);
+    this.edgeService.startBackendJob(bc);
     try {
       const data = await this.edgeService.downloadCertificate("blob")
       const url = window.URL.createObjectURL(data);

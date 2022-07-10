@@ -25,6 +25,34 @@ export class EdgeService {
   constructor(private http: HttpClient,
     private socket: Socket) { }
 
+  startBackendJob(msg) {
+    this.socket.emit('job-input', msg);
+  }
+
+  getJobProgress(): Observable<BackendCommandProgress> {
+    return this.socket.fromEvent('job-progress');
+  }
+
+  getJobOutput(): Observable<string> {
+    return this.socket.fromEvent('job-output');
+  }
+
+  startShellCommand(msg) {
+    this.socket.emit('shell-input', msg);
+  }
+
+  getShellCommandExit(): Observable<string> {
+    return this.socket.fromEvent('shell-exit');
+  }
+
+  getShellCommandOutput(): Observable<string> {
+    return this.socket.fromEvent('shell-output');
+  }
+
+  getShellCommandConfirmation(): Observable<string> {
+    return this.socket.fromEvent('shell-cmd');
+  }
+
   getLastMeasurements(displaySpan: number): Promise<RawMeasurment[]> {
     const promise = new Promise<any[]>((resolve, reject) => {
       const params = new HttpParams({
@@ -72,14 +100,6 @@ export class EdgeService {
     return promise;
   }
 
-  sendBackendCommand(msg) {
-    this.socket.emit('cmd-in', msg);
-  }
-
-  getCommandProgress(): Observable<BackendCommandProgress> {
-    return this.socket.fromEvent('cmd-progress');
-  }
-
   getRealtimeMeasurements(): Observable<RawMeasurment> {
     this.socket.emit('new-measurement', 'start');
     const obs = this.socket.fromEvent<string>('new-measurement').pipe(map(m => JSON.parse(m)))
@@ -88,10 +108,6 @@ export class EdgeService {
 
   stopMeasurements(): void {
     this.socket.emit('new-measurement', 'stop');
-  }
-
-  getCommandOutput(): Observable<string> {
-    return this.socket.fromEvent('cmd-result');
   }
 
   updateEdgeConfiguration(ec: any) {
