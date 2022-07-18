@@ -9,7 +9,8 @@ WORKDIR /app/thin-edge.io
 RUN cargo build --release
 
 
-FROM alpine:latest
+# stick alpine to an intentional fixed version, to avoid issues of unexpected future imcompatibilities
+FROM alpine:3.15
 
 ARG DEVICEID=tedge_alpine
 ARG C8YURL=mqtt.cumulocity.com
