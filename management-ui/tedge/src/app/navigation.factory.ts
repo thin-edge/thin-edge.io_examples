@@ -35,14 +35,12 @@ export class EdgeNavigationFactory implements NavigatorNodeFactory {
         let Cloud: NavigatorNode = new NavigatorNode({
             path: '/cloud',
             label: _('Cloud'),
-            name: 'Cloud',
             priority: 100,
             icon: 'cloud',
             routerLinkExact: false
         });
         let Edge: NavigatorNode = new NavigatorNode({
             label: _('Edge'),
-            name: 'Edge',
             priority: 300,
             children: [Setup, Control, Status],
             icon: 'thin-client',

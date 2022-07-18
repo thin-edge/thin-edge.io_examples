@@ -38,9 +38,12 @@
     "mongodb": "^4.5.0",
     "ng2-charts": "3.0.11",
     "ngx-socket-io": "4.1",
+    "node-pty-prebuilt-multiarch": "^0.10.1-pre.5",
     "properties-to-json": "^0.2.1",
     "rxjs": "~6.6.3",
     "socket.io": "^4.3.2",
+    "xterm": "^4.19.0",
+    "xterm-addon-fit": "^0.5.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

@@ -1,79 +1,72 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertService } from '@c8y/ngx-components';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
-import { BackendCommandProgress } from '../property.model';
-
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
 
 @Component({
   selector: 'app-shell',
   templateUrl: './shell.component.html',
-  styleUrls: ['./shell.component.scss']
+  styleUrls: ['./shell.component.scss', '../../../node_modules/xterm/css/xterm.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ShellComponent implements OnInit {
-  commandTerminal: string = "# "
   currentLine: string = ""
   subscriptionOutput: Subscription;
   subscriptionExit: Subscription;
-  subscriptionConfirmation: Subscription;
+  term: any;
+  prepareCR: boolean = false;
 
-  constructor(private edgeService: EdgeService, private alertService: AlertService) {
+  constructor(private edgeService: EdgeService) {
   }
+
+  @ViewChild('terminalcontainer') private termElement: ElementRef;
 
   ngOnInit() {
     this.subscriptionOutput = this.edgeService.getShellCommandOutput().subscribe((data: any) => {
-      var st = String.fromCharCode.apply(null, new Uint8Array(data));
-      var end = this.commandTerminal.slice(-2) 
-      // test if last two char represent the prompt "# ", then remove these
-      if ( end == "# ") {
-        this.commandTerminal = this.commandTerminal.slice(0,-2);
-      }
-      this.commandTerminal = this.commandTerminal  + st 
-    })
+      const ar = new Uint8Array(data)
+      const char_minus1 = ar[ar.length - 1]
+      const st = String.fromCharCode.apply(null, ar);
+      console.log("Shell output:", st, char_minus1);
 
-    this.subscriptionConfirmation = this.edgeService.getShellCommandConfirmation().subscribe((data: any) => {
-      var st = String.fromCharCode.apply(null, new Uint8Array(data));
-      this.commandTerminal = this.commandTerminal  + st 
+      this.term.write(st);
     })
 
     this.subscriptionExit = this.edgeService.getShellCommandExit().subscribe((data: any) => {
       var st = String.fromCharCode.apply(null, new Uint8Array(data));
-      this.commandTerminal = this.commandTerminal  + st + "\n" + "# "
+      console.log("Shell exit:", st);
     })
 
   }
 
-  private resetTerminal() {
-    this.commandTerminal = "# ";
-  }
+  ngAfterViewInit(): void {
+    //this.term = new Terminal({convertEol: true, cursorBlink: true, cursorStyle :'block'});
+    this.term = new Terminal();
+    this.term.setOption('cursorStyle', 'block');
+    this.term.setOption('cursorBlink', true);
+    this.term.setOption('convertEol', true);
+    this.term.setOption('rendererType', 'dom');
+    const fitAddon = new FitAddon();
+    this.term.loadAddon(fitAddon);
+    this.term.onKey((ev) => {
+      console.log("OnKey event:", ev.domEvent.key, ev.key, ev);
 
-  onKeydown(e){
-    console.log ("Keydown:", e);
-    if (e.key == 'Enter') {
-      //this.commandTerminal = this.commandTerminal + this.currentLine + "\n" + "# "
-      console.log ("CommandTerminal:", this.commandTerminal);
-      if (this.currentLine == "clear") {
-        this.resetTerminal();
-      }
-      this.edgeService.startShellCommand(this.currentLine);
-      this.currentLine = ""
-    } else if (e.key == 'Backspace' ) {
-      // test if key is backspace and we don't remove a newline
-      this.currentLine = this.currentLine.slice(0, -1) 
-    } else if (!e.ctrlKey && e.key !== "Shift"){
-      this.currentLine = this.currentLine + e.key;
-    } else {
-      console.log ("Keydown ignore:", e);
-    }
-  }
+      this.edgeService.startShellCommand(ev.key);
+    });
 
-  onChange(e){
-    console.log ("Onchange:", e);
+    // this.term.onData((data) => {
+    //   console.log("OnData:", data, data.charCodeAt(0));
+    // });
+    this.term.focus();
+    this.term.open(this.termElement.nativeElement);
   }
 
   ngOnDestroy() {
     this.subscriptionOutput.unsubscribe();
     this.subscriptionExit.unsubscribe();
-    this.subscriptionConfirmation.unsubscribe();
+    if (this.term) {
+      console.log("Terminal is defined");
+      //this.term.destroy();
+    }
   }
 }

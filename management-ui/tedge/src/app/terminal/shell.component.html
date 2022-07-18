@@ -1,13 +1,8 @@
 <div class="card">
     <div class="card-block">
-        <div class="container">
-            <div class="d-flex justify-content-center">
-                <!-- <div style="pointer-events: none;"> -->
-                <div>
-                    <textarea #textarea (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event)"
-                        (change)="onChange($event)" class="commandTerminal" cols="100" rows="20"
-                        [ngModel]="commandTerminal" autofocus [scrollTop]="textarea.scrollHeight" onmousedown="return false;" ></textarea>
-                </div>
+        <div id="container-id">
+            <div id="grid-id">
+                 <div #terminalcontainer></div>
             </div>
         </div>
     </div>

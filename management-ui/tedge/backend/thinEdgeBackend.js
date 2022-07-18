@@ -1,5 +1,6 @@
 // spawn
 const { spawn } = require('child_process');
+const pty = require('node-pty-prebuilt-multiarch');
 const { TaskQueue } = require('./taskqueue');
 const fs = require('fs');
 // emmitter to signal completion of current task
@@ -30,14 +31,20 @@ class ThinEdgeBackend {
         Object.keys(this.notifier).forEach(key => {
             this.notifier[key] = this.notifier[key].bind(this)
         });
-        //console.log(`Socket: ${socket.id}`)
+        console.log(`New constructor for socket: ${socket.id}`)
         if (ThinEdgeBackend.measurementCollection == null || ThinEdgeBackend.seriesCollection == null) {
             console.error(`Connect to mongo first: ${socket.id}`)
         } else {
             this.watchMeasurementCollection();
         }
 
-        this.shell  = spawn('sh');
+        this.shell  = pty.spawn('sh', [], {
+            name: 'xterm-color',
+            cols: 80,
+            rows: 30,
+            cwd: "/",
+            env: process.env
+          });
         this.initShell(this.shell, this.socket);
         this.taskQueue = new TaskQueue(this.shell)
     }
@@ -45,25 +52,16 @@ class ThinEdgeBackend {
     initShell(sh, so) {
         const socket = so;
         const shell = sh;
-
         this.socket.on('shell-input', function (data) {
-            console.log("New shell-input:",data)
-            shell.stdin.write(data + "\n");
-            socket.emit('shell-cmd', Buffer.from( data + "\n"  + "# "));
+            console.log("New shell-input:", data, data.length)
+            shell.write(data);
         });
 
-        shell.stdout.on('data', function (data) {
+        shell.on('data', function (data) {
             console.log("New shell-ouput:",data)
-            socket.emit('shell-output', Buffer.concat([data, Buffer.from ("# ")]));
+            socket.emit('shell-output', Buffer.from(data));
         });
 
-        shell.stderr.on('data', function (data) {
-            socket.emit('shell-output', Buffer.concat([data, Buffer.from ("# ")]));
-        });
-
-        shell.on('exit', function (code) {
-            socket.emit('shell-exit', '** Shell exited: ' + code + ' **');
-        });
         return shell;
     }
 

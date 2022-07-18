@@ -7,12 +7,11 @@ export class ShellNavigationFactory implements NavigatorNodeFactory {
     nav: NavigatorNode[] = [];
     constructor(private edgeService: EdgeService,) {
         let Shell: NavigatorNode = new NavigatorNode({
-            label: _('Shell'),
+            label: 'Shell',
             icon: 'terminal',
-            path: 'edge/shell',
-            parent: gettext('Edge'),
-            priority: 10,
-            routerLinkExact: false
+            path: '/edge/shell',
+            parent: 'Edge',
+            priority: 10
         });
 
         this.nav.push(Shell);
