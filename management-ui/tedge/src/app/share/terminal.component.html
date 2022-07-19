@@ -1,11 +1,6 @@
-<c8y-progress-bar *ngIf="showStatusBar" [progress]="progress" [message]="''" ></c8y-progress-bar>
-<div class="container">
-    <div class="d-flex justify-content-center">
-        <div class="card">
-            <div>
-                <textarea  (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event)" (change)="onChange($event)" class="commandTerminal" cols="100"
-                    rows="20" [ngModel]="commandTerminal"></textarea>
-            </div>
-        </div>
+<c8y-progress-bar *ngIf="showStatusBar" [progress]="progress" [message]="''"></c8y-progress-bar>
+<div class="d-flex justify-content-center">
+    <div class="card">
+        <div #terminalcontainer></div>
     </div>
 </div>

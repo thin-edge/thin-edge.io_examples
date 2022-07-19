@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AlertService } from '@c8y/ngx-components';
 import { Subscription } from 'rxjs';
 import { EdgeService } from '../edge.service';
 import { BackendCommandProgress } from '../property.model';
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
 
 
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
-  styleUrls: ['./terminal.component.scss']
+  styleUrls: ['./terminal.component.scss', '../../../node_modules/xterm/css/xterm.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TerminalComponent implements OnInit {
   subscriptionProgress: Subscription;
   subscriptionOutput: Subscription;
   showStatusBar: boolean = true;
   progress: number = 0;
-  commandTerminal: string = "# "
-  currentLine: string = ""
+  term: any;
 
   constructor(private edgeService: EdgeService, private alertService: AlertService) {
   }
+
+  @ViewChild('terminalcontainer') private termElement: ElementRef;
 
   ngOnInit() {
     this.subscriptionProgress = this.edgeService.getJobProgress().subscribe((st: BackendCommandProgress) => {
@@ -27,55 +31,49 @@ export class TerminalComponent implements OnInit {
       this.progress = 100 * (st.progress + 1) / st.total
       if (st.status == 'error') {
         this.alertService.danger(`Running command ${st.job} failed at step: ${st.progress}`)
-        this.commandTerminal = this.commandTerminal + "\n" + "# "
+        this.term.write("\n/ $");
         this.progress = 0
       } else if (st.status == 'end-job') {
         this.alertService.success(`Successfully completed command ${st.job}`)
-        this.commandTerminal = this.commandTerminal + "\n" + "# "
+        this.term.write("\n/ $");
         this.progress = 0
       } else if (st.status == 'start-job') {
         this.progress = 0
-        this.resetTerminal();
-        this.commandTerminal = this.commandTerminal + ( st.promptText && st.promptText !== "" ? "# " + st.promptText : "")
+        this.term.clear();
+        this.term.write( (st.promptText && st.promptText !== "" ? "/ $ # " + st.promptText : "") + "\n")
       } else if (st.status == 'processing') {
-        this.commandTerminal = this.commandTerminal + "\n" + "# " + st.cmd + "\n"
+        this.term.write("\n" + "/ $ " + st.cmd + "\n");
       }
     })
     this.subscriptionOutput = this.edgeService. getJobOutput().subscribe((st: string) => {
-      this.commandTerminal = this.commandTerminal + st
+      this.term.write(st);
     })
 
   }
 
-  private resetTerminal() {
-    this.commandTerminal = "# ";
+  ngAfterViewInit(): void {
+    console.log("AfterViewInit is called!");
+    this.initializeTerminal();
   }
 
-  onKeydown(e){
-    console.log ("Keydown:", e);
-    if (e.key == 'Enter') {
-      this.commandTerminal = this.commandTerminal + this.currentLine + "\n" + "# "
-      console.log ("CommandTerminal:", this.commandTerminal);
-      if (this.currentLine == "clear") {
-        this.resetTerminal();
-      }
-      this.currentLine = ""
-    } else if (e.key == 'Backspace' ) {
-      // test if key is backspace and we don't remove a newline
-      this.currentLine = this.currentLine.slice(0, -1) 
-    } else if (!e.ctrlKey){
-      this.currentLine = this.currentLine + e.key;
-    } else {
-      console.log ("Keydown ignore:", e);
-    }
+  private initializeTerminal() {
+    this.term = new Terminal({'rows': 30, 'cols': 80});
+    this.term.setOption('convertEol', true);
+    this.term.open(this.termElement.nativeElement);
+    this.term.focus();
+    this.term.setOption('cursorBlink', true);
+    this.term.setOption('cursorStyle', 'bar');
+
+    // make sure prompt appears
+    this.term.write("/ $ ");
   }
 
-  onChange(e){
-    console.log ("Onchange:", e);
-  }
 
   ngOnDestroy() {
     this.subscriptionOutput.unsubscribe();
     this.subscriptionProgress.unsubscribe();
+    if (this.term) {
+      this.term.dispose();
+    }
   }
 }

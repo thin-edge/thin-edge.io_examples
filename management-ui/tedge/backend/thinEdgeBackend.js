@@ -21,6 +21,7 @@ class ThinEdgeBackend {
     static measurementCollection = null;
     static seriesCollection = null;
     shell = null;
+    jobShell = null;
     taskQueue = null;
 
 
@@ -38,6 +39,13 @@ class ThinEdgeBackend {
             this.watchMeasurementCollection();
         }
 
+        this.shell  = pty.spawn('sh', [], {
+            name: 'xterm-color',
+            cols: 80,
+            rows: 30,
+            cwd: "/",
+            env: process.env
+          });
         this.shell  = pty.spawn('sh', [], {
             name: 'xterm-color',
             cols: 80,

@@ -17,7 +17,7 @@ import { TerminalComponent } from './share/terminal.component';
 import { AnalysisModule } from './analysis/analysis.module';
 import { StatusColloringDirective } from './share/status.directive';
 import { StatusColloringPipe } from './share/status.pipe';
-import { ShellModule } from './terminal/shell.module';
+import { ShellModule } from './shell/shell.module';
 
 
 const config: SocketIoConfig = { url: location.origin, options: {} };
