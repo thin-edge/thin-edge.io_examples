@@ -50,13 +50,13 @@ export class StatusComponent implements OnInit {
               value: data[key]
             })
         });
-      console.log ("Result configuration", rows )
+      //console.log ("Result configuration", rows )
       this.rows$ = new Observable<Row[]>(observer => {
         observer.next(rows);
         observer.complete();
       })
       this.edgeService.getEdgeServiceStatus().then( data => {
-        console.log ("Result status", data )
+        //console.log ("Result status", data )
         this.serviceStatus =  data.result
       })
     })

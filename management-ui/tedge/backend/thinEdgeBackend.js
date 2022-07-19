@@ -47,6 +47,7 @@ class ThinEdgeBackend {
           });
         this.initShell(this.shell, this.socket);
         this.taskQueue = new TaskQueue(this.shell)
+        console.error(`Initialized taskQueue: ${this.taskQueue }`)
     }
 
     initShell(sh, so) {
@@ -62,7 +63,11 @@ class ThinEdgeBackend {
             socket.emit('shell-output', Buffer.from(data));
         });
 
-        return shell;
+        shell.on('exit', function (exitCode, signal) {
+            console.log("New shell-exit:",exitCode, signal)
+            const data = "Shell exited with code: " + exitCode;
+            socket.emit('shell-exit', Buffer.from(data));
+        })
     }
 
     notifier = {
@@ -352,9 +357,9 @@ class ThinEdgeBackend {
                     args: ["Finished resetting edge"]
                 }]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
-                taskQueue.registerNotifier(this.notifier)
-                taskQueue.start()
+                this.taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
+                this.taskQueue.registerNotifier(this.notifier)
+                this.taskQueue.start()
             } else {
                 this.socket.emit('job-progress', {
                     status: 'ignore',
@@ -380,9 +385,9 @@ class ThinEdgeBackend {
                     args: ["/sbin/rc-service", "c8y-log-plugin", "restart"]
                 },]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
-                taskQueue.registerNotifier(this.notifier)
-                taskQueue.start()
+                this.taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
+                this.taskQueue.registerNotifier(this.notifier)
+                this.taskQueue.start()
             } else {
                 this.socket.emit('job-progress', {
                     status: 'ignore',
@@ -423,9 +428,9 @@ class ThinEdgeBackend {
                 },
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
-                taskQueue.registerNotifier(this.notifier)
-                taskQueue.start()
+                this.taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
+                this.taskQueue.registerNotifier(this.notifier)
+                this.taskQueue.start()
             } else {
                 this.socket.emit('job-progress', {
                     status: 'ignore',
@@ -474,9 +479,9 @@ class ThinEdgeBackend {
                 }
             ]
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
-                taskQueue.registerNotifier(this.notifier)
-                taskQueue.start()
+                this.taskQueue.queueTasks(msg.job, msg.promptText, tasks, true)
+                this.taskQueue.registerNotifier(this.notifier)
+                this.taskQueue.start()
             } else {
                 this.socket.emit('job-progress', {
                     status: 'ignore',
@@ -510,9 +515,9 @@ class ThinEdgeBackend {
             ]
 
             if (!this.cmdInProgress) {
-                taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
-                taskQueue.registerNotifier(this.notifier)
-                taskQueue.start()
+                this.taskQueue.queueTasks(msg.job, msg.promptText, tasks, false)
+                this.taskQueue.registerNotifier(this.notifier)
+                this.taskQueue.start()
             } else {
                 this.socket.emit('job-progress', {
                     status: 'ignore',

@@ -167,3 +167,7 @@ io.on('connection', function (socket) {
         }
     });
 });
+
+io.on('close', function (socket) {
+    console.log(`Closing connection from web ui: ${socket.id}`);
+});
