@@ -1,0 +1,22 @@
+#!/bin/sh
+
+echo "tedge update hook: stop and snapshot"
+
+# mark current thin-edge container for rollback
+echo "Renaming container"
+docker container rename "thin-edge" "thin-edge_snapshot"
+ 
+# disconnect all clouds (in that example we know C8Y is connected)
+# could be improved to automatically loop over all currently connected clouds
+echo "Disconnecting C8Y"
+sudo tedge disconnect c8y
+
+# export current config for new container
+echo "Exporting tedge config"
+mkdir -p /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/tedge.toml   /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/device-certs /tmp/tedge-update-store/tedge/
+cp -r /etc/tedge/.agent       /tmp/tedge-update-store/tedge/
+
+echo "Hook1 done"
+exit 0 # success 

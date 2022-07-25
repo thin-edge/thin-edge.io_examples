@@ -1,0 +1,12 @@
+#!/bin/sh
+
+/sbin/rc-service $*
+r=$?
+
+# Dirty workaround: When mosquitto gets restarted during 'tedge disconnect', rc-service blocks
+# for some time some flocks, so following stop actions of tedge-agent and mapper do fail.
+echo Sleeping after restart for 5s
+sleep 5
+
+exit $r
+
