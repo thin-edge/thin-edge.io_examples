@@ -1,3 +1,5 @@
+# Use Thin-edge.io and Balena together
+
 By using this example, you can combine an existing Balena container with an additional docker container where all thin-edge.io processes and mosquito run.
 
 We used a Balena image, which can be found on the Balena website. For thin-edge.io we used the existing Alpine example, which can be found here.
@@ -12,7 +14,7 @@ In the dockerfile change the DEVICEID and C8YURL to your needs.
 Every time when a new build has taken place, a new certificate is created and must be uploaded to the cloud tenant. To use the same certificate every time, replace line 'RUN tedge cert create --device-id $DEVICEID' with the following"
 :
 
-# Create a self-signed certificate, and upload it to cloud tennant
+ Create a self-signed certificate, and upload it to cloud tennant
 # RUN tedge cert create --device-id $DEVICEID
 COPY ./certs/tedge-certificate.pem /etc/tedge/device-certs/
 COPY ./certs/tedge-private-key.pem /etc/tedge/device-certs/
