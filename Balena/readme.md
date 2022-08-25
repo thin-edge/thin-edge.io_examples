@@ -13,30 +13,31 @@ After you downloaded the Balena image, you need to place the thin-edge-alpine fo
 Insert image floder tree
 
 In the dockerfile change the DEVICEID and C8YURL to your needs.
-Every time when a new build has taken place, a new certificate is created and must be uploaded to the cloud tenant. To use the same certificate every time, replace line 'RUN tedge cert create ```--device-id $DEVICEID'``` with the following"
+Every time when a new build has taken place, a new certificate is created and must be uploaded to the cloud tenant. To use the same certificate every time, replace line ```'RUN tedge cert create --device-id $DEVICEID'``` with the following"
 :
 ```
- Create a self-signed certificate, and upload it to cloud tennant
+# Create a self-signed certificate, and upload it to cloud tennant
 # RUN tedge cert create --device-id $DEVICEID
 COPY ./certs/tedge-certificate.pem /etc/tedge/device-certs/
 COPY ./certs/tedge-private-key.pem /etc/tedge/device-certs/
 ```
 To create a self-signed certificate, you can do the following:
 
-•	generate new cert in sh inside the thin-edge container:
+Generate new cert inside the thin-edge container:
+```
 $ tedge cert create --device-id [DEVICEID]
 •	copy both files from /etc/tedge/device-certs/ from inside thin-edge container to 
 cat /etc/tedge/device-certs/tedge-certificate.pem
 cat /etc/tedge/device-certs/tedge-private-key.pem
-
+```
 To connect both docker images via MQTT you need add some lines to the docker compose file, this maps the internal ports to the host system:
-
+```
 thin-edge:
     build: ./thin-edge-alpine
     network_mode: "host"
     ports:
       - "1883:1883"
       - "8883:8883"
-      
+  ```    
 todo: add dependency check if thin-edge.io has started
 
