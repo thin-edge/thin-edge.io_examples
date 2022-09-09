@@ -4,7 +4,7 @@ After=tedge-mapper-c8y.service
 
 [Service]
 User=root
-ExecStart=/usr/bin/python3 /etc/tedge/plugins/service-mapper.py
+ExecStart=/usr/bin/python3 /etc/tedge/plugins/watcher.py
 Restart=on-failure
 
 WatchdogSec=30
