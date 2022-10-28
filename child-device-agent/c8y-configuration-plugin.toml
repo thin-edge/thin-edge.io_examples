@@ -1,0 +1,5 @@
+files = [
+    { path = '/path/to/some/config', type = 'config1'},
+    { path = '/path/to/another/config', type = 'config2'},
+]
+
