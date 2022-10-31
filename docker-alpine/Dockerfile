@@ -1,6 +1,6 @@
 FROM rust:alpine as builder
 
-ARG VERSION=0.7.0
+ARG VERSION=0.7.7
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
