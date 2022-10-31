@@ -24,14 +24,14 @@ RUN apk update \
     && apk upgrade \
     && apk --no-cache add mosquitto curl collectd collectd-mqtt sudo openrc
 
+# Add user and groups
+RUN addgroup -S tedge
+RUN adduser -g "" -H -D tedge -G tedge
+
 # Create useful directories
 RUN mkdir /run/lock && mkdir /var/tedge && \
     chmod 1777 /run/lock/ && \
     chown tedge:tedge /var/tedge
-
-# Add user and groups
-RUN addgroup -S tedge
-RUN adduser -g "" -H -D tedge -G tedge
 
 # Add tedge to sudoers
 RUN echo "%tedge   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge
