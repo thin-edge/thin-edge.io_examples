@@ -22,7 +22,7 @@ VOLUME ["/sys/fs/cgroup"]
 # We need curl to get root certificates
 RUN apk update \
     && apk upgrade \
-    && apk --no-cache add mosquitto curl collectd sudo openrc
+    && apk --no-cache add mosquitto curl collectd collectd-mqtt sudo openrc
 
 # Create /run/lock
 RUN mkdir /run/lock
@@ -57,6 +57,9 @@ WORKDIR /app
 
 # Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
+
+# Copy collectd.conf
+COPY ./etc/collectd/collectd.conf /etc/collectd/collectd.conf
 
 # Set OpenRC service scripts to /etc/init.d
 COPY ./etc/init.d/* /etc/init.d/
