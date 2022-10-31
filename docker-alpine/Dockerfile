@@ -24,9 +24,10 @@ RUN apk update \
     && apk upgrade \
     && apk --no-cache add mosquitto curl collectd collectd-mqtt sudo openrc
 
-# Create /run/lock
-RUN mkdir /run/lock
-RUN chmod 1777 /run/lock/
+# Create useful directories
+RUN mkdir /run/lock && mkdir /var/tedge && \
+    chmod 1777 /run/lock/ && \
+    chown tedge:tedge /var/tedge
 
 # Add user and groups
 RUN addgroup -S tedge
