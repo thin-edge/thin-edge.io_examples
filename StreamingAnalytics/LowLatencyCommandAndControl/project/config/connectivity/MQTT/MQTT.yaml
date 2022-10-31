@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Copyright (c) 2016, 2018, 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 # This is a YAML configuration file. See the associated .properties file for an 
 # easy way to change the most commonly needed configuration settings. 
@@ -66,7 +66,7 @@ dynamicChains:
             # If the input MQTT message maps to multiple EPL event types consider using the classifier codec
 
             defaultValue:
-              - metadata.sag.type: Temperature
+              - metadata.sag.type: com.apamax.thinedge.lowlatencysample.Temperature
             mapFrom:
 
               # Assuming that the EPL event type (MySampleInput) has field 'myParameter'

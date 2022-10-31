@@ -1,3 +1,8 @@
+COPYRIGHT NOTICE
+
+# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+
 # Streaming Analytics Low Latency Command and Control Sample
 This example demonstrates the use of Apama to average temperature
 sensor values over a 10 second window. If the average temperature
