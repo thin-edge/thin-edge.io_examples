@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Copyright (c) 2016,2018,2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 # This is a YAML configuration file. See the associated .properties file for an 
 # easy way to change the most commonly needed configuration settings. 
@@ -60,15 +60,15 @@ dynamicChains:
         suppressLoopback: true
     - mapperCodec:
         allowMissing: false
-        RawCpuMeasurement:
+        com.apamax.thinedge.resourcemonitoring.RawCpuMeasurement:
             towardsHost:
                 mapFrom:
                     - payload.cpuMeasurement: payload
-        RawMemMeasurement:
+        com.apamax.thinedge.resourcemonitoring.RawMemMeasurement:
             towardsHost:
                 mapFrom:
                     - payload.memMeasurement: payload
-        ResourceUsageReport:
+        com.apamax.thinedge.resourcemonitoring.ResourceUsageReport:
             towardsTransport:
                 defaultValue:
                     - metadata.contentType: "application/json"
@@ -77,10 +77,10 @@ dynamicChains:
                     - payload.memory.high-use-percent: payload.highMemPercent
     - classifierCodec:
         rules:
-          - RawCpuMeasurement:
-            - metadata.mqtt.topic: collectd/thin-edge/cpu/percent-active
-          - RawMemMeasurement:
-            - metadata.mqtt.topic: collectd/thin-edge/mem/percent-used
+          - com.apamax.thinedge.resourcemonitoring.RawCpuMeasurement:
+            - regex:metadata.mqtt.topic: /?collectd/thin-edge/cpu/percent-active
+          - com.apamax.thinedge.resourcemonitoring.RawMemMeasurement:
+            - regex:metadata.mqtt.topic: /?collectd/thin-edge/mem/percent-used
     - jsonCodec:
         filterOnContentType: true
     - stringCodec:

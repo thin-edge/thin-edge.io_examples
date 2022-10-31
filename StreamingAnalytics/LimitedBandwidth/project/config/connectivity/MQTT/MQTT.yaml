@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Copyright (c) 2016, 2018, 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 # This is a YAML configuration file. See the associated .properties file for an 
 # easy way to change the most commonly needed configuration settings. 
@@ -61,12 +61,12 @@ dynamicChains:
 
     - classifierCodec:
         rules:
-          - Temperature:
-            - metadata.mqtt.topic: sensors/temperature
-          - Pressure:
-            - metadata.mqtt.topic: sensors/pressure
-          - Vibration:
-            - metadata.mqtt.topic: sensors/vibration
+          - com.apamax.thinedge.limitedbandwidth.Temperature:
+            - regex:metadata.mqtt.topic: /?sensors/temperature
+          - com.apamax.thinedge.limitedbandwidth.Pressure:
+            - regex:metadata.mqtt.topic: /?sensors/pressure
+          - com.apamax.thinedge.limitedbandwidth.Vibration:
+            - regex:metadata.mqtt.topic: /?sensors/vibration
         
     # Codec that logs message contents during testing/debugging - should be commented out in production
     #- diagnosticCodec:

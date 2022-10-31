@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+ * Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+ * 
+ */
+
+package com.apamax.thinedge.resourcemonitoring;
+
 using com.apama.aggregates.count;
 using com.apama.correlator.timeformat.TimeFormat;
 
@@ -124,6 +132,7 @@ monitor DeviceResourceMonitor {
 	action sendReport(float highCpuTimePercent, float highMemTimePercent) {
 		float reportingTime := currentTime;
 
+		log "ResourceUsageReport: percentage of time CPU usage breached limit " + highCpuTimePercent.toString() + ";  percentage of time memory usage breached limit " + highMemTimePercent.toString() at INFO;
 		send ResourceUsageReport(TimeFormat.format(reportingTime, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
 		                         highCpuTimePercent, highMemTimePercent) to ResourceUsageReport.SEND_CHANNEL;
 		lastReportTime := reportingTime;
