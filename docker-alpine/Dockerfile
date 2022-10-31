@@ -29,7 +29,9 @@ RUN addgroup -S tedge
 RUN adduser -g "" -H -D tedge -G tedge
 
 # Create useful directories
-RUN mkdir /run/lock && mkdir /var/tedge && \
+RUN mkdir /run/lock && \
+    mkdir /var/tedge && \
+    mkdir /etc/collectd/collectd.conf.d && \
     chmod 1777 /run/lock/ && \
     chown tedge:tedge /var/tedge
 
@@ -64,7 +66,9 @@ COPY ./etc/collectd/collectd.conf /etc/collectd/collectd.conf
 
 # Set OpenRC service scripts to /etc/init.d
 COPY ./etc/init.d/* /etc/init.d/
-RUN chmod +x /etc/init.d/*
+RUN chmod +x /etc/init.d/* && \
+    sudo -u root rc-update add tedge-mapper-collectd default && \
+    sudo -u root rc-update add collectd default
 
 # Copy system.toml
 COPY ./etc/tedge/system.toml /etc/tedge/system.toml
