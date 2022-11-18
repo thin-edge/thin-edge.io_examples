@@ -9,10 +9,7 @@ COPYRIGHT NOTICE
 This example shows how Apama can be used on a thin-edge device to process and
 filter events to reduce the frequency of messages sent to the cloud.
 
-The EPL file in this sample
-([ThinEdgeIoExample.mon](project/monitors/ThinEdgeIoExample.mon)) collates
-temperature, pressure and vibration events, averages them and sends a
-measurement combining those averages at 5 second intervals to thin-edge.io via
+The EPL file in this sample ([ThinEdgeIoExample.mon](project/monitors/ThinEdgeIoExample.mon)) collates temperature, pressure and vibration events, averages them and sends a measurement combining those averages at 5 second intervals to thin-edge.io via
 MQTT.
 
 ## Prerequisites
@@ -36,14 +33,28 @@ pip install paho-mqtt
 > [config.yaml](./project/config.yaml) and using `engine_deploy` works out the
 > correct initialization order when creating a deployable project.
 
-1. Copy the contents of the [project](./project) directory to the
-`/etc/tedge/apama/project` directory on the thin-edge device.
-2. On the thin-edge device, restart the service with `sudo service apama
-restart`. This restarts the correlator and runs the project that was copied
-in the previous step.
-3. Execute the `demo_publisher.py` script in this directory to send some fake
+Zip the project located in the `LimitedBandwidth` directory of this repository. Note that you must use the zip format and not some other compression utility. Then use your tenant to deploy the zipped project to your thin-edge device by following these steps:
+
+1. In your Cumulocity IoT tenant, go to the **Device Management** app and go to the **Management** menu option and select the **Software repository**.
+2. Click **Add software** at the right of the top menu bar. 
+3. In the **ADD SOFTWARE** dialog enter the following details:
+- **Software**: apama-limited-bandwidth
+- **Description**: apama-limited-bandwidth (or something else if you choose)
+- **Device Filter Type**: (leave empty)
+- **Software Type**: apama
+- **Version**: 1.0::apama
+- **SOFTWARE FILE**: select the **Upload a binary** option and either drag and drop the project zip file created previously, or use the file chooser to navigate to it in your file system. 
+4. Click the **Add software** button.
+5. Now return to the **Devices** menu option and then select **All devices**.
+6. In the list of devices, select the thin-edge device installed previously.
+7. In the sub-menu for the device, select the **Software** option.
+8. Click the **Install software** button in the bottom left; the apama-limited-bandwidth project should be listed.
+9. Click the drop-down arrow on the right and check the 1.0::apama radio button. Then, click **Install**.
+10. Finally, click the Apply changes button in the lower right of the panel.
+11. Copy the  `demo_publisher.py` script in the `LimitedBandwidth` directory to the
+`/etc/tedge/apama/project` directory on the thin-edge device. Execute the script to send some fake
 temperature, pressure and vibration measurements to the Apama application.
-4. If you have configured thin-edge.io to connect to Cumulocity IoT or another
+12. If you have configured thin-edge.io to connect to Cumulocity IoT or another
 cloud service you should see the measurement(s) appear there.
 Otherwise, run `tail /var/log/apama/correlator.log` to print out the end of
 the correlator log file. In the correlator's output you should see log messages
