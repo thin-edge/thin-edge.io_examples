@@ -30,6 +30,16 @@ git clone https://github.com/thin-edge/thin-edge.io_examples
 cd thin_edge.io_examples/opcua-solution
 ```
 
+Copy the environment template file `env.template` to produce a custom `.env` file. This will container your secrets so don't commit it to the repository!
+
+```bash
+# Linux/MacOS/WSL
+cp --no-clobber env.template .env
+
+# Windows (powershell)
+if (!(Test-Path .env)) { Copy-Item env.template .env }
+```
+
 Modify the values within the .env file. Make espacially sure that you have an proper device ID for thin-edge.io. The baseUrl should be without leading https://.
 
 ```bash
