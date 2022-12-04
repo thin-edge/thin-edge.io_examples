@@ -34,7 +34,7 @@ Copy the environment template file `env.template` to produce a custom `.env` fil
 
 ```bash
 # Linux/MacOS/WSL
-cp --no-clobber env.template .env
+cp -n env.template .env
 
 # Windows (powershell)
 if (!(Test-Path .env)) { Copy-Item env.template .env }
