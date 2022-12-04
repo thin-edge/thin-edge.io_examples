@@ -182,7 +182,7 @@ Within docker-compose the part of gateway defines the parameters for the OPC UA 
       depends_on:
         - tedge
       volumes:
-      - ./data/opcua/:/data
+      - opcua_data:/data
 ```
 
 The registration data are stored in the ./data directory that are mapped as a volume to the docker service gateway.

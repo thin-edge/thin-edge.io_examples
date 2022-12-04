@@ -30,4 +30,7 @@ services:
     depends_on:
       - tedge
     volumes:
-    - ./data/opcua/:/data
+    - opcua_data:/data
+
+volumes:
+  opcua_data:
