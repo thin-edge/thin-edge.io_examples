@@ -36,6 +36,9 @@ RUN addgroup tedge-users
 RUN addgroup -S tedge
 RUN adduser -g "" -H -D tedge -G tedge
 
+# Create useful directories
+RUN mkdir /var/tedge \
+    && chown tedge:tedge /var/tedge
 
 # Add tedge-agent to sudoers
 RUN echo "%tedge   ALL = (ALL) NOPASSWD: /etc/tedge/sm-plugins/[a-zA-Z0-9]*, /bin/sync, /sbin/init" >/etc/sudoers.d/tedge
