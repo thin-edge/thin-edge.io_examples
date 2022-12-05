@@ -25,6 +25,13 @@ However thats where a modified version of the OPC UA Gateway agent can be used. 
 
 # Quickstart
 
+Warning: If you are on windows please change the git default line endings as this causes problems with scripts when building the image.
+
+```sh
+# Windows only
+git config --global core.autocrlf false
+```
+
 ```bash
 git clone https://github.com/thin-edge/thin-edge.io_examples
 cd thin_edge.io_examples/opcua-solution
