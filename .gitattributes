@@ -1,0 +1,2 @@
+# Force line endings on windows due to problems it causes with scripts
+text eol=lf
