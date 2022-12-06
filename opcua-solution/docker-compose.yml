@@ -6,6 +6,7 @@ services:
       args:
         - URL=${baseUrl}
         - DEVICEID=${deviceID}
+        - VERSION=${TEDGE_VERSION}
     container_name: thin-edge.io
     env_file:
       - .env
@@ -30,4 +31,7 @@ services:
     depends_on:
       - tedge
     volumes:
-    - ./data/opcua/:/data
+    - opcua_data:/data
+
+volumes:
+  opcua_data:

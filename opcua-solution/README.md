@@ -25,9 +25,26 @@ However thats where a modified version of the OPC UA Gateway agent can be used. 
 
 # Quickstart
 
+Warning: If you are on windows please change the git default line endings as this causes problems with scripts when building the image.
+
+```sh
+# Windows only
+git config --global core.autocrlf false
+```
+
 ```bash
 git clone https://github.com/thin-edge/thin-edge.io_examples
 cd thin_edge.io_examples/opcua-solution
+```
+
+Copy the environment template file `env.template` to produce a custom `.env` file. This will container your secrets so don't commit it to the repository!
+
+```bash
+# Linux/MacOS/WSL
+cp -n env.template .env
+
+# Windows (powershell)
+if (!(Test-Path .env)) { Copy-Item env.template .env }
 ```
 
 Modify the values within the .env file. Make espacially sure that you have an proper device ID for thin-edge.io. The baseUrl should be without leading https://.
@@ -182,7 +199,7 @@ Within docker-compose the part of gateway defines the parameters for the OPC UA 
       depends_on:
         - tedge
       volumes:
-      - ./data/opcua/:/data
+      - opcua_data:/data
 ```
 
 The registration data are stored in the ./data directory that are mapped as a volume to the docker service gateway.
