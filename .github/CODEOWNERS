@@ -8,5 +8,5 @@
 /remote-access/ @mstoffel-sag
 /c8y-operations/ @mbay-ODW
 /management-ui/ @sagIoTPower
-/StreamingAnalytics/ @louiseam-sag @jdoc-sag @mjj29
+/StreamingAnalytics/ @jdoc-sag
 /opcua-solution/ @mbay-ODW
