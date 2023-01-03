@@ -54,9 +54,12 @@ services:
         "--dbpath",
         "/data/db"
       ]
+    # volumes:
+    #   - ./mongo/data1/db:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
+    #   - ./mongo/data1/configdb:/data/configdb
     volumes:
-      - ./mongo/data1/db:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
-      - ./mongo/data1/configdb:/data/configdb
+      - mongodata1:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
+      - mongoconfig:/data/configdb
     deploy:
       restart_policy:
         condition: on-failure
@@ -68,5 +71,11 @@ services:
       TTL_DOCUMENT: 3600 # documents are automatically deleted after 3600 seconds / 1 h
     depends_on:
       - mongodb
+    # volumes:
+    #   - ./mongo/data2:/data/
     volumes:
-      - ./mongo/data2:/data/
+      - mongodata2:/data
+volumes:
+  mongodata1:
+  mongoconfig:
+  mongodata2:

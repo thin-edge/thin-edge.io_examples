@@ -1,7 +1,7 @@
 
 FROM rust:alpine as builder
 
-ARG VERSION=0.7.1
+ARG VERSION=0.8.1
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
@@ -50,7 +50,8 @@ RUN chown root:root /bin/c8y*
 RUN tedge --init
 RUN sudo -u tedge tedge_mapper --init c8y
 RUN sudo -u tedge tedge_mapper --init az
-RUN sudo -u tedge tedge_agent --init
+#RUN sudo -u tedge tedge_agent --init
+RUN sudo tedge_agent --init
 RUN sudo -u root c8y_log_plugin --init
 RUN sudo -u root c8y_configuration_plugin --init
 

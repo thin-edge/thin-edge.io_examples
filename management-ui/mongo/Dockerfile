@@ -1,3 +1,4 @@
+#FROM mongo:latest
 FROM mongo:latest
 
 WORKDIR /config
