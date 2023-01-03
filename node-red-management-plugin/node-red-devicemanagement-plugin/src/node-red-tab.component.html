@@ -34,13 +34,13 @@
                     <div class="col-2 ng-binding">
                         Label
                     </div>
-                    <div class="col-3 ng-binding">
+                    <div class="col-2 ng-binding">
                         Id
                     </div>
                     <div class="col-5 ng-binding">
                         Info
                     </div>
-                    <div class="col-2 ng-binding">
+                    <div class="col-3 ng-binding">
                         Updated
                     </div>
                 </div>
@@ -52,12 +52,17 @@
     </div>
     <c8y-list-group>
         <c8y-li *ngFor="let flow of deployedFlows">
-            <c8y-li-icon [icon]="'box'"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='PENDING'" [icon]="'clock-o'"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='SUCCESSFUL'" [icon]="'check-circle'"
+                class="text-success"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='FAILED'" [icon]="'exclamation-circle'"
+                class="text-danger"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='DELIVERED'" [icon]="'clock-o'"></c8y-li-icon>
             <div class="content-flex-60">
                 <div class="col-2 ng-binding">
                     {{flow.label}}
                 </div>
-                <div class="col-3 ng-binding">
+                <div class="col-2 ng-binding">
                     <span class="label label-info ng-binding">
                         {{flow.id}}
                     </span>
@@ -67,7 +72,7 @@
                         {{flow.info}}
                     </small>
                 </div>
-                <div class="col-2 ng-binding">
+                <div class="col-3 ng-binding">
                     <small>
                         {{flow.updated | date:'medium'}}
                     </small>
