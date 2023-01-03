@@ -5,6 +5,11 @@
         <i c8y-icon="plus-circle" class="dlt-c8y-icon-plus-circle"></i>
         Add flow
     </button>
+    <button class="btn btn-link c8y-realtime" title="Toggle realtime"
+        (click)="isRealtimeActive = !isRealtimeActive; toggleRealtime(isRealtimeActive)">
+        <span class="c8y-pulse" [ngClass]="{ active: isRealtimeActive, inactive: !isRealtimeActive }"> </span>
+        Realtime
+    </button>
     <button title="Reload" class="btn btn-link ng-binding ng-scope" (click)="loadData()">
         <i c8y-icon="refresh" ng-class="{'icon-spin': isLoading}" class="dlt-c8y-icon-refresh"></i>
         Reload
