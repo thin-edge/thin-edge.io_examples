@@ -1,0 +1,88 @@
+<c8y-title>Deployed Node-RED flows</c8y-title>
+
+<c8y-action-bar-item [placement]="'right'">
+    <button class="btn btn-link ng-binding ng-scope" title="Add flow" (click)="openModal(addModal,'modal-sm')">
+        <i c8y-icon="plus-circle" class="dlt-c8y-icon-plus-circle"></i>
+        Add flow
+    </button>
+    <button title="Reload" class="btn btn-link ng-binding ng-scope" (click)="loadData()">
+        <i c8y-icon="refresh" ng-class="{'icon-spin': isLoading}" class="dlt-c8y-icon-refresh"></i>
+        Reload
+    </button>
+</c8y-action-bar-item>
+
+<div class="c8y-empty-state text-middel" *ngIf="deployedFlows && deployedFlows.length === 0">
+    <h1 class="c8y-icon c8y-icon-layers c8y-icon-duocolor"></h1>
+    <h3 translate>No flow assigned.</h3>
+    <p translate>Add a new flow by clicking below.</p>
+    <p>
+        <button class="btn btn-primary" title="Add flow" (click)="openModal(addModal,'modal-sm')" translate>
+            Add flow
+        </button>
+    </p>
+</div>
+
+
+<div class="card-block overflow-visible" *ngIf="deployedFlows && deployedFlows.length > 0">
+    <div class="page-sticky-header c8y-list__item hidden-xs ng-scope">
+        <div class="c8y-list__item__block">
+            <div class="c8y-list__item__icon">
+                <i class="p-l-24"></i>
+            </div>
+            <div class="c8y-list__item__body">
+                <div class="content-flex-60">
+                    <div class="col-2 ng-binding">
+                        Label
+                    </div>
+                    <div class="col-3 ng-binding">
+                        Id
+                    </div>
+                    <div class="col-5 ng-binding">
+                        Info
+                    </div>
+                    <div class="col-2 ng-binding">
+                        Updated
+                    </div>
+                </div>
+            </div>
+            <div class="c8y-list__item__actions">
+                <div class="c8y-list__item--empty-actions"></div>
+            </div>
+        </div>
+    </div>
+    <c8y-list-group>
+        <c8y-li *ngFor="let flow of deployedFlows">
+            <c8y-li-icon [icon]="'box'"></c8y-li-icon>
+            <div class="content-flex-60">
+                <div class="col-2 ng-binding">
+                    {{flow.label}}
+                </div>
+                <div class="col-3 ng-binding">
+                    <span class="label label-info ng-binding">
+                        {{flow.id}}
+                    </span>
+                </div>
+                <div class="col-5 ng-binding">
+                    <small>
+                        {{flow.info}}
+                    </small>
+                </div>
+                <div class="col-2 ng-binding">
+                    <small>
+                        {{flow.updated | date:'medium'}}
+                    </small>
+                </div>
+            </div>
+            <c8y-li-action (click)="update(flow)" icon="box-settings">
+                Update
+            </c8y-li-action>
+            <c8y-li-action (click)="remove(flow)" icon="remove-delivery">
+                Remove
+            </c8y-li-action>
+        </c8y-li>
+    </c8y-list-group>
+</div>
+
+<ng-template #addModal>
+    <add-flow-modal [modalRef]="modalRef" [deviceId]="deviceId" (onSave)="loadData()"></add-flow-modal>
+</ng-template>

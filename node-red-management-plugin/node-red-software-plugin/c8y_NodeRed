@@ -1,0 +1,4 @@
+[exec]
+  topic = "c8y/s/dc/node-red"
+  on_message = "10"
+  command = "/bin/c8y_NodeRed.py"

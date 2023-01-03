@@ -1,0 +1,19 @@
+<c8y-typeahead [(ngModel)]="selected" placeholder="{{ 'Start typing…' | translate }}" (onSearch)="setFilter($event)"
+    [required]="true" [allowFreeEntries]="false" [displayProperty]="'full.label'">
+    <c8y-li *c8yFor="
+    let item of items;
+    loadMore: 'false';
+    pipe: filterPipe;
+    notFound: notFoundTemplate
+  " class="p-l-8 p-r-8 c8y-list__item--link interact" (click)="selected = item; setFilter(''); itemChanged()"
+        [active]="selected === item">
+        <c8y-highlight [text]="item.full.label" [pattern]="pattern"></c8y-highlight>
+    </c8y-li>
+
+    <ng-template #notFoundTemplate>
+        <c8y-li class="bg-gray-lighter p-8" *ngIf="pattern.length > 0">
+            <span>No match found</span>
+        </c8y-li>
+    </ng-template>
+
+</c8y-typeahead>

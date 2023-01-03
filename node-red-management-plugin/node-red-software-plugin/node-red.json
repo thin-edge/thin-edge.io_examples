@@ -1,0 +1,21 @@
+{
+  "name": "node-red",
+  "type": "c8y_SmartRest2Template",
+  "com_cumulocity_model_smartrest_csv_CsvSmartRestTemplate": {
+    "requestTemplates": [],
+    "responseTemplates": [
+      {
+        "msgId": "10",
+        "condition": "c8y_NodeRed",
+        "base": "",
+        "name": "Node-Red",
+        "pattern": [
+          "data",
+          "c8y_NodeRed.type",
+          "c8y_NodeRed.flowId"
+        ]
+      }
+    ]
+  },
+  "__externalId": "node-red"
+}
