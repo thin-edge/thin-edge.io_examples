@@ -57,12 +57,12 @@ export class TerminalComponent implements OnInit {
   }
 
   private initializeTerminal() {
-    this.term = new Terminal({'rows': 30, 'cols': 80});
-    this.term.setOption('convertEol', true);
+    this.term = new Terminal({'rows': 30, 'cols': 80, 'convertEol': true, 'cursorBlink': true, 'cursorStyle': 'bar'});
+    //this.term.setOption('convertEol', true);
     this.term.open(this.termElement.nativeElement);
     this.term.focus();
-    this.term.setOption('cursorBlink', true);
-    this.term.setOption('cursorStyle', 'bar');
+    //this.term.setOption('cursorBlink', true);
+    //this.term.setOption('cursorStyle', 'bar');
 
     // make sure prompt appears
     this.term.write("/ $ ");

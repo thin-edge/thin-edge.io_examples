@@ -1,24 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule as ngRouterModule } from '@angular/router';
+import { AlertModule, CommonModule, CoreModule, HOOK_NAVIGATOR_NODES, RouterModule } from '@c8y/ngx-components';
 import { NgChartsModule } from 'ng2-charts';
-import { CoreModule, RouterModule, HOOK_NAVIGATOR_NODES, CommonModule, AlertModule } from '@c8y/ngx-components';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { AnalysisComponent } from './analysis/analysis.component';
+import { AnalysisModule } from './analysis/analysis.module';
+import { AppComponent } from './boot/app.component';
 import { CloudComponent } from './cloud/cloud.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { ControlComponent } from './control/control.component';
 import { EdgeNavigationFactory } from './navigation.factory';
 import { SetupComponent } from './setup/setup.component';
-import { StatusComponent } from './status/status.component';
-import { ControlComponent } from './control/control.component';
-import { AppComponent } from './boot/app.component';
+import { StatusColoringDirective } from './share/status.directive';
+import { StatusColoringPipe } from './share/status.pipe';
 import { TerminalComponent } from './share/terminal.component';
-import { AnalysisModule } from './analysis/analysis.module';
-import { StatusColloringDirective } from './share/status.directive';
-import { StatusColloringPipe } from './share/status.pipe';
 import { ShellModule } from './shell/shell.module';
-
+import { StatusComponent } from './status/status.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule }from '@ngx-formly/bootstrap';
 
 const config: SocketIoConfig = { url: location.origin, options: {} };
 
@@ -42,10 +46,15 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     FormsModule,
     AlertModule,
     ReactiveFormsModule,
+    FormlyBootstrapModule,
+    FormlyModule.forRoot({}),
     AnalysisModule,
     ShellModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,
+    BsDropdownModule.forRoot(),
+    PopoverModule,
+    ModalModule,
     CommonModule
   ],
   
@@ -57,6 +66,6 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     CloudComponent, AppComponent,
     SetupComponent, StatusComponent, 
     ControlComponent, TerminalComponent,
-    StatusColloringDirective, StatusColloringPipe]
+    StatusColoringDirective, StatusColoringPipe]
  })
 export class AppModule { }

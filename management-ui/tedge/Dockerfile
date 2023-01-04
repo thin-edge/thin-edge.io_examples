@@ -88,11 +88,6 @@ RUN install -g mosquitto -o mosquitto -m 755 -d /etc/tedge/device-certs
 RUN install -g tedge -o tedge -m 755 -d /etc/tedge/plugins
 RUN install -g tedge -o tedge -m 754 -d /etc/tedge/.agent
 
-# Copy operation files
-# COPY ./etc/tedge/operations/c8y/* /etc/tedge/operations/c8y
-# RUN chown -R root:root /etc/tedge/operations/c8y
-# RUN chmod -R 644 /etc/tedge/operations/c8y
-
 # Copy sm dummy plugin
 COPY ./etc/tedge/sm-plugins/* /etc/tedge/sm-plugins/
 RUN chown root:root /etc/tedge/sm-plugins/*
@@ -103,7 +98,7 @@ COPY ./etc/tedge/contrib/collectd/collectd.conf /etc/collectd/collectd.conf
 
 # Comment out getty's, since they cause error messages
 COPY ./etc/inittab /etc/inittab
-#Build web app
+# Build web app
 WORKDIR /app/tedge
 COPY ./ /app/tedge
 
@@ -112,7 +107,7 @@ ARG MONGO_PORT ${MONGO_PORT}
 ARG MONGO_HOST ${MONGO_HOST}
 RUN echo "export MONGO_HOST=$MONGO_HOST" >/app/tedge/tedge-ui-env
 RUN echo "export MONGO_PORT=$MONGO_PORT" >>/app/tedge/tedge-ui-env
-RUN npm install -g @angular/cli && npm install
+RUN npm install -g @angular/cli && npm install -f
 RUN npm run build
 
 # # Clean up

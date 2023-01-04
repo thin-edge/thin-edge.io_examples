@@ -4,7 +4,7 @@
             <form [formGroup]="form">
                 <div class="card-header">Diagram properties</div>
                 <div class="card-block">
-                    <formly-form [model]="config" [fields]="fields" [options]="options" [form]="form"></formly-form>
+                    <formly-form [model]="config" [fields]="fields" [form]="form"></formly-form>
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary" (click)="onSaveClicked()">Save</button>
@@ -20,7 +20,7 @@
                 <ul class="list-group">
                     <li class="list-group-item collapsible" *ngFor="let mType of measurementTypes"
                         [ngClass]="{ expanded: isDetailOpen }" #li>
-                        <button type="button" title="{{ 'Expand' | translate }}" class="collapse-btn"
+                        <button type="button" title="{{ 'Expand' }}" class="collapse-btn"
                             [ngClass]="{ active: li.collapsed }" (click)="li.collapsed = !li.collapsed">
                             <i c8yIcon="chevron-down"></i>
                         </button>

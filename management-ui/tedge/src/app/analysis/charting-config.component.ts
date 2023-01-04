@@ -12,7 +12,9 @@ import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 })
 export class ChartingConfigComponent implements OnInit {
 
-  constructor(public edgeService: EdgeService) { }
+  constructor(public edgeService: EdgeService) {
+    console.log("Constructor: config:", this.config)
+   }
 
   @Output() onChangeConfig = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
@@ -21,15 +23,14 @@ export class ChartingConfigComponent implements OnInit {
   isHidden: boolean = false;
 
   form = new FormGroup({});
-  options: FormlyFormOptions = {};
+  //options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [
     {
       key: 'diagramName',
       type: 'input',
       templateOptions: {
         label: 'Digram Name',
-        description: 'Name of diagram.',
-        required: true,
+        description: 'Name of diagram.'
       },
     },
     {
@@ -78,8 +79,8 @@ export class ChartingConfigComponent implements OnInit {
     
   ];
   async ngOnInit() {
+    console.log("Init: config:", this.config)
     this.measurementTypes = await this.edgeService.getSeries();
-    console.log("This config:", this.config)
   }
 
   public onSaveClicked(): void {

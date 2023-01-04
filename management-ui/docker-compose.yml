@@ -21,10 +21,12 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   # Test version: map local directory and build angular locally (three changes are required in total)  
-  # 1. map locally
+  # in file docker-compose.yml
+  # 1. map web app from local directory, build outside
+  ##  - ./:/app/
+  # in file tedge/Dockerfile.yml
   # 2. run in tedge cmd: npm run build to build outside of the container, the result is then mapped with the following volume mapping:  ./:/app/
   # 3. enable entrypoint ENTRYPOINT ["/bin/bash", "/app/tedge/start.sh"] in tedge/Dockerfile
-  ##  - ./:/app/
   mqtt_collector:
     build: ./mqtt_collector
     container_name: mqtt_collector
@@ -54,9 +56,6 @@ services:
         "--dbpath",
         "/data/db"
       ]
-    # volumes:
-    #   - ./mongo/data1/db:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
-    #   - ./mongo/data1/configdb:/data/configdb
     volumes:
       - mongodata1:/data/db # This is where your volume will persist. e.g. VOLUME-DIR = ./volumes/mongodb
       - mongoconfig:/data/configdb
@@ -71,8 +70,6 @@ services:
       TTL_DOCUMENT: 3600 # documents are automatically deleted after 3600 seconds / 1 h
     depends_on:
       - mongodb
-    # volumes:
-    #   - ./mongo/data2:/data/
     volumes:
       - mongodata2:/data
 volumes:
