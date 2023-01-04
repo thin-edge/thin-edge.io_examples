@@ -39,7 +39,8 @@ export class NodeRedFlowService {
         const operation: IOperation = {
             deviceId: deviceId,
             c8y_NodeRed: {
-                type: type
+                type: type,
+                flowId: flow.id
             },
             description: `${type} the node-red flow "${flow.label}" to the runtime on the device.`,
             data: encoded
@@ -69,7 +70,7 @@ export class NodeRedFlowService {
                 type: "remove",
                 flowId: flow.id
             },
-            description: `$Remove the node-red flow "${flow.label}" to the runtime on the device.`,
+            description: `Remove the node-red flow "${flow.label}" to the runtime on the device.`,
 
         }
         this.operations.create(operation).then(res => this.userFeedback(res.res))
