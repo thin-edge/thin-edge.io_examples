@@ -72,7 +72,15 @@ services:
       - mongodb
     volumes:
       - mongodata2:/data
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    ports:
+      - "1880:1880"
+    volumes:
+      -nodereddata:/data
 volumes:
   mongodata1:
   mongoconfig:
   mongodata2:
+  nodereddata:
