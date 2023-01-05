@@ -2,11 +2,11 @@
 # coding=utf-8
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('c8y_NodeRed')
 logFile = f'/var/log/c8y_NodeRed.log'
-logging.basicConfig(level=log  ging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename=logFile,level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-logger.info(f'Logger for {__name__} was initialised')
+logger.info(f'Logger for c8y_NodeRed was initialised')
 
 import sys
 import base64
@@ -38,7 +38,7 @@ try:
 
     client = mqtt_client.Client(client_id)
     client.connect(broker, port)
-    client.publish('c8y/s/us',f'501,{__name__}')
+    client.publish('c8y/s/us',f'501,')
     nodeRed = Connector(url)
     logger.debug("Checking if node-red is runnning locally")
     logger.debug(nodeRed.check_node_red())
@@ -63,10 +63,10 @@ try:
         elif type == 'create':
             logger.info("FlowId does not exist, creating it.")
             logger.debug(f'Using the following data to create flow: {data}')
-            response = nodeRed.create_flow(data)
-            if response:
+            validresponse, response = nodeRed.create_flow(data)
+            if validresponse:
                 localFlowId = json.loads(response)['id']
-                client.publish(f'c8y/s/uc/node-red/{c8yFlowId}',f'11,{c8yFlowId},{response}')
+                client.publish(f'c8y/s/uc/node-red/{c8yFlowId}',f'11,{c8yFlowId},{localFlowId}')
                 logger.debug("Flow created")
             else:
                 logger.debug("Flow not created")
@@ -76,10 +76,10 @@ try:
             raise Exception
     else:
         logger.warning("Node-red is not running")
-        client.publish('c8y/s/us',f'502,{__name__},"Error: Node-Red not running."')
-    client.publish('c8y/s/us',f'503,{__name__},')
+        client.publish('c8y/s/us',f'502,c8y_NodeRed,"Error: Node-Red not running."')
+    client.publish('c8y/s/us',f'503,c8y_NodeRed,')
 except Exception as e:
     try:
-        client.publish('c8y/s/us',f'502,{__name__},"Error: {e}"')
+        client.publish('c8y/s/us',f'502,c8y_NodeRed,"Error: {e}"')
     except Exception as e:
         logger.debug(f'Aborting due to error: {e}')
