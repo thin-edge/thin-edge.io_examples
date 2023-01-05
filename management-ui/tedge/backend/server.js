@@ -1,13 +1,15 @@
-// Overwrite console
+// overwrite console output to add timestamp
 require('console-stamp')(console, '[HH:MM:ss.l]');
-// Use Express
+
+// use Express
 const express = require("express");
 const http = require('http');
 
-//proxy
+// http-proxy
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const socketIO = require('socket.io')
-// Create new instance of the express server
+
+// create new instance of the express server
 const app = express();
 const thinEdgeBackend = require('./thinEdgeBackend.js');
 const CERTIFICATE = "/etc/tedge/device-certs/tedge-certificate.pem";
@@ -37,13 +39,13 @@ const proxyToTargetUrl = createProxyMiddleware(
 // set up proxy 
 app.use('/c8y', proxyToTargetUrl);
 
-// Define the JSON parser as a default way 
+// define the JSON parser as a default way 
 // to consume and produce data through the 
 // exposed APIs
 app.use(express.json());
 
-// Create link to Angular build directory
-// The `ng build` command will save the result
+// create link to Angular build directory
+// the `ng build` command will save the result
 // under the `dist` folder.
 //var distDir = __dirname + "/../dist/cumulocity-tedge-setup";
 var distDir = __dirname + "/../dist/apps/edge";
