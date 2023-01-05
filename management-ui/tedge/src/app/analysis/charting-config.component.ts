@@ -12,7 +12,9 @@ import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 })
 export class ChartingConfigComponent implements OnInit {
 
-  constructor(public edgeService: EdgeService) { }
+  constructor(public edgeService: EdgeService) {
+    console.log("Constructor: config:", this.config)
+   }
 
   @Output() onChangeConfig = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
@@ -21,15 +23,14 @@ export class ChartingConfigComponent implements OnInit {
   isHidden: boolean = false;
 
   form = new FormGroup({});
-  options: FormlyFormOptions = {};
+  //options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [
     {
       key: 'diagramName',
       type: 'input',
       templateOptions: {
         label: 'Digram Name',
-        description: 'Name of diagram.',
-        required: true,
+        required: true
       },
     },
     {
@@ -37,7 +38,6 @@ export class ChartingConfigComponent implements OnInit {
       type: 'checkbox',
       templateOptions: {
         label: 'Fit Axis',
-        description: 'Fit Axis',
         readonly: false,
         change: (field, $event) => {
           this.updateFitAxis();
@@ -49,7 +49,6 @@ export class ChartingConfigComponent implements OnInit {
       type: 'checkbox',
       templateOptions: {
         label: 'Fill Curve',
-        description: 'Fill Curve',
         readonly: false,
       }
     },
@@ -59,7 +58,6 @@ export class ChartingConfigComponent implements OnInit {
       hideExpression: 'model.fitAxis',
       templateOptions: {
         label: 'Lower range y-axis',
-        description: 'Low Range',
         type: 'number',
         readonly: false,
       }
@@ -70,7 +68,6 @@ export class ChartingConfigComponent implements OnInit {
       hideExpression: 'model.fitAxis',
       templateOptions: {
         label: 'Higher range y-axis',
-        description: 'High Range',
         type: 'number',
         readonly: false,
       }
@@ -78,8 +75,8 @@ export class ChartingConfigComponent implements OnInit {
     
   ];
   async ngOnInit() {
+    console.log("Init: config:", this.config)
     this.measurementTypes = await this.edgeService.getSeries();
-    console.log("This config:", this.config)
   }
 
   public onSaveClicked(): void {

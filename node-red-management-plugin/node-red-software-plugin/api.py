@@ -83,9 +83,9 @@ class Connector(object):
             response = requests.request("POST", f'{self.url}/flow', headers=self.headers, data=body)
             logger.debug('Response from request: ' + str(response.text))
             logger.debug('Response from request with code : ' + str(response.status_code))
-            if response.status_code == 204:
+            if response.status_code == 200:
                 logger.debug('Flow created')
-                return response.text
+                return True, response.text
             else:
                 logger.warning(f'Response from request: {response.text}')
                 logger.warning(f'Got response with status_code: {response.status_code}')

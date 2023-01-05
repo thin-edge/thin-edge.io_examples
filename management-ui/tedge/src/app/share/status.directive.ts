@@ -2,7 +2,7 @@ import { Directive, ElementRef, AfterContentInit, Renderer2, AfterViewInit } fro
 
 @Directive({ selector: '[statusColoring]' })
 
-export class StatusColloringDirective implements AfterContentInit, AfterViewInit { //
+export class StatusColoringDirective implements AfterContentInit, AfterViewInit { //
 
     constructor(private el: ElementRef, private renderer: Renderer2) {
     }

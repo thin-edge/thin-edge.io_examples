@@ -224,7 +224,7 @@ Select the binaries and wait until it is uploaded.
 
 > **_NOTE:_** We need to clone the Device Management app to add the plugin to it
 
-After succesful upload go to "All Applications" and click on "Add Application". Select "Duplicate existing application"
+After successful upload go to "All Applications" and click on "Add Application". Select "Duplicate existing application"
 and afterwards "Device Management".
 
 <br/><br/>
@@ -300,7 +300,8 @@ To inject node-red flows via operation from Cumulocity IoT the operation plugin 
 2. run sudo -H pip3 install -r requirements.txt from that directory
 3. Copy c8y_NodeRed to the following directory "/etc/tedge/operations/c8y/"
 4. Copy c8y_NodeRed.py to the following directory "/bin/"
-5. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 644 c8y_NodeRed and chmod 555 c8y_NodeRed.py")
+5. Copy api.py to the following directory "/bin/"
+6. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 644 c8y_NodeRed and chmod 555 c8y_NodeRed.py and api.py")
 
 If installation is done properly according to the steps above, you have to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
 

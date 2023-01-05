@@ -4,7 +4,7 @@
             <form [formGroup]="form">
                 <div class="card-header">Diagram properties</div>
                 <div class="card-block">
-                    <formly-form [model]="config" [fields]="fields" [options]="options" [form]="form"></formly-form>
+                    <formly-form [model]="config" [fields]="fields" [form]="form"  class="formly-group-array-cols d-block p-l-24 p-r-24"></formly-form>
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary" (click)="onSaveClicked()">Save</button>
@@ -18,19 +18,23 @@
             <div class="card-header">Measurement Types</div>
             <div class="card-block">
                 <ul class="list-group">
-                    <li class="list-group-item collapsible" *ngFor="let mType of measurementTypes"
-                        [ngClass]="{ expanded: isDetailOpen }" #li>
-                        <button type="button" title="{{ 'Expand' | translate }}" class="collapse-btn"
+                    <li class="list-group-item collapsible" *ngFor="let mType of measurementTypes" #li>
+                        <button type="button" title="{{ 'Expand' }}" class="collapse-btn"
                             [ngClass]="{ active: li.collapsed }" (click)="li.collapsed = !li.collapsed">
                             <i c8yIcon="chevron-down"></i>
                         </button>
                         <span>{{mType.name}} (with series)</span>
                         <div [collapse]="li.collapsed" [isAnimated]="true">
-                            <ul class="list-group">
-                                <li class="list-group-item" *ngFor="let serie of mType.series; index as i;">
-                                    {{i}}. &nbsp;{{serie}}
-                                </li>
-                            </ul>
+                            <div class="list-group">
+                                <div class="list-group-item flex-row" *ngFor="let serie of mType.series; index as i;">
+                                    <div class="list-item-icon">
+                                        <i c8yIcon="c8y-icon c8y-icon-data-points"></i>
+                                    </div>
+                                    <div class="list-item-body">
+                                        <span>{{serie}}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>

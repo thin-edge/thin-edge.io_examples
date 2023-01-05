@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   name: 'applyStatusColoring'
 })
 
-export class StatusColloringPipe implements PipeTransform {
+export class StatusColoringPipe implements PipeTransform {
 
   constructor(private _domSanitizer: DomSanitizer) { }
 

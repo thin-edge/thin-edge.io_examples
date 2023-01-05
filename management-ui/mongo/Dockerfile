@@ -1,3 +1,7 @@
+# this dockerfile creates an image mongosetup for
+# 1. creating a replica set
+# 2. creating an index responsible for removing  old measurements, TTL setting
+
 FROM mongo:latest
 
 WORKDIR /config

@@ -37,7 +37,8 @@ export class ShellComponent implements OnInit {
   }
 
   private initializeTerminal() {
-    this.term = new Terminal();
+    //this.term = new Terminal();
+    this.term = new Terminal({'cursorBlink': true, 'cursorStyle': 'bar'});
     //this.term.setOption('convertEol', true);
     const fitAddon = new FitAddon();
     this.term.loadAddon(fitAddon);
@@ -52,8 +53,8 @@ export class ShellComponent implements OnInit {
 
     this.term.open(this.termElement.nativeElement);
     this.term.focus();
-    this.term.setOption('cursorBlink', true);
-    this.term.setOption('cursorStyle', 'bar');
+    //this.term.setOption('cursorBlink', true);
+    //this.term.setOption('cursorStyle', 'bar');
 
     // make sure prompt appears
     this.edgeService.startShellCommand("\n");

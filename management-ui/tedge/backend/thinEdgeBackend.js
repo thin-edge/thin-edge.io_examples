@@ -8,10 +8,11 @@ const fs = require('fs');
 const propertiesToJSON = require('properties-to-json');
 const MongoClient = require('mongodb').MongoClient;
 
-const MONGO_URL = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`;
+const MONGO_DB = 'localDB'
+//const MONGO_URL = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`;
+const MONGO_URL = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${MONGO_DB}?directConnection=true`;
 const MONGO_MEASUEMENT_COLLECTION = 'measurement'
 const MONGO_SERIES_COLLECTION = 'serie'
-const MONGO_DB = 'localDB'
 const ANALYTICS_CONFIG = '/etc/tedge/tedge-ui/analyticsConfig.json'
 const MAX_MEASUREMENT = 2000;
 
@@ -185,15 +186,13 @@ class ThinEdgeBackend {
         }
     }
 
-    static connect2Mongo() {
+    static async connect2Mongo() {
         if (ThinEdgeBackend.measurementCollection == null || ThinEdgeBackend.seriesCollection == null) {
-            console.log('Connecting to mongo ...');
-            MongoClient.connect(MONGO_URL, function (err, client) {
-                if (err) throw err;
-                let dbo = client.db(MONGO_DB);
-                ThinEdgeBackend.measurementCollection = dbo.collection(MONGO_MEASUEMENT_COLLECTION)
-                ThinEdgeBackend.seriesCollection = dbo.collection(MONGO_SERIES_COLLECTION)
-            });
+            console.log('Connecting to mongo ...', MONGO_URL, MONGO_DB);
+            const client = await MongoClient.connect(MONGO_URL);
+            const dbo = client.db(MONGO_DB);
+            ThinEdgeBackend.measurementCollection = dbo.collection(MONGO_MEASUEMENT_COLLECTION)
+            ThinEdgeBackend.seriesCollection = dbo.collection(MONGO_SERIES_COLLECTION)
         }
     }
 
