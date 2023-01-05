@@ -30,7 +30,7 @@ export class ChartingConfigComponent implements OnInit {
       type: 'input',
       templateOptions: {
         label: 'Digram Name',
-        description: 'Name of diagram.'
+        required: true
       },
     },
     {
@@ -38,7 +38,6 @@ export class ChartingConfigComponent implements OnInit {
       type: 'checkbox',
       templateOptions: {
         label: 'Fit Axis',
-        description: 'Fit Axis',
         readonly: false,
         change: (field, $event) => {
           this.updateFitAxis();
@@ -50,7 +49,6 @@ export class ChartingConfigComponent implements OnInit {
       type: 'checkbox',
       templateOptions: {
         label: 'Fill Curve',
-        description: 'Fill Curve',
         readonly: false,
       }
     },
@@ -60,7 +58,6 @@ export class ChartingConfigComponent implements OnInit {
       hideExpression: 'model.fitAxis',
       templateOptions: {
         label: 'Lower range y-axis',
-        description: 'Low Range',
         type: 'number',
         readonly: false,
       }
@@ -71,7 +68,6 @@ export class ChartingConfigComponent implements OnInit {
       hideExpression: 'model.fitAxis',
       templateOptions: {
         label: 'Higher range y-axis',
-        description: 'High Range',
         type: 'number',
         readonly: false,
       }

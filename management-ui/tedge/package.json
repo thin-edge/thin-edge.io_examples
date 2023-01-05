@@ -24,7 +24,6 @@
     "@angular/upgrade": "14.0.6",
     "@c8y/ngx-components": "1016.0.83",
     "@c8y/style": "1016.0.83",
-    "@ng-select/ng-select": "^9.0.0",
     "@ngx-formly/bootstrap": "^6.0.4",
     "@ngx-formly/core": "^6.0.4",
     "@ngx-translate/core": "14.0.0",
