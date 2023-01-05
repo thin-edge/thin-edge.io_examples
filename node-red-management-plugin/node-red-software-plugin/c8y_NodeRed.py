@@ -71,6 +71,9 @@ try:
             else:
                 logger.debug("Flow not created")
                 raise Exception
+        else:
+            logger.debug("Type us unkown")
+            raise Exception
     else:
         logger.warning("Node-red is not running")
         client.publish('c8y/s/us',f'502,{__name__},"Error: Node-Red not running."')
