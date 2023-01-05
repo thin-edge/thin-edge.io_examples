@@ -2,7 +2,25 @@
   "name": "node-red",
   "type": "c8y_SmartRest2Template",
   "com_cumulocity_model_smartrest_csv_CsvSmartRestTemplate": {
-    "requestTemplates": [],
+    "requestTemplates": [
+      {
+        "method": "PUT",
+        "response": false,
+        "msgId": "11",
+        "api": "INVENTORY",
+        "byId": false,
+        "mandatoryValues": [],
+        "customValues": [
+          {
+            "path": "localFlowId",
+            "type": "STRING",
+            "value": ""
+          }
+        ],
+        "externalIdType": "c8y_Serial",
+        "name": "updateMO"
+      }
+    ],
     "responseTemplates": [
       {
         "msgId": "10",
@@ -12,7 +30,8 @@
         "pattern": [
           "data",
           "c8y_NodeRed.type",
-          "c8y_NodeRed.flowId"
+          "c8y_NodeRed.c8yFlowId",
+          "c8y_NodeRed.localFlowId"
         ]
       }
     ]

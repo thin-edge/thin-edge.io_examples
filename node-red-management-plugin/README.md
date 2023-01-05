@@ -224,7 +224,7 @@ Select the binaries and wait until it is uploaded.
 
 > **_NOTE:_** We need to clone the Device Management app to add the plugin to it
 
-After succesful upload go to "All Applications" and click on "Add Application". Select "Duplicate existing application"
+After successful upload go to "All Applications" and click on "Add Application". Select "Duplicate existing application"
 and afterwards "Device Management".
 
 <br/><br/>
