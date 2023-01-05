@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { OperationService } from '@c8y/client';
+import { IManagedObject, OperationService } from '@c8y/client';
 import { ActivatedRoute } from '@angular/router';
 import { Flow, FlowStatus } from './shared/node-red-models';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NodeRedFlowService } from './shared/node-red-flows.service';
 import { RealtimeHelperService } from './shared/realtimeHelper.service';
 import { Subscription } from 'rxjs';
+import { AlertService } from '@c8y/ngx-components';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class NodeRedTabComponent implements OnInit, OnDestroy {
   isRealtimeActive = false;
   operationsSubscription: Subscription;
   constructor(
-    private route: ActivatedRoute, private operations: OperationService, private modalService: BsModalService, private flows: NodeRedFlowService, private realtimeService: RealtimeHelperService) { }
+    private route: ActivatedRoute, private operations: OperationService, private modalService: BsModalService, private flows: NodeRedFlowService, private alertservice: AlertService, private realtimeService: RealtimeHelperService) { }
 
   ngOnInit(): void {
     this.deviceId = this.route.snapshot.parent.data.contextData["id"];
@@ -45,6 +46,14 @@ export class NodeRedTabComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(template, { class: size });
   }
 
+  async addFlow(mo: IManagedObject) {
+    if (!this.deployedFlows.some(f => f.c8yFlowId === mo.full.id)) {
+      this.flows.assignToDevice(mo, this.deviceId)
+    } else {
+      this.alertservice.danger(`Flow with id ${mo.full.id} already deployed.`)
+    }
+  }
+
   async remove(flow: Flow) {
     this.flows.removeFromDevice(flow, this.deviceId).then(_ => this.loadData());
   }
@@ -62,7 +71,7 @@ export class NodeRedTabComponent implements OnInit, OnDestroy {
       revert: true
     }
     await this.operations.list(filter)
-      .then(res => flows.forEach(f => this.flowStatus[f.id] = res?.data.find(o => o.c8y_NodeRed?.flowId === f.id)?.status))
+      .then(res => flows.forEach(f => this.flowStatus[f.c8yFlowId] = res?.data.find(o => o.c8y_NodeRed?.flowId === f.c8yFlowId)?.status))
   }
 
   private toggleRealtime(on: boolean): void {

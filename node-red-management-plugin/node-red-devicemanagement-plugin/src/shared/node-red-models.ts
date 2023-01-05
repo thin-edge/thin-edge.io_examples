@@ -2,9 +2,10 @@ import { OperationStatus } from "@c8y/client"
 
 export interface Flow {
     label: string
-    id: string
+    c8yFlowId: string
     updated?: string
     info: string
+    localFlowId?: string
 }
 
 export interface FlowStatus {
