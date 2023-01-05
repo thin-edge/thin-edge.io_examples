@@ -16,7 +16,7 @@ import json
 
 broker = 'localhost'
 port = 1883
-client_id = f'{__name__}-operation-client'
+client_id = f'c8y_NodeRed-operation-client'
 
 url = 'http://localhost:1880'
 
@@ -38,7 +38,7 @@ try:
 
     client = mqtt_client.Client(client_id)
     client.connect(broker, port)
-    client.publish('c8y/s/us',f'501,')
+    client.publish('c8y/s/us',f'501,c8y_NodeRed')
     nodeRed = Connector(url)
     logger.debug("Checking if node-red is runnning locally")
     logger.debug(nodeRed.check_node_red())
@@ -74,10 +74,11 @@ try:
         else:
             logger.debug("Type us unkown")
             raise Exception
+        client.publish('c8y/s/us',f'503,c8y_NodeRed')
     else:
         logger.warning("Node-red is not running")
         client.publish('c8y/s/us',f'502,c8y_NodeRed,"Error: Node-Red not running."')
-    client.publish('c8y/s/us',f'503,c8y_NodeRed,')
+    
 except Exception as e:
     try:
         client.publish('c8y/s/us',f'502,c8y_NodeRed,"Error: {e}"')
