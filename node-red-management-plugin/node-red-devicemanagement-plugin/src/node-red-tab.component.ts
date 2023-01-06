@@ -59,6 +59,7 @@ export class NodeRedTabComponent implements OnInit, OnDestroy {
   }
 
   async update(flow: Flow) {
+    console.log("update")
     this.flows.updateOnDevice(flow, this.deviceId).then(_ => this.loadData());
   }
 

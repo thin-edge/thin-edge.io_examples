@@ -21,18 +21,19 @@ export class NodeRedFlowService {
         return this.inventory.list(queryFlows);
     }
 
-    async get(flow: Flow): Promise<IManagedObject> {
+    async getFlow(flowId: string): Promise<IManagedObject> {
         let queryFlow: object = {
-            query: `$filter=(full.id eq '${flow.c8yFlowId}' and has(c8y_noderedV2))`
+            query: `$filter=(full.id eq '${flowId}' and has(c8y_noderedV2))`
         }
         return this.inventory.list(queryFlow).then(res => res.data.pop())
     }
 
     private async sendOperation(type: string, flow: Flow, deviceId: string) {
         let queryNodes: object = {
-            query: `$filter=(full.z eq '${flow.c8yFlowId}' and has(c8y_noderedV2))`
+            query: `$filter=((full.z eq '${flow.c8yFlowId}' or full.type eq 'mqtt-broker') and has(c8y_noderedV2))`
         }
         let nodes = await (await this.inventory.list(queryNodes)).data.map(res => res.full)
+        console.log(nodes) //full.z eq '${flow.c8yFlowId}') or
         let json = {
             id: flow.c8yFlowId,
             label: flow.label,
@@ -41,13 +42,15 @@ export class NodeRedFlowService {
             env: [],
             nodes: nodes
         }
+        console.log(json)
         var encoded = btoa(JSON.stringify(json))
         const operation: IOperation = {
             deviceId: deviceId,
             c8y_NodeRed: {
                 type: type,
-                c8yFlowId: flow.c8yFlowId.replace(".", ""),
-                localFlowId: flow.localFlowId
+                c8yFlowId: flow.c8yFlowId,
+                localFlowId: flow.localFlowId,
+                label: flow.label
             },
             description: `${type} the node-red flow "${flow.label}" to the runtime on the device.`,
             data: encoded
@@ -61,19 +64,12 @@ export class NodeRedFlowService {
             label: selectedFlow.full.label,
             info: selectedFlow.full.info
         }
-        this.sendOperation("create", flow, deviceId);
-        await this.createFlowOnDevice(flow, deviceId);
+        await this.sendOperation("create", flow, deviceId);
+        //await this.createFlowOnDevice(flow, deviceId);
     }
 
     async updateOnDevice(flow: Flow, deviceId: string) {
-
-        if (flow.localFlowId) {
-            this.sendOperation("update", flow, deviceId)
-        }
-        else {
-            this.alertservice.danger('No local flow Id availabe.')
-        }
-        await this.updateFlowOnDevice(flow, deviceId);
+        this.sendOperation("update", flow, deviceId)
     }
 
     async removeFromDevice(flow: Flow, deviceId) {
@@ -82,8 +78,9 @@ export class NodeRedFlowService {
                 deviceId: deviceId,
                 c8y_NodeRed: {
                     type: "remove",
-                    c8yFlowId: flow.c8yFlowId.replace(".", ""),
-                    localFlowId: flow?.localFlowId
+                    c8yFlowId: flow.c8yFlowId,
+                    localFlowId: flow.localFlowId,
+                    label: flow.label
                 },
                 description: `Remove the node-red flow "${flow.label}" to the runtime on the device.`,
 
@@ -96,7 +93,6 @@ export class NodeRedFlowService {
         await this.removeFlowFromDevice(flow, deviceId)
     }
 
-
     private async userFeedback(res: IFetchResponse) {
         if (res.status < 300) {
             this.alertservice.success('Operation created');
@@ -105,13 +101,24 @@ export class NodeRedFlowService {
         }
     }
 
-    public managedObjectToFlow(mo: IManagedObject): Flow {
-        return { label: mo.name, c8yFlowId: mo.c8yFlowId, info: mo.info, updated: mo.lastUpdated, localFlowId: mo.localFlowId }
+    public async managedObjectToFlow(mo: IManagedObject): Promise<Flow> {
+        const [externalId, flowMo] = await Promise.all([this.identity.list(mo.id).then(res => res.data.filter(ex => ex.type === "c8y_Serial").pop()), this.getFlow(mo.name)])
+
+        console.log(flowMo)
+        return {
+            c8yFlowId: mo.name,
+            info: flowMo.full.info,
+            updated: mo.lastUpdated,
+            localFlowId: externalId.externalId,
+            label: flowMo.full.label,
+            id: mo.id
+        }
     }
+
     private flowToManagedObject(flow: Flow): Partial<IManagedObject> {
         return {
             c8yFlowId: flow.c8yFlowId,
-            name: flow.label,
+            name: flow.c8yFlowId,
             info: flow.info,
             type: this.flowType
         }
@@ -119,9 +126,9 @@ export class NodeRedFlowService {
 
     public async getDeployedFlows(deviceId): Promise<Flow[]> {
         //TODO: Filter via API
-        return this.inventory.childAdditionsList(deviceId, this.childAdditionFilter)
-            .then(res => res.data.filter(mo => mo.type === this.flowType))
-            .then(l => l.map(mo => this.managedObjectToFlow(mo)))
+        return await (this.inventory.childAdditionsList(deviceId, this.childAdditionFilter)
+            .then(res => res.data.filter(mo => mo.type === "c8y_Service" && mo.serviceType === "node-red"))
+            .then(async l => await Promise.all(l.map(mo => this.managedObjectToFlow(mo)))))
     }
 
     private async createFlowOnDevice(flow: Flow, deviceId: string) {
@@ -136,15 +143,9 @@ export class NodeRedFlowService {
         })
     }
 
-    private async updateFlowOnDevice(flow: Flow, deviceId: string) {
-        const moId = await this.inventory.childAdditionsList(deviceId, this.childAdditionFilter)
-            .then(res => res.data.filter(mo => mo?.c8yFlowId === flow.c8yFlowId).pop()?.id)
-        await this.inventory.update({ ...this.flowToManagedObject(flow), id: moId })
-    }
-
     private async removeFlowFromDevice(flow: Flow, deviceId: string) {
         const moId = await this.inventory.childAdditionsList(deviceId, this.childAdditionFilter).then(
-            res => res.data.filter(mo => mo.c8yFlowId === flow.c8yFlowId).pop()?.id)
+            res => res.data.filter(mo => mo.name === flow.c8yFlowId).pop()?.id)
         await this.inventory.delete(moId);
     }
 }

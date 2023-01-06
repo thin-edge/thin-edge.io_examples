@@ -40,15 +40,15 @@
                         Label
                     </div>
                     <div class="col-2 ng-binding">
-                        Id
+                        Flow Id
                     </div>
                     <div class="col-2 ng-binding">
-                        Id on Device
+                        Flow Id on Device
                     </div>
-                    <div class="col-3 ng-binding">
+                    <div class="col-4 ng-binding">
                         Info
                     </div>
-                    <div class="col-3 ng-binding">
+                    <div class="col-2 ng-binding">
                         Updated
                     </div>
                 </div>
@@ -68,7 +68,9 @@
             <c8y-li-icon *ngIf="flowStatus[flow.c8yFlowId] ==='DELIVERED'" [icon]="'clock-o'"></c8y-li-icon>
             <div class="content-flex-60">
                 <div class="col-2 ng-binding">
-                    {{flow.label}}
+                    <button class="btn-clean text-truncate ng-binding" [routerLink]="['/device', flow.id]">
+                        {{flow.label}}
+                    </button>
                 </div>
                 <div class="col-2 ng-binding">
                     <span class="label label-info ng-binding">
@@ -80,12 +82,12 @@
                         {{flow.localFlowId}}
                     </span>
                 </div>
-                <div class="col-3 ng-binding">
+                <div class="col-4 ng-binding">
                     <small>
                         {{flow.info}}
                     </small>
                 </div>
-                <div class="col-3 ng-binding">
+                <div class="col-2 ng-binding">
                     <small>
                         {{flow.updated | date:'medium'}}
                     </small>
