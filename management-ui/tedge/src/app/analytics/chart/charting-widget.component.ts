@@ -3,8 +3,8 @@ import { Chart, ChartOptions, ChartConfiguration, UpdateMode } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import StreamingPlugin from 'chartjs-plugin-streaming';
 import { Observable, Subscription } from 'rxjs';
-import { EdgeService } from '../edge.service';
-import { RawMeasurment } from '../property.model';
+import { EdgeService } from '../../edge.service';
+import { RawMeasurment } from '../../property.model';
 import { flatten, generateNextColor, unitList, spanList } from './widget-helper';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ export class ChartingWidgetComponent implements OnDestroy, OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    //this.router.url == "/analysis/realtime"
+    //this.router.url == "/analytics/realtime"
     let sp = this.router.url.split("/");
     this.type = sp[sp.length-1];
   }

@@ -9,8 +9,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { AnalysisComponent } from './analysis/analysis.component';
-import { AnalysisModule } from './analysis/analysis.module';
+import { AnalyticsComponent } from './analytics/chart/analytics.component';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { AppComponent } from './boot/app.component';
 import { CloudComponent } from './cloud/cloud.component';
 import { ControlComponent } from './control/control.component';
@@ -34,7 +34,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     ngRouterModule.forRoot(
       [
       { path: '', component: SetupComponent },   // set default route
-      { path: 'analysis', component: AnalysisComponent }, 
+      { path: 'analytics', component: AnalyticsComponent }, 
       { path: 'cloud', component: CloudComponent },
       { path: 'edge/setup', component: SetupComponent },
       { path: 'edge/status', component: StatusComponent },
@@ -48,7 +48,7 @@ const config: SocketIoConfig = { url: location.origin, options: {} };
     ReactiveFormsModule,
     FormlyBootstrapModule,
     FormlyModule.forRoot({}),
-    AnalysisModule,
+    AnalyticsModule,
     ShellModule,
     SocketIoModule.forRoot(config),
     NgChartsModule,

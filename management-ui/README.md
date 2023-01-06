@@ -62,10 +62,10 @@ The registration to the cloud can be verified here as well:
 
 Then you can access the analytics dashboard : http://localhost:9080/#/analytics
 
-![Setup](resource/01-Analysis.png)
+![Setup](resource/01-Analytics.png)
 
 and change the settings of the chart:
-![Setup](resource/02-Analysis.png)
+![Setup](resource/02-Analytics.png)
 
 
 # Contributing

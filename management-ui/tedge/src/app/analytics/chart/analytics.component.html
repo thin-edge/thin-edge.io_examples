@@ -1,13 +1,12 @@
 <c8y-title>
   {{ 'Analytics'| translate }}
 </c8y-title>
-<div class="card">
+<div class="card p-t-24">
   <div class="card-header">
     <h4>{{config.diagramName}}</h4>
   </div>
-  <div class="card-block my-card-body">
+  <div class="card-block">
     <form class="form-inline top-chart-bar flex-row ">
-
       <div class="c8y-select-wrapper d-inline-block form-inlinev" style="margin-left: 20px;">
         <select class="form-control" name="spanSelector" [(ngModel)]="displaySpanIndex">
           <option *ngFor="let span of spanList; let i = index" [value]="i" [disabled]="span.type !== type">
@@ -60,14 +59,11 @@
   </div>
 </div>
 
-
 <c8y-action-bar-item [placement]="'right'">
   <button class="btn btn-link" title="{{ 'Configure diagram' | translate }}" (click)="showDialog = !showDialog">
     <i class="fa fa-cog"></i>&nbsp;<span translate>Configure diagram</span>
   </button>
 </c8y-action-bar-item>
-
-
 
 <div [ngClass]="{ drawerOpen: showDialog }">
   <div class="bottom-drawer">

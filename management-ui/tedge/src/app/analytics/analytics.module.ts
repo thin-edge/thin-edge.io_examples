@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { CoreModule, HOOK_NAVIGATOR_NODES } from '@c8y/ngx-components';
-import { ChartingWidgetComponent } from './charting-widget.component';
-import { AnalysisComponent } from './analysis.component';
-import { AnalysisNavigationFactory } from './analysis-navigation.factory';
-import { ChartingConfigComponent } from './charting-config.component';
+import { ChartingWidgetComponent } from './chart/charting-widget.component';
+import { AnalyticsComponent } from './chart/analytics.component';
+import { AnalyticsNavigationFactory } from './analytics-navigation.factory';
+import { ChartingConfigComponent } from './chart/charting-config.component';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { NodeRedIframeComponent } from './analytic/node-red-iframe.component';
 
 /**
  * Angular Routes.
@@ -15,12 +16,16 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
  */
 const routes: Routes = [
   {
-    path: 'analysis/realtime',
-    component: AnalysisComponent
+    path: 'analytics/realtime',
+    component: AnalyticsComponent
   },
   {
-    path: 'analysis/historic',
-    component: AnalysisComponent
+    path: 'analytics/historic',
+    component: AnalyticsComponent
+  },
+  {
+    path: 'analytics/flow',
+    component: NodeRedIframeComponent
   }
 ];
 
@@ -28,7 +33,7 @@ const routes: Routes = [
   declarations: [
     ChartingWidgetComponent,
     ChartingConfigComponent,
-    AnalysisComponent
+    AnalyticsComponent
   ],
   imports: [RouterModule.forChild(routes), 
     CoreModule,
@@ -39,10 +44,10 @@ const routes: Routes = [
   /**
    * Adding the hooks to the providers:
    */
-   providers:  [ { provide: HOOK_NAVIGATOR_NODES, useClass: AnalysisNavigationFactory, multi: true }],
+   providers:  [ { provide: HOOK_NAVIGATOR_NODES, useClass: AnalyticsNavigationFactory, multi: true }],
   /**
    * The EntryComponents to allow the HOOK_ONCE_ROUTE to work:
    */
-  entryComponents: [AnalysisComponent]
+  entryComponents: [AnalyticsComponent]
 })
-export class AnalysisModule {}
+export class AnalyticsModule {}

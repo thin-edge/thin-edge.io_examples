@@ -1,15 +1,17 @@
+
+
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EdgeService } from '../edge.service';
-import { RawListItem, SpanListItem } from '../property.model';
+import { EdgeService } from '../../edge.service';
+import { RawListItem, SpanListItem } from '../../property.model';
 import { unitList, spanList } from './widget-helper';
 
 @Component({
-  selector: 'app-analysis',
-  templateUrl: './analysis.component.html',
-  styleUrls: ['./analysis.component.less']
+  selector: 'app-analytics',
+  templateUrl: './analytics.component.html',
+  styleUrls: ['./analytics.component.less']
 })
-export class AnalysisComponent implements OnInit, OnDestroy {
+export class AnalyticsComponent implements OnInit, OnDestroy {
 
   public showDialog: boolean = false;
   public onChangeConfig: EventEmitter<any> = new EventEmitter();
@@ -41,7 +43,7 @@ export class AnalysisComponent implements OnInit, OnDestroy {
       ...c
     }
 
-    //this.router.url == "/analysis/realtime"
+    //this.router.url == "/analytics/realtime"
     let sp = this.router.url.split("/");
     this.type = sp[sp.length-1];
     console.log("Chart type:", this.type);

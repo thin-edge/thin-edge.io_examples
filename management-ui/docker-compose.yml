@@ -16,6 +16,7 @@ services:
     environment:
       - MONGO_HOST=mongodb1
       - MONGO_PORT=27017
+      - NODERED_HOST=node-red
     depends_on:
       - mongodb
     volumes:
@@ -73,12 +74,13 @@ services:
     volumes:
       - mongodata2:/data
   node-red:
-    image: nodered/node-red:latest
+    image: node-red
+    build: "./node-red"
     container_name: node-red
     ports:
       - "1880:1880"
     volumes:
-      -nodereddata:/data
+      - nodereddata:/data
 volumes:
   mongodata1:
   mongoconfig:
