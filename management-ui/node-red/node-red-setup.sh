@@ -1,4 +1,8 @@
-[
+#!/usr/bin/env bash
+
+if [ ! -f /service/node-red-init.flag ]; then
+    echo "Init Node-Red"
+    curl -d '[
     {
         "id": "f6f2187d.f17ca8",
         "type": "tab",
@@ -81,4 +85,8 @@
         "y": 220,
         "wires": []
     }
-]
+]' -H "Content-Type: application/json" -X POST http://node-red:1880/flows
+    touch /service/node-red-init.flag
+else
+    echo "Node-Red already initialized"
+fi

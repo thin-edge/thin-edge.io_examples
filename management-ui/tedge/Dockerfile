@@ -15,7 +15,6 @@ FROM node:16-alpine3.15
 VOLUME ["/sys/fs/cgroup"]
 
 # We need curl to get root certificates
-# We need curl to get root certificates
 RUN apk update \
     && apk upgrade \
     && apk --no-cache add mosquitto curl collectd sudo openrc collectd-mqtt mosquitto-libs
