@@ -6,6 +6,7 @@ from paho.mqtt import client as mqtt_client
 import time
 import logging
 import json
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -15,6 +16,8 @@ logger.info('Logger for service watchdog mapper was initialised')
 broker = 'localhost'
 port = 1883
 client_id = 'watchdog-service-mapper-client'
+stream = os.popen(f'tedge config get device.id')
+device_id = stream.read()
 
 
 client = mqtt_client.Client(client_id)
@@ -23,11 +26,10 @@ def on_message(client, userdata, msg):
     try:
         message = json.loads(msg.payload)
 
-        pid = message['pid']
-        logger.debug(f'Pid is: {pid}')
-
         name = msg.topic.split("/")[-1]
         logger.debug(f'Name is: {name}')
+
+        logger.debug(f'device_id is {device_id}')
 
         service = "systemd"
         logger.debug(f'Service is: {service}')
@@ -35,7 +37,7 @@ def on_message(client, userdata, msg):
         status = message['status']
         logger.debug(f'Status is: {status}')
         #Publishing message
-        client.publish("c8y/s/us",f'102,{pid},{service},{name},{status}')
+        client.publish("c8y/s/us",f'102,{device_id}_{name},{service},{name},{status}')
     except Exception as e:
         logger.error(f'The following error occured: {e}, skipping message')
 
