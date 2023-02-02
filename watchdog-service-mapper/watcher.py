@@ -17,7 +17,7 @@ broker = 'localhost'
 port = 1883
 client_id = 'watchdog-service-mapper-client'
 stream = os.popen(f'tedge config get device.id')
-device_id = stream.read()
+device_id = f'{stream.read()}'.strip()
 
 
 client = mqtt_client.Client(client_id)
@@ -37,7 +37,9 @@ def on_message(client, userdata, msg):
         status = message['status']
         logger.debug(f'Status is: {status}')
         #Publishing message
-        client.publish("c8y/s/us",f'102,{device_id}_{name},{service},{name},{status}')
+        payload = f'102,{device_id}_{name},{service},{name},{status}'
+        logger.debug(f'Sending the following payload: {payload}')
+        client.publish("c8y/s/us",f'{payload}')
     except Exception as e:
         logger.error(f'The following error occured: {e}, skipping message')
 
