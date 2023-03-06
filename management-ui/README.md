@@ -19,7 +19,7 @@ This project adds an configuration ui to thin-edge.io. It enables you to use thi
 # Solution components
 
 This solution consists of 3 services:
-* `tedge`: contain the thin edge core services: `tedge_agent`, `tedge_mapper`, ... and `tedge-ui` app
+* `tedge`: contain the thin edge core services: `tedge-agent`, `tedge-mapper`, ... and `tedge-ui` app
 * `mqtt-colletctor`: listens to measurements on all topics of the mosquitto broker and sends them to the mongo db
 * `mongodb`: stores the measurements in a colletion, to be retrieved by the web-ui. All measurements have time-to-live (TTL) of 300. This can be changed
 

@@ -3,7 +3,7 @@
 name=$RC_SVCNAME
 description="tedge-mapper-collectd listens to measurements from collectd."
 
-command="/bin/tedge_mapper"
+command="/bin/tedge-mapper"
 command_args="collectd"
 command_user="tedge"
 command_background="yes"
