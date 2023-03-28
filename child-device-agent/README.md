@@ -1,8 +1,11 @@
-# Child Device Configuration Management Agent Prototype
+# Child Device Connector Prototype
 
-This prototype implements the thin-edge child device configuration management agent contract described
-[here](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/child_device_config_management_agent.md)
-that is required to enable configuration management on child devices of thin-edge.
+This child device connector prototype implements the following specifications:
+
+* [configuration management](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/child_device_config_management_agent.md)
+* [firmware management](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/child_device_firmware_management.md)
+
+to enable configuration management and firmware management on child devices of thin-edge.
 
 ## Usage
 
@@ -12,3 +15,4 @@ that is required to enable configuration management on child devices of thin-edg
 1. Update the `c8y-configuration-plugin.toml` file in this directory with some configuration file paths on your device.
 1. Run the `child_device_agent.py` script from this directory: `python3 child_device_agent.py`
 1. Trigger configuration management operations for the child device of thin-edge named `tedge-child` from Cumulocity.
+1. Similarly, perform firmware update operations on the same device.
