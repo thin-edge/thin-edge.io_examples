@@ -67,3 +67,13 @@ by connecting to `http://<local-ip-of-tedge>:1984/stream.html?src=tedge_cam&mode
 sudo systemctl start go2rtc
 sudo systemctl enable go2rtc
 ```
+
+## Usage
+
+- install the [cumulocity-webrtc-webcam-plugin](https://github.com/SoftwareAG/cumulocity-webrtc-webcam-plugin) to cockpit and/or devicemanagement application
+- create a new remote access configuration of type `PASSTHROUGH` and set the host to `127.0.0.1` and the port to `1984` and ensure that the name contains `webcam`.
+- after refreshing the page or navigating another time to the device you should see a `Webcam` tab, where you can start the video stream
+
+## Debugging
+
+- the WebRTC connection can be e.g. debugged from firefox by visiting `about:webrtc`.
