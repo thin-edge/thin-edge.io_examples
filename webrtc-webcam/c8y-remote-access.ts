@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 
-import { WebSocket, MessageEvent } from 'ws';
-import { Socket } from 'net';
-import { exec } from 'child_process';
-import { connect } from 'mqtt';
+import { WebSocket, MessageEvent } from "ws";
+import { Socket } from "net";
+import { exec } from "child_process";
+import { connect } from "mqtt";
 import * as winston from "winston";
 
-const websocketPortMapping: {[key: string]: string} = {
-  '1984': '/api/ws?src=tedge_cam'
-}
+// TODO: move to e.g. a local configuration file
+const websocketPortMapping: { [key: string]: string } = {
+  "127.0.0.1:1984": "ws://127.0.0.1:1984/api/ws?src=tedge_cam",
+};
+
+const mqttBrokerHost = "127.0.0.1";
+const mqttTokenRetrievalTopic = "c8y/s/dat";
+const mqttTokenRequestTopic = "c8y/s/uat";
+const c8yUrlRetrievalCommand = "tedge config get c8y.url";
+const pluginIdentifier = "c8y-remote-access-connect-nodejs";
+const logLevel = process.env.LOG_LEVEL || "info";
 
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || "info",
+  level: logLevel,
   format: winston.format.combine(
     winston.format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss",
@@ -19,192 +27,209 @@ const logger = winston.createLogger({
     winston.format.simple(),
     winston.format.json()
   ),
-  transports: [new winston.transports.File({filename: 'c8y-remote-access-connect-nodejs.json'})],
+  transports: [
+    new winston.transports.File({ filename: `${pluginIdentifier}.json` }),
+  ],
 });
 
 function performCommand(cmd: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const child = exec(cmd, { timeout: 60000 }, (err, stdout, stderr) => {
-        if (child.exitCode !== 0) {
-          return reject(stderr || err?.message);
-        } else {
-          return resolve(stdout);
-        }
-      });
-    });
-}
-
-function getTokenViaMqtt(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const mqttClient = connect({host: '127.0.0.1', clientId: 'c8y-remote-access-connect-nodejs'});
-    mqttClient.once('connect', () => {
-      mqttClient.once('message', (topic, payload) => {
-        if (topic !== 'c8y/s/dat') {
-          return;
-        }
-        mqttClient.end(true);
-        const token = payload.toString();
-        resolve(token.replace(/^71,/, ''));
-      });
-      mqttClient.subscribe('c8y/s/dat')
-      mqttClient.publish('c8y/s/uat', '');
-    });
-    mqttClient.once('error', () => {
-      mqttClient.end(true);
-      reject()
+  return new Promise<string>((resolve, reject) => {
+    const child = exec(cmd, { timeout: 60000 }, (err, stdout, stderr) => {
+      if (child.exitCode !== 0) {
+        return reject(stderr || err?.message);
+      } else {
+        return resolve(stdout);
+      }
     });
   });
 }
 
-async function establishRemoteConnection(host: string, port: number, connectionKey: string): Promise<void> {
-	try {
-    const url = await performCommand('tedge config get c8y.url');
+function getTokenViaMqtt(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const mqttClient = connect({
+      host: mqttBrokerHost,
+      clientId: pluginIdentifier,
+    });
+    mqttClient.once("connect", () => {
+      mqttClient.once("message", (topic, payload) => {
+        if (topic !== mqttTokenRetrievalTopic) {
+          return;
+        }
+        mqttClient.end(true);
+        const token = payload.toString();
+        resolve(token.replace(/^71,/, ""));
+      });
+      mqttClient.subscribe(mqttTokenRetrievalTopic);
+      mqttClient.publish(mqttTokenRequestTopic, "");
+    });
+    mqttClient.once("error", () => {
+      mqttClient.end(true);
+      reject();
+    });
+  });
+}
+
+async function establishRemoteConnection(
+  host: string,
+  port: number,
+  connectionKey: string
+): Promise<void> {
+  try {
+    const url = await performCommand(c8yUrlRetrievalCommand);
     logger.info(`URL: ${url}`);
     const token = await getTokenViaMqtt();
     logger.info(`Token: retrieved.`);
     logger.debug(`Token: ${token}`);
-    
-    const webSocket = new WebSocket(
+
+    const c8yWebSocket = new WebSocket(
       `wss://${url}/service/remoteaccess/device/${connectionKey}`,
-      ['binary'],
+      ["binary"],
       {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
-    if (Object.keys(websocketPortMapping).includes(`${port}`)) {
-      logger.info(`Connecting to ${host}:${port} via WebSocket`);
-      await openWebSocket(webSocket, host, port);
+    const websocketMapping = websocketPortMapping[`${host}:${port}`];
+    if (websocketMapping) {
+      logger.info(`Connecting to ${websocketMapping} via WebSocket`);
+      await openWebSocket(c8yWebSocket, websocketMapping);
     } else {
-      logger.info(`Connecting to ${host}:${port} via TCP`)
-      await openSocket(webSocket, host, port);
+      logger.info(`Connecting to ${host}:${port} via TCP`);
+      await openSocket(c8yWebSocket, host, port);
     }
   } catch (e) {
     logger.error(`Failure`);
   }
 }
 
-function openSocket(webSocket: WebSocket, host: string, port: number): Promise<void> {
+function openSocket(
+  c8yWebSocket: WebSocket,
+  host: string,
+  port: number
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const socket = new Socket();
-    webSocket.onmessage = (ev: MessageEvent) => {
+    c8yWebSocket.onmessage = (ev: MessageEvent) => {
       const messagePayload = String(ev.data);
-      if (typeof ev.data === 'string') {
-        logger.debug('WS string: ' + JSON.stringify(messagePayload));
+      if (typeof ev.data === "string") {
+        logger.debug("WS string: " + JSON.stringify(messagePayload));
         socket.write(ev.data);
       } else if (ev.data instanceof Buffer) {
-        logger.debug('WS Buffer: ' + JSON.stringify(messagePayload));
+        logger.debug("WS Buffer: " + JSON.stringify(messagePayload));
         socket.write(ev.data);
       } else if (ev.data instanceof ArrayBuffer) {
-        logger.debug('WS ArrayBuffer: ' + JSON.stringify(messagePayload));
+        logger.debug("WS ArrayBuffer: " + JSON.stringify(messagePayload));
         socket.write(messagePayload);
       } else if (Array.isArray(ev.data)) {
-        logger.debug('WS Array: ' + JSON.stringify(messagePayload));
+        logger.debug("WS Array: " + JSON.stringify(messagePayload));
         socket.write(messagePayload);
       } else {
-        logger.debug('WS else: ' + JSON.stringify(messagePayload));
+        logger.debug("WS else: " + JSON.stringify(messagePayload));
         socket.write(messagePayload);
       }
     };
-    webSocket.onerror = (e) => {
+    c8yWebSocket.onerror = (e) => {
       socket.end();
       reject(e);
     };
-    webSocket.onclose = () => {
+    c8yWebSocket.onclose = () => {
       socket.end();
       resolve();
     };
-    webSocket.onopen = () => {
+    c8yWebSocket.onopen = () => {
       socket.connect({ host, port });
-      socket.on('data', (data) => {
+      socket.on("data", (data) => {
         const messagePayload = String(data);
-        logger.debug('Socket: ' + JSON.stringify(messagePayload));
-        webSocket.send(data);
+        logger.debug("Socket: " + JSON.stringify(messagePayload));
+        c8yWebSocket.send(data);
       });
-      socket.on('close', () => {
+      socket.on("close", () => {
         logger.info(`Connection to socket: ${host}:${port} closed.`);
-        logger.debug('Socket: closed');
-        webSocket.close();
+        logger.debug("Socket: closed");
+        c8yWebSocket.close();
         resolve();
       });
-      socket.on('error', (e) => {
-        logger.error('Socket: error' + JSON.stringify(e));
-        webSocket.close();
+      socket.on("error", (e) => {
+        logger.error("Socket: error" + JSON.stringify(e));
+        c8yWebSocket.close();
         reject(e);
       });
-      socket.on('connect', () => {
+      socket.on("connect", () => {
         logger.info(`Connection to socket: ${host}:${port} established.`);
       });
     };
   });
 }
 
-function openWebSocket(webSocket: WebSocket, host: string, port: number): Promise<void> {
-  const path = websocketPortMapping[`${port}`] || '';
+function openWebSocket(
+  c8yWebSocket: WebSocket,
+  address: string
+): Promise<void> {
   return new Promise((resolve, reject) => {
-    const socket = new WebSocket(`ws://${host}:${port}${path}`);
-    socket.onmessage = (data) => {
+    const localWebSocket = new WebSocket(address);
+    localWebSocket.onmessage = (data) => {
       logger.debug(`Message received from: ${host}:${port}.`);
-      if (typeof data.data === 'string') {
+      if (typeof data.data === "string") {
         logger.debug(data.data);
-        webSocket.send(Buffer.from(data.data));
+        c8yWebSocket.send(Buffer.from(data.data));
       }
     };
-    socket.onclose = () => {
+    localWebSocket.onclose = () => {
       logger.info(`Connection to socket: ${host}:${port} closed.`);
-      logger.debug('Socket: closed');
-      webSocket.close();
+      logger.debug("Socket: closed");
+      c8yWebSocket.close();
       resolve();
     };
-    socket.onerror = (e) => {
-      logger.error('Socket: error' + e.message);
-      webSocket.close();
+    localWebSocket.onerror = (e) => {
+      logger.error("Socket: error" + e.message);
+      c8yWebSocket.close();
       reject(e);
     };
-    socket.onopen = () => {
+    localWebSocket.onopen = () => {
       logger.info(`Connection to socket: ${host}:${port} established.`);
     };
-    webSocket.onmessage = (ev: MessageEvent) => {
+    c8yWebSocket.onmessage = (ev: MessageEvent) => {
       logger.debug(`Message received from: c8y.`);
       const messagePayload = String(ev.data);
       logger.debug(messagePayload);
-      if (typeof ev.data === 'string') {
-        logger.debug('WS string: ' + JSON.stringify(messagePayload));
-        socket.send(ev.data);
+      if (typeof ev.data === "string") {
+        logger.debug("WS string: " + JSON.stringify(messagePayload));
+        localWebSocket.send(ev.data);
       } else if (ev.data instanceof Buffer) {
-        logger.debug('WS Buffer: ' + JSON.stringify(messagePayload));
-        socket.send(ev.data);
+        logger.debug("WS Buffer: " + JSON.stringify(messagePayload));
+        localWebSocket.send(ev.data);
       } else if (ev.data instanceof ArrayBuffer) {
-        logger.debug('WS ArrayBuffer: ' + JSON.stringify(messagePayload));
-        socket.send(messagePayload);
+        logger.debug("WS ArrayBuffer: " + JSON.stringify(messagePayload));
+        localWebSocket.send(messagePayload);
       } else if (Array.isArray(ev.data)) {
-        logger.debug('WS Array: ' + JSON.stringify(messagePayload));
-        socket.send(messagePayload);
+        logger.debug("WS Array: " + JSON.stringify(messagePayload));
+        localWebSocket.send(messagePayload);
       } else {
-        logger.debug('WS else: ' + JSON.stringify(messagePayload));
-        socket.send(messagePayload);
+        logger.debug("WS else: " + JSON.stringify(messagePayload));
+        localWebSocket.send(messagePayload);
       }
     };
-    webSocket.onerror = (e) => {
-      logger.error('Websocket: error');
+    c8yWebSocket.onerror = (e) => {
+      logger.error("Websocket: error");
       logger.error(e.message);
       reject(e);
     };
-    webSocket.onclose = () => {
+    c8yWebSocket.onclose = () => {
       logger.info(`Websocket connection to: cumulocity closed.`);
-      socket.close();
+      localWebSocket.close();
       resolve();
     };
-    webSocket.onopen = () => {
+    c8yWebSocket.onopen = () => {
       logger.info(`Websocket connection to: cumulocity established.`);
     };
   });
 }
 
-const [,,operationSmartREST] = process.argv;
-const [operationId, externalId, host, port, connectionKey] = operationSmartREST.split(',');
+const [, , operationSmartREST] = process.argv;
+const [operationId, externalId, host, port, connectionKey] =
+  operationSmartREST.split(",");
 
 logger.debug(`externalId: ${externalId}`);
 logger.debug(`host: ${host}`);
