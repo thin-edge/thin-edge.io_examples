@@ -3,7 +3,6 @@
 server:
    port: ${correlator.port}
    name: ${correlator.name}
-   pidFile: ${correlator.pidFile}
 
 jvmOptions: [  ]
 correlator:

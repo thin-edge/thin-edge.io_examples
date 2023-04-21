@@ -1,6 +1,6 @@
 COPYRIGHT NOTICE
 
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Copyright (c) 2022-2023 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 
 # Using thin-edge.io with Apama Streaming Analytics
@@ -66,14 +66,14 @@ Further details about this can be found in the thin-edge.io documentation at [Ma
 - **Description**: apama-thin-edge-support (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apt
-- **Version**: 10.15.0.2-1::apt
+- **Version**: ::apt
 - **SOFTWARE FILE**: select the **Provide a file path** option and give an **empty space** (' ').
 4. Click the **Add Software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software** option.
 8. Click the **Install software** button in the bottom left; the apama-thin-edge-support should be listed.
-9. Click the drop-down arrow on the right and check the 10.15.0.2-1::apt radio button, then click **Install**.
+9. Click the drop-down arrow on the right and check the ::apt radio button, then click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 
 Once Apama support has been installed, the correlator will attempt to start. However, it will initially fail because there is not yet an Apama project installed on the device. An Apama project can be deployed using the Cumulocity IoT tenant, as described below.
