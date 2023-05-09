@@ -1,6 +1,6 @@
 COPYRIGHT NOTICE
 
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+# Copyright (c) 2022-2023 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 
 
@@ -56,14 +56,3 @@ Zip the project located in the `LimitedBandwidth` directory of this repository. 
 temperature, pressure and vibration measurements to the Apama application.
 12. If you have configured thin-edge.io to connect to Cumulocity IoT or another
 cloud service you should see the measurement(s) appear there.
-Otherwise, run `tail /var/log/apama/correlator.log` to print out the end of
-the correlator log file. In the correlator's output you should see log messages
-indicating that the combined measurement has been sent to `tedge/measurements`.
-
-> _Note:_ The actual path to the correlator log file is
-> determined by the project's configuration or the `--logfile` argument passed
-> to the correlator in the [Apama service script](../src/service/apama).
-
-> _Caution:_ The correlator fails to start if you specify the name of the
-> logfile in both the project configuration and the `--logfile` argument to
-> the correlator.

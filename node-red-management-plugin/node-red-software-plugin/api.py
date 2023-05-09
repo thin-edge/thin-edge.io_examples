@@ -65,7 +65,7 @@ class Connector(object):
             response = requests.request("PUT", f'{self.url}/flow/{id}', headers=self.headers, data=body)
             logger.debug('Response from request: ' + str(response.text))
             logger.debug('Response from request with code : ' + str(response.status_code))
-            if response.status_code == 204:
+            if response.status_code == 200:
                 logger.debug('Flow updated')
                 return response.text
             else:

@@ -1,7 +1,7 @@
 
 FROM rust:alpine as builder
 
-ARG VERSION=0.8.1
+ARG VERSION=0.9.0
 
 RUN apk add --no-cache musl-dev make git
 WORKDIR /app
@@ -14,7 +14,6 @@ FROM node:16-alpine3.15
 # Otherwise mosquitto fails
 VOLUME ["/sys/fs/cgroup"]
 
-# We need curl to get root certificates
 # We need curl to get root certificates
 RUN apk update \
     && apk upgrade \
@@ -39,21 +38,21 @@ RUN echo "%tedge-ui   ALL = (ALL) NOPASSWD: ALL" >/etc/sudoers.d/tedge-ui
 
 # Move built executables from build stage
 COPY --from=builder /app/thin-edge.io/target/release/tedge /bin/tedge
-COPY --from=builder /app/thin-edge.io/target/release/tedge_mapper /bin/tedge_mapper
-COPY --from=builder /app/thin-edge.io/target/release/tedge_agent /bin/tedge_agent
-COPY --from=builder /app/thin-edge.io/target/release/c8y_log_plugin /bin/c8y_log_plugin
-COPY --from=builder /app/thin-edge.io/target/release/c8y_configuration_plugin /bin/c8y_configuration_plugin
+COPY --from=builder /app/thin-edge.io/target/release/tedge-mapper /bin/tedge-mapper
+COPY --from=builder /app/thin-edge.io/target/release/tedge-agent /bin/tedge-agent
+COPY --from=builder /app/thin-edge.io/target/release/c8y-log-plugin /bin/c8y-log-plugin
+COPY --from=builder /app/thin-edge.io/target/release/c8y-configuration-plugin /bin/c8y-configuration-plugin
 RUN chown root:root /bin/tedge*
 RUN chown root:root /bin/c8y*
 
 # Create required directories by --init
 RUN tedge --init
-RUN sudo -u tedge tedge_mapper --init c8y
-RUN sudo -u tedge tedge_mapper --init az
-#RUN sudo -u tedge tedge_agent --init
-RUN sudo tedge_agent --init
-RUN sudo -u root c8y_log_plugin --init
-RUN sudo -u root c8y_configuration_plugin --init
+RUN sudo -u tedge tedge-mapper --init c8y
+RUN sudo -u tedge tedge-mapper --init az
+#RUN sudo -u tedge tedge-agent --init
+RUN sudo tedge-agent --init
+RUN sudo -u root c8y-log-plugin --init
+RUN sudo -u root c8y-configuration-plugin --init
 
 # Copy mosquitto.conf
 COPY ./etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf

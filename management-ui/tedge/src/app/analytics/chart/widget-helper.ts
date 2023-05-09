@@ -1,5 +1,5 @@
-import { interpolateInferno, interpolateRainbow } from "d3-scale-chromatic"
-import { RawListItem, SpanListItem } from "../property.model";
+import { interpolateRainbow } from "d3-scale-chromatic"
+import { RawListItem, SpanListItem } from "../../property.model";
 
 const colorScale = interpolateRainbow;
 const colorRangeInfo = {

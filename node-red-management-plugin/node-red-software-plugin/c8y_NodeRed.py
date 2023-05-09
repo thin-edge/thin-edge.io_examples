@@ -13,6 +13,7 @@ import base64
 from api import Connector
 from paho.mqtt import client as mqtt_client
 import json
+import time
 
 broker = 'localhost'
 port = 1883
@@ -35,6 +36,8 @@ try:
     logger.debug(f'Got type: {type}')
     localFlowId = array[5]
     logger.debug(f'Got localFlowId: {localFlowId}')
+    label = array[6]
+    logger.debug(f'Got label: {label}')
 
     client = mqtt_client.Client(client_id)
     client.connect(broker, port)
@@ -66,7 +69,7 @@ try:
             validresponse, response = nodeRed.create_flow(data)
             if validresponse:
                 localFlowId = json.loads(response)['id']
-                client.publish(f'c8y/s/uc/node-red/{c8yFlowId}',f'11,{c8yFlowId},{localFlowId}')
+                client.publish(f'c8y/s/us',f'102,{localFlowId},node-red,{label},up')
                 logger.debug("Flow created")
             else:
                 logger.debug("Flow not created")

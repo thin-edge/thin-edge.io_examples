@@ -139,6 +139,58 @@ def subscribe(client: mqtt_client.Client):
     client.subscribe(config_update_topic)
     client.message_callback_add(config_update_topic, on_config_update_request)
 
+    def on_firmware_update_request(client: Client, userdata, msg: MQTTMessage):
+        print(
+            f"Firmware update request received `{msg.payload.decode()}` from `{msg.topic}` topic"
+        )
+
+        payload = json.loads(msg.payload.decode())
+
+        req_id = payload["id"]
+        download_url = payload["url"]
+
+        # Set firmware update command status to executing
+        firmware_update_res_topic = (
+            f"tedge/{child_device_id}/commands/res/firmware_update"
+        )
+        message_payload = json.dumps(
+            {
+                "status": "executing",
+                "id": req_id,
+            }
+        )
+        print(
+            f"Sending firmware update executing response to `{firmware_update_res_topic}` topic with payload `{message_payload}`"
+        )
+        client.publish(f"{firmware_update_res_topic}", message_payload)
+
+        # Download the firmware file update from tedge
+        print(download_url)
+        response = requests.get(download_url)
+        print("Download status code: ", response.status_code)
+        target_path = tempfile.NamedTemporaryFile(prefix=req_id, delete=False)
+        print("Firmware file downloaded to: ", target_path.name)
+        try:
+            target_path.write(response.content)
+        finally:
+            target_path.close()
+
+        message_payload = json.dumps(
+            {
+                "status": "successful",
+                "id": req_id,
+            }
+        )
+        print(
+            f"Sending firmware update successful response to `{firmware_update_res_topic}` topic with payload `{message_payload}`"
+        )
+        client.publish(firmware_update_res_topic, message_payload)
+
+    firmware_update_topic = f"tedge/{child_device_id}/commands/req/firmware_update"
+    client.subscribe(firmware_update_topic)
+    client.message_callback_add(firmware_update_topic, on_firmware_update_request)
+
+
 def run():
 
     client = connect_mqtt()

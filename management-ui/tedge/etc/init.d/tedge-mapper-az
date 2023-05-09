@@ -3,7 +3,7 @@
 name=$RC_SVCNAME
 description="tedge-mapper-az checks Thin Edge JSON measurements and forwards to Azure IoT Hub."
 
-command="/bin/tedge_mapper"
+command="/bin/tedge-mapper"
 command_args="az"
 command_user="tedge"
 command_background="yes"

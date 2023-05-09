@@ -16,6 +16,7 @@ services:
     environment:
       - MONGO_HOST=mongodb1
       - MONGO_PORT=27017
+      - NODERED_HOST=node-red
     depends_on:
       - mongodb
     volumes:
@@ -27,9 +28,9 @@ services:
   # in file tedge/Dockerfile.yml
   # 2. run in tedge cmd: npm run build to build outside of the container, the result is then mapped with the following volume mapping:  ./:/app/
   # 3. enable entrypoint ENTRYPOINT ["/bin/bash", "/app/tedge/start.sh"] in tedge/Dockerfile
-  mqtt_collector:
-    build: ./mqtt_collector
-    container_name: mqtt_collector
+  mqtt-collector:
+    build: ./mqtt-collector
+    container_name: mqtt-collector
     deploy:
       restart_policy:
         condition: on-failure
@@ -62,10 +63,10 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-  mongosetup:
+  mongo-setup:
     image: mongo-setup
     build: "./mongo"
-    container_name: mongosetup
+    container_name: mongo-setup
     environment:
       TTL_DOCUMENT: 3600 # documents are automatically deleted after 3600 seconds / 1 h
     depends_on:
@@ -78,7 +79,13 @@ services:
     ports:
       - "1880:1880"
     volumes:
-      -nodereddata:/data
+      - nodereddata:/data
+  node-red-setup:
+    image: node-red-setup
+    build: "./node-red"
+    container_name: node-red-setup
+    depends_on:
+      - node-red
 volumes:
   mongodata1:
   mongoconfig:
