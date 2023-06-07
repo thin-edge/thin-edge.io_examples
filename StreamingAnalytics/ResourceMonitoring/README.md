@@ -1,8 +1,3 @@
-COPYRIGHT NOTICE
-
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
-
 # Streaming Analytics Resource Monitoring Sample
 
 This example demonstrates the use of Apama to monitor CPU and memory usage and calculate 
@@ -11,6 +6,11 @@ in 5-minute cycles if this percentage is over 70% or once per hour otherwise.
 
 Note that we are __not__ reporting the average CPU and memory usage, but the _percentage of time for 
 which CPU or memory usage breached the threshold._
+
+## COPYRIGHT NOTICE
+
+Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 
 ## Prerequisites
 
