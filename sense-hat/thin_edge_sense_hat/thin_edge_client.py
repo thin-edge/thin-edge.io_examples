@@ -29,7 +29,7 @@ class SenseHatThinEdgeClient():
         self.running = True
         self.interval = interval
         self.showImage = showImage
-        self._measurement_topic = "te/device/main///m/"
+        self._measurement_topic = 'te/device/main///m/'
 
     def joystick_up(self, event):
         if event.action == ACTION_PRESSED:

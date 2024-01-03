@@ -9,7 +9,7 @@
 
 1. Setup your Raspberry Pi with Raspberry Pi OS (other OS should also work but it is not always easy to get the Sense HAT working)
 2. Make sure `sudo apt-get install sense-hat` is installed (it should be there by default in Raspberry Pi OS)
-3. Install and connect the thin-edge (https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md)
+3. Install and connect the thin-edge (https://thin-edge.github.io/thin-edge.io/install/)
 4. Clone this repository
 5. On the level of setup.py run `sudo python setup.py install`
 
