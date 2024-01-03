@@ -1,4 +1,0 @@
-[exec]
-  topic = "c8y/s/ds"
-  on_message = "513"
-  command = "/bin/c8y_Configuration.py"
