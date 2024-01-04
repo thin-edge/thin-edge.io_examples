@@ -1,4 +1,0 @@
-[exec]
-  topic = "c8y/s/ds"
-  on_message = "530"
-  command = "/bin/c8y_RemoteAccessConnect.py"

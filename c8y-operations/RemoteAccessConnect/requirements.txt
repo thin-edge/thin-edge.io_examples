@@ -1,4 +1,0 @@
-paho-mqtt
-websocket_client
-certifi
-c8y-device-proxy
