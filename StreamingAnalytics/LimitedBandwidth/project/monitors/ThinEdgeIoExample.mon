@@ -48,8 +48,8 @@ monitor ThinEdgeIoExample {
                 CombinedMeasurement m := CombinedMeasurement(
                     avgTemperature, avgPressure, avgVibration);
                 log "Sending " + m.toString()
-                    + " to mqtt:tedge/measurements" at INFO;
-                send m to "mqtt:tedge/measurements";
+                    + " to mqtt:te/device/main///m/" at INFO;
+                send m to "mqtt:te/device/main///m/";
             }
         }
 
