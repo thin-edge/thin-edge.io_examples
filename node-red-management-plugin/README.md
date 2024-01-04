@@ -271,7 +271,7 @@ The basic steps are:
 
 1. Get thin-edge.io installation script using the [official instructions](https://thin-edge.github.io/thin-edge.io/install/)
 
-2. Config Cumulocity IoT tenant url
+2. Set the Cumulocity IoT tenant url
 
 ```bash
 sudo tedge config set c8y.url {{YOUR_C8Y_URL}}
