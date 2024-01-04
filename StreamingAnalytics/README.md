@@ -11,9 +11,9 @@ Use, reproduction, transfer, publication or disclosure is prohibited except as s
 
 - A Raspberry Pi (minimum version 3) running Raspberry Pi OS 32-bit. 
 - thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions in the
-[thin-edge.io installation guide](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md).
+[thin-edge.io installation guide](https://thin-edge.github.io/thin-edge.io/install/).
 - _Recommended:_ thin-edge.io configured with connection to Cumulocity IoT or Azure IoT Hub using the
-[thin-edge.io connectivity instructions](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/004_connect.md).
+[thin-edge.io connectivity instructions](https://thin-edge.github.io/thin-edge.io/start/connect-c8y/).
 
 ### Optional
 
@@ -82,7 +82,7 @@ Once Apama support has been installed, the correlator will attempt to start. How
 ## Quick Start
 For demonstration purposes a simple project has been provided with this repository which listens 
 for events on the `demo/number` MQTT topic, increments the number by 1, and sends it back to the 
-`tedge/measurements` topic.
+`te/device/main///m/` topic.
 
 ### Deploying the project to thin-edge 
 
@@ -169,28 +169,28 @@ The project should be launched automatically on being deployed down to the thin-
 >If you update or replace the project you should repeat the steps given above for deploying a project to thin-edge.
 
 ## Testing a Project
-To publish messages to MQTT, thin-edge.io has a [built-in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).
+To publish messages to MQTT, thin-edge.io has a [built-in command](https://thin-edge.github.io/thin-edge.io/operate/telemetry/pub_sub/).
 You can publish/subscribe to any MQTT topic using this command, not just
-thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/architecture/thin-edge-json.md)
+thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://thin-edge.github.io/thin-edge.io/understand/thin-edge-json/)
 format.
 
-To test the quick start example, first open a terminal to subscribe to the `tedge/measurements` 
+To test the quick start example, first open a terminal to subscribe to the `te/device/main///m/` 
 topic:
 
 ``` 
-tedge mqtt sub tedge/measurements
+tedge mqtt sub te/device/main///m/
 ```
 In a separate terminal send some messages formatted like below:
 ```
 tedge mqtt pub 'demo/number' '{ "number": 3 }'
 ```
 
-The output numbers in the `tedge/measurements` topic should be the original test values 
+The output numbers in the `te/device/main///m/` topic should be the original test values 
 incremented by 1.
 
 If you followed the recommended prerequisite of connecting thin-edge.io to a
 cloud provider such as Cumulocity IoT or Azure IoT Hub, any valid
-(Thin Edge JSON) messages published to `tedge/measurements` also appear in the
+(Thin Edge JSON) messages published to `te/device/main///m/` also appear in the
 device measurement interface.
 
 ![Number appearing in Cumulocity IoT ](src/images/number-in-cumulocity.png)

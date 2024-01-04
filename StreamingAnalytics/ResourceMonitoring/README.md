@@ -48,12 +48,12 @@ Zip the project located in the `ResourceMonitoring` directory of this repository
 11. Copy the  `resource-monitor.py.py` script in the `ResourceMonitoring` directory to the
 `/etc/tedge/apama/project` directory on the thin-edge device. Run the [resource-monitor.py](resource-monitor.py) script from this directory using Python 3
 with the command `python3 resource-monitor.py`.
-12. To see the measurements that will be sent to the cloud, run `tedge mqtt sub 'tedge/measurements'`.
+12. To see the measurements that will be sent to the cloud, run `tedge mqtt sub 'te/device/main///m/'`.
 13. If you have configured the thin-edge.io installation to connect to a cloud provider, your measurements 
 will begin appearing there.
 
 > Note: You may need to wait up to an hour for this
-example to publish a message to the `tedge/measurements`
+example to publish a message to the `te/device/main///m/`
 channel. If you want to speed this up, you could alter
 the thresholds, intervals or CPU and memory usage
 variables accordingly.

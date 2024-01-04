@@ -32,5 +32,5 @@ event ResourceUsageReport {
 	string time;
 	float highCpuPercent;
 	float highMemPercent;
-	constant string SEND_CHANNEL := "mqtt:tedge/measurements";
+	constant string SEND_CHANNEL := "mqtt:te/device/main///m/";
 }
