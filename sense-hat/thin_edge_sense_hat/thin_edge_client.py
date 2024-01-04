@@ -29,34 +29,35 @@ class SenseHatThinEdgeClient():
         self.running = True
         self.interval = interval
         self.showImage = showImage
+        self._measurement_topic = 'te/device/main///m/'
 
     def joystick_up(self, event):
         if event.action == ACTION_PRESSED:
             move = {
                 'move': 1
             }
-            self.client.publish('tedge/measurements', json.dumps(move))
+            self.client.publish(self._measurement_topic, json.dumps(move))
     
     def joystick_down(self, event):
         if event.action == ACTION_PRESSED:
             move = {
                 'move': 2
             }
-            self.client.publish('tedge/measurements', json.dumps(move))
+            self.client.publish(self._measurement_topic, json.dumps(move))
 
     def joystick_left(self, event):
         if event.action == ACTION_PRESSED:
             move = {
                 'move': 3
             }
-            self.client.publish('tedge/measurements', json.dumps(move))
+            self.client.publish(self._measurement_topic, json.dumps(move))
 
     def joystick_right(self, event):
         if event.action == ACTION_PRESSED:
             move = {
                 'move': 4
             }
-            self.client.publish('tedge/measurements', json.dumps(move))
+            self.client.publish(self._measurement_topic, json.dumps(move))
 
     def joystick_middle(self, event):
         global client
@@ -64,7 +65,7 @@ class SenseHatThinEdgeClient():
             move = {
                 'move': 5
             }
-            self.client.publish('tedge/measurements', json.dumps(move))
+            self.client.publish(self._measurement_topic, json.dumps(move))
 
     def stop(self, signum, frame):
         self.running = False
@@ -113,7 +114,7 @@ class SenseHatThinEdgeClient():
                         'z': accelerometer['z']            
                     }
                 }
-                self.client.publish('tedge/measurements', json.dumps(measurements))
+                self.client.publish(self._measurement_topic, json.dumps(measurements))
         except Exception as e:
             logging.error(str(e))
         finally:
