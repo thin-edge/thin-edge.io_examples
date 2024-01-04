@@ -175,12 +175,14 @@ If npm is not installed, you can install it by following the instructions on the
 ```bash
 npm install -g node-red
 ```
+
 This will install the latest version of Node-RED and make it available globally on your system.
 
 To start the Node-RED server, run the following command in your terminal:
+
 ```bash
 node-red
-````
+```
 
 This will start the Node-RED server. Usually the web server can be reached via port 1880.
 
@@ -189,17 +191,23 @@ This will start the Node-RED server. Usually the web server can be reached via p
 Make sure docker is installed on your system. You can download Docker from the official website (https://www.docker.com/products/docker-desktop).
 
 Start the Docker daemon by running the following command:
+
 ```bash
 sudo systemctl start docker
 ```
+
 Once the Docker daemon is running, pull the latest Node-RED image from the Docker registry by running the following command:
+
 ```bash 
 docker pull nodered/node-red
 ```
+
 Run the Node-RED container by executing the following command:
+
 ```bash
 docker run -d -p 1880:1880 --name mynodered nodered/node-red
 ```
+
 This command will start the Node-RED container in detached mode (-d), bind the container's port 1880 to the host's port 1880 (-p 1880:1880), and give the container the name "mynodered".
 
 This will start the Node-RED server in a container. Depending on your mapping (-p) the web server can be reached via port 1880 or any other you configured.
@@ -261,12 +269,9 @@ https://thin-edge.github.io/thin-edge.io/html/tutorials/getting-started.html#Ste
 
 The basic steps are:
 
-1. Get thin-edge.io installation script
- ```bash
- curl -fsSL https://raw.githubusercontent.com/thin-edge/thin-edge.io/main/get-thin-edge_io.sh | sudo sh -s
-```
+1. Get thin-edge.io installation script using the [official instructions](https://thin-edge.github.io/thin-edge.io/install/)
 
-2. Config tenant url
+2. Set the Cumulocity IoT tenant url
 
 ```bash
 sudo tedge config set c8y.url {{YOUR_C8Y_URL}}
@@ -303,23 +308,6 @@ To inject node-red flows via operation from Cumulocity IoT the operation plugin 
 5. Copy api.py to the following directory "/bin/"
 6. Make sure, that both files do have permissions for being executed by tedge_mapper ("chmod 644 c8y_NodeRed and chmod 555 c8y_NodeRed.py and api.py")
 
-If installation is done properly according to the steps above, you have to disconnect and reconnect thin-edge.io. In that way the supported Operations will be updated.
-
-```shell
-sudo tedge disconnect c8y
-```
-
-and
-
-```shell
-sudo tedge connect c8y
-```
-
-However it would also to be sufficient to restart the tedge_mapper service via e.g.:
-
-```shell
-sudo systemctl tedge_mapper restart
-```
 
 You device within Cumulocity should look similar to this afterwards:
 
