@@ -9,7 +9,7 @@ See as well for additional information:
 [thin-edge.io](https://thin-edge.io)
 
 
-The architecture allows that other components can be used on thin-edge.io. This is possible due to the concepct of using mqtt as the underlying messaging broker. The module can be programmed in any language but needs to understand mqtt and its payload/topic structure.
+The architecture allows that other components can be used on thin-edge.io. This is possible due to the concept of using mqtt as the underlying messaging broker. The module can be programmed in any language but needs to understand mqtt and its payload/topic structure.
 
 However thats where a modified version of the OPC UA Gateway agent can be used. In this solution the steps to create that solution as well as the underlying idea are described.
 
@@ -23,7 +23,7 @@ However thats where a modified version of the OPC UA Gateway agent can be used. 
 </p>
 <br/>
 
-# Quickstart
+# Quick start
 
 Warning: If you are on windows please change the git default line endings as this causes problems with scripts when building the image.
 
@@ -47,7 +47,7 @@ cp -n env.template .env
 if (!(Test-Path .env)) { Copy-Item env.template .env }
 ```
 
-Modify the values within the .env file. Make espacially sure that you have an proper device ID for thin-edge.io. The baseUrl should be without leading https://.
+Modify the values within the .env file. Make especially sure that you have an proper device ID for thin-edge.io. The baseUrl should be without leading https://.
 
 ```bash
 docker-compose up -d
@@ -86,7 +86,7 @@ The device will appear in the device list, the opcua gateway agent will be a chi
 Until the device is not proper connected and the MQTT broker is not running proper, the OPC UA Gateway Agent will fail to start. You need to start that again after the proper connect of thin-edge.io to cumulocity.
 # thin-edge.io
 
-Thin-edge.io is here deploayed as a docker container on the basis of an alpine image. Feel free to adjust. Some steps are already packed into the building process such as creating the device certificate based on the device id. The uploading of the certificate needs to be handled manually via
+Thin-edge.io is here deployed as a docker container on the basis of an alpine image. Feel free to adjust. Some steps are already packed into the building process such as creating the device certificate based on the device id. The uploading of the certificate needs to be handled manually via
 
 ```bash
 tedge cert upload c8y --user
@@ -171,7 +171,7 @@ You can define which data points are translated in the device protocol section o
 
 You can find more about the OPC UA Gateway implementation in the official [documentation](https://cumulocity.com/guides/protocol-integration/opcua/).
 
-For the device protocoll a new device as child device of the OPC UA Server will be registered. The mapped measurements can be found there.
+For the device protocol a new device as child device of the OPC UA Server will be registered. The mapped measurements can be found there.
 
 <br/>
 <p style="text-indent:30px;">
