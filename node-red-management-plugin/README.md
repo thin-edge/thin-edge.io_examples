@@ -78,7 +78,7 @@ sequenceDiagram
     Note over B,C: Check for load,update or remove
     C -->> B: Response
     Deactivate C
-    B ->> A: Operation Successfull
+    B ->> A: Operation Successful
     A -->> Bob: Response
 ```
 
@@ -182,7 +182,7 @@ To start the Node-RED server, run the following command in your terminal:
 node-red
 ````
 
-This will start the Node-RED server. Usually the webserver can be reached via port 1880.
+This will start the Node-RED server. Usually the web server can be reached via port 1880.
 
 ### Running via docker
 
@@ -202,14 +202,14 @@ docker run -d -p 1880:1880 --name mynodered nodered/node-red
 ```
 This command will start the Node-RED container in detached mode (-d), bind the container's port 1880 to the host's port 1880 (-p 1880:1880), and give the container the name "mynodered".
 
-This will start the Node-RED server in a container. Depending on your mapping (-p) the webserver can be reached via port 1880 or any other you configured.
+This will start the Node-RED server in a container. Depending on your mapping (-p) the web server can be reached via port 1880 or any other you configured.
 ## Node-red UI plugin
 
-Refering to the backend/frontend implementation you can find all content, packages and tutorials here:
+Referring to the backend/frontend implementation you can find all content, packages and tutorials here:
 
 https://github.com/SoftwareAG/cumulocity-node-red
 
-## Node-red devicemanagement plugin
+## Node-red device management plugin
 
 You need to install the plugin for the device management application to your Cumulocity IoT Tenant:
 
@@ -301,9 +301,9 @@ To inject node-red flows via operation from Cumulocity IoT the operation plugin 
 3. Copy c8y_NodeRed to the following directory "/etc/tedge/operations/c8y/"
 4. Copy c8y_NodeRed.py to the following directory "/bin/"
 5. Copy api.py to the following directory "/bin/"
-6. Make sure, that both files do have permissions for beeing executed by tedge_mapper ("chmod 644 c8y_NodeRed and chmod 555 c8y_NodeRed.py and api.py")
+6. Make sure, that both files do have permissions for being executed by tedge_mapper ("chmod 644 c8y_NodeRed and chmod 555 c8y_NodeRed.py and api.py")
 
-If installation is done properly according to the steps above, you have to disconnect and reconnect thin-edge.io. In that way the suppoerted Operations will be updated.
+If installation is done properly according to the steps above, you have to disconnect and reconnect thin-edge.io. In that way the supported Operations will be updated.
 
 ```shell
 sudo tedge disconnect c8y
@@ -382,6 +382,3 @@ These tools are provided as-is and without warranty or support. They do not cons
 For more information you can Ask a Question in the [TECH Community Forums](https://tech.forums.softwareag.com/tag/Cumulocity-IoT).
 
 Contact us at [TECHcommunity](mailto:Communities@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
-
-
-

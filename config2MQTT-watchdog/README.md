@@ -1,7 +1,7 @@
 # Reader that published the content of the tedge.toml files via mqtt
 
-For some reasons it would be good to have tedge.toml information avaible on dedicated mqtt topics.
-Thus a watchdog was created that triggers a file read everytime the tedge.toml is modified.
+For some reasons it would be good to have tedge.toml information available on dedicated mqtt topics.
+Thus a watchdog was created that triggers a file read every time the tedge.toml is modified.
 
 ## Requirements
 
@@ -19,7 +19,7 @@ Thus a watchdog was created that triggers a file read everytime the tedge.toml i
 
 ## Usage
 
-If a deamon service such as systemd is used you can just start/enable the service via:
+If a daemon service such as systemd is used you can just start/enable the service via:
 
 ```shell
 sudo systemctl start reader.service
