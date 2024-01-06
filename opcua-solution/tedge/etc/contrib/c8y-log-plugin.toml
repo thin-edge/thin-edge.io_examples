@@ -1,8 +1,0 @@
-files = [
-{ type = "software-management", path = "/var/log/tedge/agent/software-*" },
-{ type = "mosquitto", path = "/var/log/mosquitto/mosquitto.log" },
-{ type = "c8y-log-plugin", path = "/var/log/c8y-log-plugin/c8y-log-plugin.log" },
-{ type = "c8y-configuration-plugin", path = "/var/log/c8y-configuration-plugin/c8y-configuration-plugin.log" },
-{ type = "c8y-mapper-collectd", path = "/var/log/tedge-mapper-collectd/tedge-mapper-collectd.log" },
-{ type = "c8y-mapper-c8y", path = "/var/log/tedge-mapper-c8y/tedge-mapper-c8y.log" }
-]
