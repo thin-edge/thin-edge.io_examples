@@ -1,37 +1,85 @@
 version: "3.2"
+
+# device template
+x-device-defaults: &defaults
+  image: ghcr.io/thin-edge/tedge-demo:${VERSION:-latest}
+  pull_policy: always
+  restart: always
+  tmpfs:
+    - /tmp
+  depends_on:
+    - mqtt-broker
+
 services:
-  tedge:
-    build:
-      context: ./tedge
-      args:
-        - URL=${baseUrl}
-        - DEVICEID=${deviceID}
-        - VERSION=${TEDGE_VERSION}
-    container_name: thin-edge.io
-    env_file:
-      - .env
+  bootstrap:
+    image: ghcr.io/thin-edge/tedge-demo:${VERSION:-latest}
+    stop_grace_period: "2s"
+    pull_policy: always
+    user: root
+    command:
+      - sh
+      - -c
+      - "until [ -f /etc/tedge/mosquitto-conf/c8y-bridge.conf ]; do echo 'Waiting for bootstrapping'; sleep 5; done; echo Finished bootstrapping"
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    restart: on-failure 
-  opcserver:
+      - device-certs:/etc/tedge/device-certs
+      - mosquitto-conf:/etc/tedge/mosquitto-conf
+      - tedge:/etc/tedge
+
+  mqtt-broker:
+    image: ghcr.io/thin-edge/tedge-mqtt-broker:${VERSION:-latest}
+    pull_policy: always
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    restart: always
+    volumes:
+      - mosquitto:/mosquitto/data
+      - mosquitto-conf:/etc/tedge/mosquitto-conf
+      - device-certs:/etc/tedge/device-certs
+
+  tedge-mapper-c8y:
+    <<: *defaults
+    command: ["/usr/bin/tedge-mapper", "c8y"]
+    volumes:
+      - device-certs:/etc/tedge/device-certs
+      - tedge:/etc/tedge
+
+  # main device
+  tedge:
+    <<: *defaults
+    command: ["/usr/bin/tedge-agent", "--mqtt-device-topic-id", "device/main//"]
+
+  opcua-server:
     build:
-      context: ./opcserver
+      context: ./opcua-server
     ports:
       - "4841:4840"
     expose:
       - "4841"
-    container_name: opc-simulation
-    restart: on-failure 
+    restart: on-failure
+
   gateway:
-    image: y509177/thin-edge.io-opcua-solution_gateway:latest
-    container_name: opc-gateway
+    # Image is maintained under: https://github.com/thin-edge/opcua-device-gateway-container
+    image: ghcr.io/thin-edge/opcua-device-gateway:20240106.0203
     restart: always
-    env_file:
-      - .env
+    environment:
+      # OPCUA Gateway info
+      - OPCUA_GATEWAY_IDENTIFIER=${OPCUA_GATEWAY_IDENTIFIER:-OPCUAGateway001}
+      - OPCUA_GATEWAY_NAME=${OPCUA_GATEWAY_NAME:-OPCUA_GATEWAY_AGENT}
+
+      # thin-edge.io MQTT broker
+      - MQTT_BROKER=mqtt-broker:1883
     depends_on:
       - tedge
     volumes:
     - opcua_data:/data
+    # Provide access to thin-edge.io configuration
+    - tedge:/etc/tedge
+    - device-certs:/etc/tedge/device-certs
 
 volumes:
   opcua_data:
+  device-certs:
+  mosquitto:
+  mosquitto-conf:
+  tedge:
