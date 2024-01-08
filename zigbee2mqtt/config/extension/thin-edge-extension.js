@@ -81,10 +81,10 @@ class ThinEdgeExtension {
       }
     }
     await this.mqtt.publish(
-      "measurements",
+      "m/",
       JSON.stringify(payload),
       {},
-      "tedge"
+      "te/device/main///"
     );
   }
 
