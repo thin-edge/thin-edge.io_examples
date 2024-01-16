@@ -1,5 +1,13 @@
 # Child Device Connector Prototype
 
+:warning: **Deprecation notice**
+
+This example has been deprecated and a more comprehensive and production ready example is available under the [python-tedge-agent](https://github.com/thin-edge/python-tedge-agent) repository.
+
+The instructions in this example are no longer applicable, however the example will be kept until the [thin-edge.io documentation](https://thin-edge.github.io/thin-edge.io/) links from the older versions (namely &lt; 1.0.0) have been removed.
+
+---
+
 This child device connector prototype implements the following specifications:
 
 * [configuration management](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/child_device_config_management_agent.md)
