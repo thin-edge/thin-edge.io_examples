@@ -55,7 +55,7 @@ services:
     ports:
       - "4841:4840"
     expose:
-      - "4841"
+      - "4840"
     restart: on-failure
 
   gateway:
