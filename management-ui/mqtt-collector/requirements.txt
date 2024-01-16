@@ -1,3 +1,0 @@
-paho-mqtt
-pymongo
-flatten_json
