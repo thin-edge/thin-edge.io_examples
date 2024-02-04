@@ -11,14 +11,21 @@ This guide shows how to use the `thin-edge/opcua-device-gateway` container to ru
 
 ## Getting started
 
-1. Create a folder on your device called `opcua`
+1. Enable the mqtt listener to accept connections other than from 127.0.0.1
+
+    ```sh
+    tedge config set mqtt.bind.address 0.0.0.0
+    tedge refresh-bridges
+    ```
+
+2. Create a folder on your device called `opcua`
 
     ```sh
     mkdir opcua
     cd opcua
     ```
 
-2. Create the docker compose file and copy the linked file contents to it
+3. Create the docker compose file and copy the linked file contents to it
 
     ```sh
     docker-compose.yaml
@@ -26,7 +33,7 @@ This guide shows how to use the `thin-edge/opcua-device-gateway` container to ru
 
     Copy the contents from this file: [docker-compose.yaml](./docker-compose.yml)
 
-3. Start the docker compose project
+4. Start the docker compose project
 
     ```sh
     docker compose up -d
