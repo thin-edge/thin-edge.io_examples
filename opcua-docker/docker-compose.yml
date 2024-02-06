@@ -3,13 +3,9 @@ version: "3.2"
 services:
   gateway:
     # Image is maintained under: https://github.com/thin-edge/opcua-device-gateway-container
-    image: ghcr.io/thin-edge/opcua-device-gateway:20240106.0203
+    image: ghcr.io/thin-edge/opcua-device-gateway:20240206.0953
     restart: always
     environment:
-      # OPCUA Gateway info
-      - OPCUA_GATEWAY_IDENTIFIER=${OPCUA_GATEWAY_IDENTIFIER:-RpiOPCUAGateway001}
-      - OPCUA_GATEWAY_NAME=${OPCUA_GATEWAY_NAME:-RPI_OPCUA_GATEWAY_AGENT}
-
       # thin-edge.io MQTT broker
       - MQTT_BROKER=host.docker.internal:1883
       - DEVICE_ID=${DEVICE_ID:-}
