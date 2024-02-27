@@ -4,7 +4,7 @@ This guide shows how to use the `thin-edge/opcua-device-gateway` container to ru
 
 ## Pre-requisites
 
-* **arm64** or **amd64** Linux Operating System
+* **arm64**, **amd64** or **armv7** Linux Operating System
 * thin-edge.io installed on your host operating system and it is already connected to Cumulocity IoT
 * docker engine >=20.18
 * docker compose plugin
