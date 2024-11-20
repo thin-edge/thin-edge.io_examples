@@ -22,13 +22,13 @@ modify or extend the examples or implement a real solution with Apama and
 thin-edge.io we recommend you follow the guidance on creating, configuring and
 deploying a project contained within this document.
 
-- A full installation of [Apama Community Edition](https://apamacommunity.com/downloads/)
-including Software AG Designer on a laptop or PC.
+- The full development package of [Apama Community Edition](https://apamacommunity.com/)
+(not the core package, which does not include Eclipse).
 - Docker and the apama-builder and apama-correlator images. See the links below
 for more details.
-	- https://tech.forums.softwareag.com/t/apama-builder-for-docker/237796
-	- https://hub.docker.com/_/softwareag-apama-builder
-	- https://hub.docker.com/_/apama-correlator
+	- The `Apama Builder For Docker` blog post on https://apamacommunity.com
+	- https://gallery.ecr.aws/apama/apama-builder
+	- https://gallery.ecr.aws/apama/apama-correlator
 
 ## Setup and Configuration
 ### Installing Apama Community Core to the Raspberry Pi
