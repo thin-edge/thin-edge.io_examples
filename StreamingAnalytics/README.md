@@ -26,7 +26,7 @@ deploying a project contained within this document.
 (not the core package, which does not include Eclipse).
 - Docker and the apama-builder and apama-correlator images. See the links below
 for more details.
-	- https://tech.forums.softwareag.com/t/apama-builder-for-docker/237796
+	- The `Apama Builder For Docker` blog post on https://apamacommunity.com
 	- https://gallery.ecr.aws/apama/apama-builder
 	- https://gallery.ecr.aws/apama/apama-correlator
 
