@@ -12,8 +12,7 @@ import { NodeRedFlowService } from '../shared/node-red-flows.service';
 })
 export class AddFlowModal implements OnInit {
     @Input() modalRef?: BsModalRef;
-    @Input() deviceId: string;
-    @Output() onSave = new EventEmitter<string>();
+    @Output() select = new EventEmitter<IManagedObject>();
     selectedFlow: IManagedObject;
     allFlows: IResultList<IManagedObject>
     constructor(private flows: NodeRedFlowService) { }
@@ -34,9 +33,8 @@ export class AddFlowModal implements OnInit {
 
     async create() {
         if (this.selectedFlow) {
-            await this.flows.assignToDevice(this.selectedFlow, this.deviceId)
+            this.select.emit(this.selectedFlow)
             this.modalRef?.hide()
-            this.onSave.emit()
         }
     }
 }

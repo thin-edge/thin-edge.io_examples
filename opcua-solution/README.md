@@ -9,7 +9,7 @@ See as well for additional information:
 [thin-edge.io](https://thin-edge.io)
 
 
-The architecture allows that other components can be used on thin-edge.io. This is possible due to the concepct of using mqtt as the underlying messaging broker. The module can be programmed in any language but needs to understand mqtt and its payload/topic structure.
+The architecture allows that other components can be used on thin-edge.io. This is possible due to the concept of using mqtt as the underlying messaging broker. The module can be programmed in any language but needs to understand mqtt and its payload/topic structure.
 
 However thats where a modified version of the OPC UA Gateway agent can be used. In this solution the steps to create that solution as well as the underlying idea are described.
 
@@ -23,55 +23,57 @@ However thats where a modified version of the OPC UA Gateway agent can be used. 
 </p>
 <br/>
 
-# Quickstart
+## Pre-requisites
 
-Warning: If you are on windows please change the git default line endings as this causes problems with scripts when building the image.
+To easy the configuration, the instructions assume that you have some tooling installed. Please following the setup in order to install the desired tooling.
 
-```sh
-# Windows only
-git config --global core.autocrlf false
-```
+and bootstrap the thin-edge.io container using [go-c8y-cli](https://goc8ycli.netlify.app/) and the [c8y-tedge](https://github.com/thin-edge/c8y-tedge) extension
 
-```bash
-git clone https://github.com/thin-edge/thin-edge.io_examples
-cd thin_edge.io_examples/opcua-solution
-```
+1. Install [go-c8y-cli](https://goc8ycli.netlify.app/) using [these instructions](https://goc8ycli.netlify.app/docs/installation/shell-installation/)
+2. Install the go-c8y-cli extension for thin-edge.io, [c8y-tedge](https://github.com/thin-edge/c8y-tedge)
 
-Copy the environment template file `env.template` to produce a custom `.env` file. This will container your secrets so don't commit it to the repository!
+    ```sh
+    c8y extension install thin-edge/c8y-tedge
+    ```
 
-```bash
-# Linux/MacOS/WSL
-cp -n env.template .env
+3. Create a Cumulocity IoT session file if you haven't already 
 
-# Windows (powershell)
-if (!(Test-Path .env)) { Copy-Item env.template .env }
-```
+    ```sh
+    c8y sessions create
+    ```
 
-Modify the values within the .env file. Make espacially sure that you have an proper device ID for thin-edge.io. The baseUrl should be without leading https://.
+## Quick start
 
-```bash
-docker-compose up -d
-```
+1. Clone the project
 
-As soon as thin-edge.io is started, log into that container via
+    ```sh
+    git clone https://github.com/thin-edge/thin-edge.io_examples
+    cd thin_edge.io_examples/opcua-solution
+    ```
 
-```bash
-docker exec -it thin-edge.io sh
-```
+2. Start the docker compose project
 
-You have to upload the created device certificate. You can do that via:
+    ```sh
+    docker compose up -d
+    ```
 
-```bash
-tedge cert upload c8y --user {YOURUSERNAME}
-```
+    **Note:** The first time you run docker compose up it will hang waiting for the bootstrapping of the thin-edge.io container. Just leave the console as is, and continue the procedure.
 
-Enter your password and the certificate will be updated. Connect thin-edge.io via:
+3. Open a new console, and set the go-c8y-cli session to the Cumulocity IoT Tenant you wish to use the example with
 
-```bash
-sudo tedge connect c8y
-```
+    ```sh
+    set-session
+    ```
 
-The device will appear in the device list, the opcua gateway agent will be a child device of this device.
+4. Bootstrap the thin-edge.io container using the [c8y-tedge extension](https://github.com/thin-edge/c8y-tedge)
+
+    ```sh
+    c8y tedge bootstrap-container bootstrap
+    ```
+
+    The command will open the Cumulocity IoT device management application to the device's page. Note, you may need to reload the web page after a few seconds if you don't the expected tabs.
+
+5. In the Cumulocity IoT **Device Management** application, check that the OPC UA device gateway agent is a child device of the thin-edge.io device, though it will also be visible in the *All devices* list.
 
 <br/>
 <p style="text-indent:30px;">
@@ -83,33 +85,25 @@ The device will appear in the device list, the opcua gateway agent will be a chi
 </p>
 <br/>
 
-Until the device is not proper connected and the MQTT broker is not running proper, the OPC UA Gateway Agent will fail to start. You need to start that again after the proper connect of thin-edge.io to cumulocity.
-# thin-edge.io
+If the device is not properly connected and the MQTT broker is not running proper, the OPC UA Gateway Agent will fail to start. You need to start it again after the thin-edge.io is successfully connected to Cumulocity IoT.
 
-Thin-edge.io is here deploayed as a docker container on the basis of an alpine image. Feel free to adjust. Some steps are already packed into the building process such as creating the device certificate based on the device id. The uploading of the certificate needs to be handled manually via
+## Stopping the project
 
-```bash
-tedge cert upload c8y --user
+You can stop the project but still retain your data using:
+
+```sh
+docker compose down
 ```
 
-However if you use your own certificate this step can be ignored but you need to copy your certificate into /etc/tedge/device-certs while building.
-## dockerfile content
+If you would like to also remove all of the data (volumes) then run:
 
-```docker
-  tedge:
-    build:
-      context: ./tedge
-      args:
-        - URL=${baseUrl}
-        - DEVICEID=${deviceID}
-    container_name: thin-edge.io
-    env_file:
-      - .env
-    volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    restart: on-failure 
+```sh
+docker compose down -v
 ```
-# OPC Simulation Server
+
+## Project setup
+
+### OPC Simulation Server (service: opcua-server)
 
 The Simulation Server simulates a machine within a factory. Values are updated every 2s.
 
@@ -127,25 +121,11 @@ You can change the tree before building the container.
 
 Once the gateway scanned the OPCTree you can view its content within the device management and the corresponding device.
 
-## dockerfile content
-
-```docker
-  opcserver:
-      build:
-        context: ./opcserver
-      ports:
-        - "4841:4840"
-      expose:
-        - "4841"
-      container_name: opc-simulation
-      restart: on-failure 
-```
-
-# OPC UA Gateway
+### OPC UA Gateway (service: gateway)
 
 The device representation of the OPC UA Gateway is a child-device for the thin-edge.io parent device. The agent is currently in BETA and not meant for productive usage.
 
-To connect to the simulation OPC UA server enter url opc.tcp://opcserver:4840 or the url of the real OPC UA Server.
+To connect to the simulation OPC UA server enter url `opc.tcp://opcua-server:4840` or the url of the real OPC UA Server.
 
 <br/>
 <p style="text-indent:30px;">
@@ -171,7 +151,7 @@ You can define which data points are translated in the device protocol section o
 
 You can find more about the OPC UA Gateway implementation in the official [documentation](https://cumulocity.com/guides/protocol-integration/opcua/).
 
-For the device protocoll a new device as child device of the OPC UA Server will be registered. The mapped measurements can be found there.
+For the device protocol a new device as child device of the OPC UA Server will be registered. The mapped measurements can be found there.
 
 <br/>
 <p style="text-indent:30px;">
@@ -183,23 +163,6 @@ For the device protocoll a new device as child device of the OPC UA Server will 
 </p>
 <br/>
 
-Until the device is not proper connected and the MQTT broker is not running proper, the OPC UA Gateway Agent will fail to start. 
-## dockerfile content
-
-Within docker-compose the part of gateway defines the parameters for the OPC UA Gateway agent. The
-
-```docker
-  gateway:
-      build:
-        context: ./gateway
-      container_name: opc-gateway
-      restart: always 
-      env_file:
-        - .env
-      depends_on:
-        - tedge
-      volumes:
-      - opcua_data:/data
-```
+Until the device is not proper connected and the MQTT broker is not running proper, the OPC UA Gateway Agent will fail to start.
 
 The registration data are stored in the ./data directory that are mapped as a volume to the docker service gateway.

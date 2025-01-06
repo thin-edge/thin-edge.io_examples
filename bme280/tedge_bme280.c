@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
             comp_data.temperature,
             comp_data.pressure / 100.0,
             comp_data.humidity);
-        publish(client, "tedge/measurements", buffer);
+        publish(client, "te/device/main///m/", buffer);
         sleep(2);
     }
 

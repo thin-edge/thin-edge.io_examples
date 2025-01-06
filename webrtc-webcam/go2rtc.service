@@ -1,0 +1,11 @@
+[Unit]
+Wants=network.target
+[Service]
+ExecStart=/home/ubuntu/go2rtc_linux_arm64
+WorkingDirectory=/home/ubuntu
+Restart=on-failure
+RestartPreventExitStatus=255
+User=ubuntu
+Group=ubuntu
+[Install]
+WantedBy=multi-user.target

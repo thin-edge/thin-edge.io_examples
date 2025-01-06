@@ -40,12 +40,15 @@
                         Label
                     </div>
                     <div class="col-2 ng-binding">
-                        Id
+                        Flow Id
                     </div>
-                    <div class="col-5 ng-binding">
+                    <div class="col-2 ng-binding">
+                        Flow Id on Device
+                    </div>
+                    <div class="col-4 ng-binding">
                         Info
                     </div>
-                    <div class="col-3 ng-binding">
+                    <div class="col-2 ng-binding">
                         Updated
                     </div>
                 </div>
@@ -57,33 +60,40 @@
     </div>
     <c8y-list-group>
         <c8y-li *ngFor="let flow of deployedFlows">
-            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='PENDING'" [icon]="'clock-o'"></c8y-li-icon>
-            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='SUCCESSFUL'" [icon]="'check-circle'"
+            <c8y-li-icon *ngIf="flowStatus[flow.c8yFlowId] ==='PENDING'" [icon]="'clock-o'"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.c8yFlowId] ==='SUCCESSFUL'" [icon]="'check-circle'"
                 class="text-success"></c8y-li-icon>
-            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='FAILED'" [icon]="'exclamation-circle'"
+            <c8y-li-icon *ngIf="flowStatus[flow.c8yFlowId] ==='FAILED'" [icon]="'exclamation-circle'"
                 class="text-danger"></c8y-li-icon>
-            <c8y-li-icon *ngIf="flowStatus[flow.id] ==='DELIVERED'" [icon]="'clock-o'"></c8y-li-icon>
+            <c8y-li-icon *ngIf="flowStatus[flow.c8yFlowId] ==='DELIVERED'" [icon]="'clock-o'"></c8y-li-icon>
             <div class="content-flex-60">
                 <div class="col-2 ng-binding">
-                    {{flow.label}}
+                    <button class="btn-clean text-truncate ng-binding" [routerLink]="['/device', flow.id]">
+                        {{flow.label}}
+                    </button>
                 </div>
                 <div class="col-2 ng-binding">
                     <span class="label label-info ng-binding">
-                        {{flow.id}}
+                        {{flow.c8yFlowId}}
                     </span>
                 </div>
-                <div class="col-5 ng-binding">
+                <div class="col-2 ng-binding">
+                    <span class="label label-info ng-binding">
+                        {{flow.localFlowId}}
+                    </span>
+                </div>
+                <div class="col-4 ng-binding">
                     <small>
                         {{flow.info}}
                     </small>
                 </div>
-                <div class="col-3 ng-binding">
+                <div class="col-2 ng-binding">
                     <small>
                         {{flow.updated | date:'medium'}}
                     </small>
                 </div>
             </div>
-            <c8y-li-action (click)="update(flow)" icon="box-settings">
+            <c8y-li-action *ngIf="flow.localFlowId" (click)="update(flow)" icon="box-settings">
                 Update
             </c8y-li-action>
             <c8y-li-action (click)="remove(flow)" icon="remove-delivery">
@@ -94,5 +104,5 @@
 </div>
 
 <ng-template #addModal>
-    <add-flow-modal [modalRef]="modalRef" [deviceId]="deviceId" (onSave)="loadData()"></add-flow-modal>
+    <add-flow-modal [modalRef]="modalRef" (select)="addFlow($event)"></add-flow-modal>
 </ng-template>

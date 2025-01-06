@@ -1,4 +1,0 @@
-paho-mqtt
-paho-mqtt-helper
-regex
-c8y-device-proxy
