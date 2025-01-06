@@ -1,19 +1,19 @@
-COPYRIGHT NOTICE
-
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
-
 # Using thin-edge.io with Apama Streaming Analytics
 This file describes how to get started with Streaming Analytics on a thin-edge
 device using Apama Community Core Edition.
+
+## COPYRIGHT NOTICE
+
+Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 
 - A Raspberry Pi (minimum version 3) running Raspberry Pi OS 32-bit. 
 - thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions in the
-[thin-edge.io installation guide](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/002_installation.md).
+[thin-edge.io installation guide](https://thin-edge.github.io/thin-edge.io/install/).
 - _Recommended:_ thin-edge.io configured with connection to Cumulocity IoT or Azure IoT Hub using the
-[thin-edge.io connectivity instructions](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/004_connect.md).
+[thin-edge.io connectivity instructions](https://thin-edge.github.io/thin-edge.io/start/connect-c8y/).
 
 ### Optional
 
@@ -22,13 +22,13 @@ modify or extend the examples or implement a real solution with Apama and
 thin-edge.io we recommend you follow the guidance on creating, configuring and
 deploying a project contained within this document.
 
-- A full installation of [Apama Community Edition](https://apamacommunity.com/downloads/)
-including Software AG Designer on a laptop or PC.
+- The full development package of [Apama Community Edition](https://apamacommunity.com/)
+(not the core package, which does not include Eclipse).
 - Docker and the apama-builder and apama-correlator images. See the links below
 for more details.
-	- https://tech.forums.softwareag.com/t/apama-builder-for-docker/237796
-	- https://hub.docker.com/_/softwareag-apama-builder
-	- https://hub.docker.com/_/apama-correlator
+	- The `Apama Builder For Docker` blog post on https://apamacommunity.com
+	- https://gallery.ecr.aws/apama/apama-builder
+	- https://gallery.ecr.aws/apama/apama-correlator
 
 ## Setup and Configuration
 ### Installing Apama Community Core to the Raspberry Pi
@@ -46,7 +46,7 @@ Further details about this can be found in the thin-edge.io documentation at [Ma
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apt
 - **Version**: 2022::apt
-- **SOFTWARE FILE**: check the Provide a file path option and enter the URL:	https://downloads.apamacommunity.com/debian/apama-repo_2022_all.deb
+- **SOFTWARE FILE**: check the Provide a file path option and enter the URL: `https://download.cumulocity.com/Apama/Debian/apama-repo_2024.0_all.deb`
 
 4. Click the **Add Software** button.
 5. Now select the **Devices** menu option and then select **All devices**.
@@ -66,14 +66,14 @@ Further details about this can be found in the thin-edge.io documentation at [Ma
 - **Description**: apama-thin-edge-support (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apt
-- **Version**: 10.15.0.2-1::apt
+- **Version**: ::apt
 - **SOFTWARE FILE**: select the **Provide a file path** option and give an **empty space** (' ').
 4. Click the **Add Software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software** option.
 8. Click the **Install software** button in the bottom left; the apama-thin-edge-support should be listed.
-9. Click the drop-down arrow on the right and check the 10.15.0.2-1::apt radio button, then click **Install**.
+9. Click the drop-down arrow on the right and check the ::apt radio button, then click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 
 Once Apama support has been installed, the correlator will attempt to start. However, it will initially fail because there is not yet an Apama project installed on the device. An Apama project can be deployed using the Cumulocity IoT tenant, as described below.
@@ -82,7 +82,7 @@ Once Apama support has been installed, the correlator will attempt to start. How
 ## Quick Start
 For demonstration purposes a simple project has been provided with this repository which listens 
 for events on the `demo/number` MQTT topic, increments the number by 1, and sends it back to the 
-`tedge/measurements` topic.
+`te/device/main///m/` topic.
 
 ### Deploying the project to thin-edge 
 
@@ -107,9 +107,9 @@ Zip the project located in the `StreamingAnalytics/src` directory of this reposi
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 
 
-## Creating a Software AG Designer Project
+## Creating Eclipse Project
 ### Creating a New Project
-- Open Software AG Designer on the laptop or PC and select a workspace (the default location is fine).
+- Open Eclipse on the laptop or PC and select a workspace (the default location is fine).
 - Start a new project by choosing __File → New → Apama Project__.
 - Give your project a name and then click __Next__.
 - Add the MQTT connectivity plug-in from 'Connectivity bundles' and JSON support from 'Standard 
@@ -169,28 +169,28 @@ The project should be launched automatically on being deployed down to the thin-
 >If you update or replace the project you should repeat the steps given above for deploying a project to thin-edge.
 
 ## Testing a Project
-To publish messages to MQTT, thin-edge.io has a [built-in command](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/howto-guides/005_pub_sub.md).
+To publish messages to MQTT, thin-edge.io has a [built-in command](https://thin-edge.github.io/thin-edge.io/operate/telemetry/pub_sub/).
 You can publish/subscribe to any MQTT topic using this command, not just
-thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://github.com/thin-edge/thin-edge.io/blob/main/docs/src/architecture/thin-edge-json.md)
+thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://thin-edge.github.io/thin-edge.io/understand/thin-edge-json/)
 format.
 
-To test the quick start example, first open a terminal to subscribe to the `tedge/measurements` 
+To test the quick start example, first open a terminal to subscribe to the `te/device/main///m/` 
 topic:
 
 ``` 
-tedge mqtt sub tedge/measurements
+tedge mqtt sub te/device/main///m/
 ```
 In a separate terminal send some messages formatted like below:
 ```
 tedge mqtt pub 'demo/number' '{ "number": 3 }'
 ```
 
-The output numbers in the `tedge/measurements` topic should be the original test values 
+The output numbers in the `te/device/main///m/` topic should be the original test values 
 incremented by 1.
 
 If you followed the recommended prerequisite of connecting thin-edge.io to a
 cloud provider such as Cumulocity IoT or Azure IoT Hub, any valid
-(Thin Edge JSON) messages published to `tedge/measurements` also appear in the
+(Thin Edge JSON) messages published to `te/device/main///m/` also appear in the
 device measurement interface.
 
 ![Number appearing in Cumulocity IoT ](src/images/number-in-cumulocity.png)

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
- * Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+ * Copyright (c) 2022 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+ * Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
  *
  * Event definitions for ResourceMonitoring thin-edge sample.
  * 
@@ -32,5 +32,5 @@ event ResourceUsageReport {
 	string time;
 	float highCpuPercent;
 	float highMemPercent;
-	constant string SEND_CHANNEL := "mqtt:tedge/measurements";
+	constant string SEND_CHANNEL := "mqtt:te/device/main///m/";
 }

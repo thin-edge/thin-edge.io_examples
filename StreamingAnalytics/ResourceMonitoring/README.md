@@ -1,8 +1,3 @@
-COPYRIGHT NOTICE
-
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
-
 # Streaming Analytics Resource Monitoring Sample
 
 This example demonstrates the use of Apama to monitor CPU and memory usage and calculate 
@@ -11,6 +6,11 @@ in 5-minute cycles if this percentage is over 70% or once per hour otherwise.
 
 Note that we are __not__ reporting the average CPU and memory usage, but the _percentage of time for 
 which CPU or memory usage breached the threshold._
+
+## COPYRIGHT NOTICE
+
+Copyright (c) 2022 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 
@@ -48,12 +48,12 @@ Zip the project located in the `ResourceMonitoring` directory of this repository
 11. Copy the  `resource-monitor.py.py` script in the `ResourceMonitoring` directory to the
 `/etc/tedge/apama/project` directory on the thin-edge device. Run the [resource-monitor.py](resource-monitor.py) script from this directory using Python 3
 with the command `python3 resource-monitor.py`.
-12. To see the measurements that will be sent to the cloud, run `tedge mqtt sub 'tedge/measurements'`.
+12. To see the measurements that will be sent to the cloud, run `tedge mqtt sub 'te/device/main///m/'`.
 13. If you have configured the thin-edge.io installation to connect to a cloud provider, your measurements 
 will begin appearing there.
 
 > Note: You may need to wait up to an hour for this
-example to publish a message to the `tedge/measurements`
+example to publish a message to the `te/device/main///m/`
 channel. If you want to speed this up, you could alter
 the thresholds, intervals or CPU and memory usage
 variables accordingly.

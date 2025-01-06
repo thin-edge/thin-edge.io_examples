@@ -1,9 +1,3 @@
-COPYRIGHT NOTICE
-
-# Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-# Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
-
-
 # Streaming Analytics Limited Bandwidth Sample
 
 This example shows how Apama can be used on a thin-edge device to process and
@@ -11,6 +5,11 @@ filter events to reduce the frequency of messages sent to the cloud.
 
 The EPL file in this sample ([ThinEdgeIoExample.mon](project/monitors/ThinEdgeIoExample.mon)) collates temperature, pressure and vibration events, averages them and sends a measurement combining those averages at 5 second intervals to thin-edge.io via
 MQTT.
+
+## COPYRIGHT NOTICE
+
+Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 Follow the setup and configuration instructions in the [README](../README.md)
