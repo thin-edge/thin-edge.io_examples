@@ -4,8 +4,8 @@ device using Apama Community Core Edition.
 
 ## COPYRIGHT NOTICE
 
-Copyright (c) 2022-2023 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ Further details about this can be found in the thin-edge.io documentation at [Ma
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apt
 - **Version**: 2022::apt
-- **SOFTWARE FILE**: check the Provide a file path option and enter the URL:	https://downloads.apamacommunity.com/debian/apama-repo_2022_all.deb
+- **SOFTWARE FILE**: check the Provide a file path option and enter the URL: `https://download.cumulocity.com/Apama/Debian/apama-repo_2024.0_all.deb`
 
 4. Click the **Add Software** button.
 5. Now select the **Devices** menu option and then select **All devices**.
@@ -107,9 +107,9 @@ Zip the project located in the `StreamingAnalytics/src` directory of this reposi
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 
 
-## Creating a Software AG Designer Project
+## Creating Eclipse Project
 ### Creating a New Project
-- Open Software AG Designer on the laptop or PC and select a workspace (the default location is fine).
+- Open Eclipse on the laptop or PC and select a workspace (the default location is fine).
 - Start a new project by choosing __File → New → Apama Project__.
 - Give your project a name and then click __Next__.
 - Add the MQTT connectivity plug-in from 'Connectivity bundles' and JSON support from 'Standard 

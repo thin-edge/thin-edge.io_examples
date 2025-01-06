@@ -1,6 +1,6 @@
 # Project Initialization File List
 # Exported from project "tedge-demo-test" at 2021-10-26 15:36:47.552
-C:\SoftwareAG\Apama\monitors\ConnectivityPluginsControl.mon
-C:\SoftwareAG\Apama\monitors\ConnectivityPlugins.mon
-C:\SoftwareAG\Apama\monitors\JSONPlugin.mon
+C:\Cumulocity\Apama\monitors\ConnectivityPluginsControl.mon
+C:\Cumulocity\Apama\monitors\ConnectivityPlugins.mon
+C:\Cumulocity\Apama\monitors\JSONPlugin.mon
 C:\Users\loam\tedge_workspace\tedge-demo-test\monitors\TedgeTestMonitor.mon

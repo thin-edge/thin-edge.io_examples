@@ -8,8 +8,8 @@ MQTT.
 
 ## COPYRIGHT NOTICE
 
-Copyright (c) 2022-2023 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.
-Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
+Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 Follow the setup and configuration instructions in the [README](../README.md)
