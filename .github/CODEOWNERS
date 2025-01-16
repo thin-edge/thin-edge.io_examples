@@ -1,7 +1,7 @@
 # Thin Edge SAG Developers owns the files in root of the repo.
-/.github @thin-edge/sag-developers
-/*.md @thin-edge/sag-developers
-/*.txt @thin-edge/sag-developers
+/.github @thin-edge/cumulocity-developers
+/*.md @thin-edge/cumulocity-developers
+/*.txt @thin-edge/cumulocity-developers
 
 # Define the owners of any file in the directory in the root of the repository
 # and any of its subdirectories.
