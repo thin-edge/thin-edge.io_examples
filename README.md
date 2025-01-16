@@ -1,5 +1,4 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
-[![Twitter Badge](https://img.shields.io/twitter/follow/thin_edge_io?style=social)](https://twitter.com/thin_edge_io)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -35,8 +34,6 @@ Distributed under the Apache 2.0 License. See [LICENSE](LICENSE.txt) for more in
 
 <!-- CONTACT -->
 # Contact
-
-Twitter - [@thin_edge_io](https://twitter.com/thin_edge_io)
 
 Email - [info@thin-edge.io](mailto:info@thin-edge.io)
 
