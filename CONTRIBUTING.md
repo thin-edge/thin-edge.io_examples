@@ -51,7 +51,7 @@ We do not want to bother you with too much legalese, but there are two pages you
 
 ## Signing the CONTRIBUTOR LICENSE AGREEMENT
 
-Each Contribution to Software AG's Open Source Projects must be accompanied by a sign-off indicating acceptance of current version of the CONTRIBUTOR LICENSE AGREEMENT, which is derived from the Apache Foundation's Individual Contributor License Agreement, sign-off time stamp relates to corresponding version of the CONTRIBUTOR LICENSE AGREEMENT maintained here on GitHub as well. Sign-Off and acceptance of the CONTRIBUTOR LICENSE AGREEMENT is declared by using  the option "-s" in
+Each Contribution to Cumulocity GmbH's Open Source Projects must be accompanied by a sign-off indicating acceptance of current version of the CONTRIBUTOR LICENSE AGREEMENT, which is derived from the Apache Foundation's Individual Contributor License Agreement, sign-off time stamp relates to corresponding version of the CONTRIBUTOR LICENSE AGREEMENT maintained here on GitHub as well. Sign-Off and acceptance of the CONTRIBUTOR LICENSE AGREEMENT is declared by using  the option "-s" in
 
 > git commit -s
 

@@ -24,7 +24,7 @@
         "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
         "pack": "npm run cleanup && npm run build && npm run package && npm pack"
     },
-    "author": "tristan.bastian@softwareag.com",
+    "author": "tristan.bastian@cumulocity.com",
     "license": "MIT",
     "files": []
 }
