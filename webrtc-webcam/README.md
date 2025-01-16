@@ -2,7 +2,7 @@
 
 This remote access connect plugin for thin-edge is able to establish a WebSocket connection between c8y and a server running on the thin-edge device in addition to the usual TCP capabilities.
 
-This functionality can be used together with the [cumulocity-webrtc-webcam-plugin](https://github.com/SoftwareAG/cumulocity-webrtc-webcam-plugin) to view a video stream from a camera connected to the thin-edge device.
+This functionality can be used together with the [cumulocity-webrtc-webcam-plugin](https://github.com/Cumulocity-IoT/cumulocity-webrtc-webcam-plugin) to view a video stream from a camera connected to the thin-edge device.
 
 The video stream is transferred via a separate peer-to-peer connection between the users browser and a server running locally on the device using [WebRTC](https://en.wikipedia.org/wiki/WebRTC).
 
@@ -70,7 +70,7 @@ sudo systemctl enable go2rtc
 
 ## Usage
 
-- install the [cumulocity-webrtc-webcam-plugin](https://github.com/SoftwareAG/cumulocity-webrtc-webcam-plugin) to cockpit and/or devicemanagement application
+- install the [cumulocity-webrtc-webcam-plugin](https://github.com/Cumulocity-IoT/cumulocity-webrtc-webcam-plugin) to cockpit and/or devicemanagement application
 - create a new remote access configuration of type `PASSTHROUGH` and set the host to `127.0.0.1` and the port to `1984` and ensure that the name contains `webcam`.
 - after refreshing the page or navigating another time to the device you should see a `Webcam` tab, where you can start the video stream
 

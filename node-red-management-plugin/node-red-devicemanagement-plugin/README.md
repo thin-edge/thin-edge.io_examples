@@ -207,13 +207,13 @@ This will start the Node-RED server in a container. Depending on your mapping (-
 
 Refering to the backend/frontend implementation you can find all content, packages and tutorials here:
 
-https://github.com/SoftwareAG/cumulocity-node-red
+https://github.com/Cumulocity-IoT/cumulocity-node-red
 
 ## Node-red devicemanagement plugin
 
 You need to install the plugin for the device management application to your Cumulocity IoT Tenant:
 
-The plugin is provided as binaries in [Releases](https://github.com/SoftwareAG/url/releases) or in the "node-red-devicemanagement-plugin" directory.
+The plugin is provided as binaries in [Releases](https://github.com/Cumulocity-IoT/cumulocity-node-red/releases) or in the "node-red-devicemanagement-plugin" directory.
 
 To install the plugin go to the Administration App -> Ecosystem -> Packages and click on "Add Application" on the top right.
 
@@ -356,8 +356,7 @@ Currently there is no monitoring of the edge sided events in the Cumulocity IoT 
 # Copyright
 
 ````
-Copyright (c) 2022 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA,
-and/or its subsidiaries and/or its affiliates and/or their licensors.
+Copyright (c) 2022-2025 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors. Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 SPDX-License-Identifier: Apache-2.0
 
@@ -376,11 +375,6 @@ limitations under the License.
 ````
 
 
-These tools are provided as-is and without warranty or support. They do not constitute part of the Software AG product suite. Users are free to use, fork and modify them, subject to the license agreement. While Software AG welcomes contributions, we cannot guarantee to include every contribution in the master project.
+These tools are provided as-is and without warranty or support. They do not constitute part of the Cumulocity GmbH product suite. Users are free to use, fork and modify them, subject to the license agreement. While Cumulocity GmbH welcomes contributions, we cannot guarantee to include every contribution in the master project.
 
-For more information you can Ask a Question in the [TECH Community Forums](https://tech.forums.softwareag.com/tag/Cumulocity-IoT).
-
-Contact us at [TECHcommunity](mailto:Communities@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
-
-
-
+For more information you can Ask a Question in the [Cumulocity TECH Community](https://techcommunity.cumulocity.com/).
