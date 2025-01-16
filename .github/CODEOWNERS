@@ -7,6 +7,6 @@
 # and any of its subdirectories.
 /remote-access/ @mstoffel-sag
 /c8y-operations/ @mbay-ODW
-/management-ui/ @sagIoTPower
+/management-ui/ @ck-c8y
 /StreamingAnalytics/ @bph-c8y
 /opcua-solution/ @mbay-ODW
