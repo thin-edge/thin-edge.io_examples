@@ -8,5 +8,5 @@
 /remote-access/ @mstoffel-sag
 /c8y-operations/ @mbay-ODW
 /management-ui/ @ck-c8y
-/StreamingAnalytics/ @bph-c8y
+/StreamingAnalytics/ @ben-c8y @skom-c8y
 /opcua-solution/ @mbay-ODW
