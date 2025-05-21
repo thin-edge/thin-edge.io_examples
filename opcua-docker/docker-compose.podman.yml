@@ -5,14 +5,12 @@ services:
     restart: always
     environment:
       # thin-edge.io MQTT broker
-      - MQTT_BROKER=host.docker.internal:1883
+      - MQTT_BROKER=host.containers.internal:1883
     volumes:
       - opcua_data:/data
       # Provide access to thin-edge.io configuration
       - /etc/tedge:/etc/tedge
       - /etc/tedge/device-certs:/etc/tedge/device-certs
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - backend
 

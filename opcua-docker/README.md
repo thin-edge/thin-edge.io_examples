@@ -11,6 +11,44 @@ This guide shows how to use the `thin-edge/opcua-device-gateway` container to ru
 
 ## Getting started
 
+### Using docker / docker compose
+
+1. Enable the mqtt listener to accept connections other than from 127.0.0.1
+
+    ```sh
+    tedge config set mqtt.bind.address 0.0.0.0
+    tedge refresh-bridges
+    ```
+
+2. Create a folder on your device called `opcua`
+
+    ```sh
+    mkdir opcua
+    cd opcua
+    ```
+
+3. Create the compose file and copy the linked file contents to it
+
+    ```sh
+    docker-compose.yaml
+    ```
+
+    Copy the contents from this file: [docker-compose.yaml](./docker-compose.yml)
+
+4. Start the docker compose project
+
+    ```sh
+    docker compose up -d
+    ```
+    
+    You can view the logs using the following command:
+
+    ```sh
+    docker compose logs gateway -f
+    ```
+
+### Using podman / podman-compose
+
 1. Enable the mqtt listener to accept connections other than from 127.0.0.1
 
     ```sh
@@ -31,18 +69,18 @@ This guide shows how to use the `thin-edge/opcua-device-gateway` container to ru
     docker-compose.yaml
     ```
 
-    Copy the contents from this file: [docker-compose.yaml](./docker-compose.yml)
+    Copy the contents from this file: [docker-compose.yaml](./docker-compose.podman.yml)
 
-4. Start the docker compose project
+4. Start the compose project
 
     ```sh
-    docker compose up -d
+    podman-compose up -d
     ```
     
     You can view the logs using the following command:
 
     ```sh
-    docker compose logs gateway -f
+    podman-compose logs gateway -f
     ```
 
 ## Example public OPC UA Servers
