@@ -29,7 +29,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    mqttClient = mqtt.Client("Demo-measurements")
+    mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "Demo-measurements")
 
     def on_publish(_client, _userdata, _result):
         print("data published")

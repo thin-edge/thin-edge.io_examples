@@ -7,9 +7,9 @@ in 5-minute cycles if this percentage is over 70% or once per hour otherwise.
 Note that we are __not__ reporting the average CPU and memory usage, but the _percentage of time for 
 which CPU or memory usage breached the threshold._
 
-## COPYRIGHT NOTICE
+## Copyright notice
 
-Copyright (c) 2022 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Copyright (c) 2022-2025 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
 Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
@@ -36,14 +36,14 @@ Zip the project located in the `ResourceMonitoring` directory of this repository
 - **Description**: apama-resource-monitoring (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apama
-- **Version**: 1.0::apama
+- **Version**: 1.0
 - **SOFTWARE FILE**: select the **Upload a binary** option and either drag and drop the project zip file created previously or use the file chooser to navigate to it in your file system. 
 4. Click the **Add software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software** option.
 8. Click the **Install software** button in the bottom left; the apama-resource-monitoring should be listed.
-9. Click the drop-down arrow on the right and check the 1.0::apama radio button. Then, click **Install**.
+9. Click the drop-down arrow on the right and check the 1.0 radio button. Then, click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 11. Copy the  `resource-monitor.py.py` script in the `ResourceMonitoring` directory to the
 `/etc/tedge/apama/project` directory on the thin-edge device. Run the [resource-monitor.py](resource-monitor.py) script from this directory using Python 3
