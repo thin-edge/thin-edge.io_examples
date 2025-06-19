@@ -3,5 +3,5 @@
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 #
 
-# This event should be sent after all monitors are injected; Eclipse will send event files after injections, so the ordering relative to other evt files is unimportant.
+# This event should be sent after all monitors are injected; ordering relative to other evt files is unimportant.
 com.apama.connectivity.ApplicationInitialized()

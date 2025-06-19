@@ -9,8 +9,6 @@ correlator:
    runtime: ${correlator.runtimeType}
    runtimeCacheDir: ${correlator.dataDir}
    javaApplicationSupport: ${correlator.javaApplicationSupport}
-   jmsConfigDir: ${correlator.jmsConfigDir}
-   distMemStoreConfigDir: ${correlator.distMemStoreConfigDir}
    inputLogFile: ${correlator.inputLogFile}
    logFile: ${correlator.logFile}
 

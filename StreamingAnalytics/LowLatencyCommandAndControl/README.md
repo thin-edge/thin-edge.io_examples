@@ -4,9 +4,9 @@ sensor values over a 10 second window. If the average temperature
 exceeds a threshold (80 in this example) then an alert is sent to the
 cloud and a shutdown is initiated.
 
-## COPYRIGHT NOTICE
+## Copyright notice
 
-Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Copyright (c) 2022-2025 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
 Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
@@ -33,14 +33,14 @@ Zip the project located in the `LowLatencyCommandAndControl` directory of this r
 - **Description**: apama-low-latency (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apama
-- **Version**: 1.0::apama
+- **Version**: 1.0
 - **SOFTWARE FILE**: select the **Upload a binary** option and either drag and drop the project zip file created previously or use the file chooser to navigate to it in your file system. 
 4. Click the **Add software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software** option.
 8. Click the **Install software** button in the bottom left; the apama-low-latency project should be listed.
-9. Click the drop-down arrow on the right and check the 1.0::apama radio button. Then, click **Install**.
+9. Click the drop-down arrow on the right and check the 1.0 radio button. Then, click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 11. Copy the  `test_publisher.py` script in the `LowLatencyCommandAndControl` directory to the
 `/etc/tedge/apama/project` directory on the thin-edge device. Execute the script to send some fake

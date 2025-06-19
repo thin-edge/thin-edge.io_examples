@@ -1,16 +1,16 @@
-# Using thin-edge.io with Apama Streaming Analytics
+# Using thin-edge.io with Cumulocity Streaming Analytics
 This file describes how to get started with Streaming Analytics on a thin-edge
-device using Apama Community Core Edition.
+device using Apama.
 
 ## COPYRIGHT NOTICE
 
-Copyright (c) 2022-2023 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
+Copyright (c) 2022-2025 Cumulocity GmbH, Duesseldorf, Germany and/or its affiliates and/or their licensors.
 Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Cumulocity GmbH.
 
 ## Prerequisites
 
-- A Raspberry Pi (minimum version 3) running Raspberry Pi OS 32-bit. 
-- thin-edge.io installed to the Raspberry Pi, which can be done by following the instructions in the
+- An 64-bit ARMv8 device,
+- thin-edge.io installed to the device, which can be done by following the instructions in the
 [thin-edge.io installation guide](https://thin-edge.github.io/thin-edge.io/install/).
 - _Recommended:_ thin-edge.io configured with connection to Cumulocity IoT or Azure IoT Hub using the
 [thin-edge.io connectivity instructions](https://thin-edge.github.io/thin-edge.io/start/connect-c8y/).
@@ -22,44 +22,38 @@ modify or extend the examples or implement a real solution with Apama and
 thin-edge.io we recommend you follow the guidance on creating, configuring and
 deploying a project contained within this document.
 
-- The full development package of [Apama Community Edition](https://apamacommunity.com/)
-(not the core package, which does not include Eclipse).
+- The full development package of [Apama](https://www.cumulocity.com/product/apama-community-edition/)
 - Docker and the apama-builder and apama-correlator images. See the links below
 for more details.
-	- The `Apama Builder For Docker` blog post on https://apamacommunity.com
+	- The `Apama Builder For Docker` blog post on https://techcommunity.cumulocity.com/tag/streaming-analytics-apama
 	- https://gallery.ecr.aws/apama/apama-builder
 	- https://gallery.ecr.aws/apama/apama-correlator
 
 ## Setup and Configuration
-### Installing Apama Community Core to the Raspberry Pi
+### Installing Apama to the device
 
 The recommended way of installing support for Apama on thin-edge is by using the Debian based distributions apt package manager.
 
-Further details about this can be found in the thin-edge.io documentation at [Manage the software on your devices from Cumulocity cloud](https://thin-edge.github.io/thin-edge.io/html/tutorials/software-management.html).
+Further details about this can be found in the thin-edge.io documentation at [Manage the software on your devices from Cumulocity cloud](https://thin-edge.github.io/thin-edge.io/extend/software-management/)
 
 #### Set up the repository from which the packages will be installed
-1. In the Cumulocity IoT tenant, open the **Device Management** app, go to the **Management** menu option and select the **Software repository**.
+1. In the Cumulocity tenant, open the **Device Management** app, go to the **Management** menu option and select the **Software repository**.
 2. Click **Add software** at the right of the top menu bar. 
 3. In the **ADD SOFTWARE** dialog enter the following details:
-
-	|Property|Value|
-    |--------|-----|
-    |Software|apama-repo|
-    |Description|apama-repo (or something else if you choose)|
-    |Device Filter Type|(leave empty)|
-    |Software Type|apt|
-    |Version|1:26.0-1|
-    |Software File - *Provide a File* option|https://download.cumulocity.com/Apama/Debian/apama-repo_26.0-1_all.deb|
-
+- **Software**: apama-repo
+- **Description**: apama-repo (or something else if you choose)
+- **Device Filter Type**: (leave empty)
+- **Software Type**: apt
+- **Version**: 1:26.0-1
+- **SOFTWARE FILE**: `https://download.cumulocity.com/Apama/Debian/apama-repo_26.0-1_all.deb`
 
 4. Click the **Add Software** button.
 5. Now select the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software** option.
 8. Click the **Install software** button in the bottom left; the apama-repo should be listed.
-9. Click the drop-down arrow on the right and select the desired version, then click **Install**.
+9. Click the drop-down arrow on the right and check the 26.0::apt radio button, then click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
-
 
 #### Add the Apama thin-edge support package to the tenant software repository and deploy it to thin-edge
 
@@ -70,7 +64,7 @@ Further details about this can be found in the thin-edge.io documentation at [Ma
 - **Description**: apama-thin-edge-support (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apt
-- **Version**: ::apt
+- **Version**: latest
 - **SOFTWARE FILE**: select the **Provide a file path** option and give an **empty space** (' ').
 4. Click the **Add Software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
@@ -100,24 +94,27 @@ Zip the project located in the `StreamingAnalytics/src` directory of this reposi
 - **Description**: apama-quick-start (or something else if you choose)
 - **Device Filter Type**: (leave empty)
 - **Software Type**: apama
-- **Version**: 1.0::apama
+- **Version**: 1.0
 - **SOFTWARE FILE**: select the **Upload a binary** option and either drag and drop the project zip file created previously, or use the file chooser to navigate to it in your file system. 
 4. Click the **Add software** button.
 5. Now return to the **Devices** menu option and then select **All devices**.
 6. In the list of devices, select the thin-edge device installed previously.
 7. In the sub-menu for the device, select the **Software option**.
 8. Click the **Install software** button in the bottom left; the apama-quick-start project should be listed.
-9. Click the drop-down arrow on the right and check the 1.0::apama radio button. Then, click **Install**.
+9. Click the drop-down arrow on the right and check the 1.0 radio button. Then, click **Install**.
 10. Finally, click the **Apply changes** button in the lower right of the panel.
 
 
-## Creating Eclipse Project
-### Creating a New Project
-- Open Eclipse on the laptop or PC and select a workspace (the default location is fine).
-- Start a new project by choosing __File → New → Apama Project__.
-- Give your project a name and then click __Next__.
-- Add the MQTT connectivity plug-in from 'Connectivity bundles' and JSON support from 'Standard 
-bundles' to the project and then click the __Finish__ button.
+## Creating the Project in Visual Studio Code
+
+### Creating a New project
+- Open VSCode on the laptop or PC and configure [Apama extension](https://marketplace.visualstudio.com/items?itemName=ApamaCommunity.apama-extensions)
+- Start a new project by choosing `(Ctrl+Shift+P)` -> **Apama:Create Project in New Folder**
+- Give your project a name and then click Next.
+- Open the created project
+- Add the "MQTT" and "JSON support" from `(Ctrl+Shift+P)` -> **Apama:Product Bundle** to the project.
+
+![Apama commands in VSCode](src/images/VSCode-commands.png)
 
 ### Configuring MQTT Support
 Open the `MQTT.properties` file.  This contains the configurations relating to the MQTT broker. 
@@ -125,8 +122,7 @@ thin-edge.io uses Mosquitto as the MQTT broker which runs on the same host as th
 project.  The thin-edge.io Mosquitto broker is configured to not require SSL/TLS or password 
 authentication for internal traffic. 
 
->In the Project Explorer tab, configuration files for MQTT can be found under __config → 
-connectivity → MQTT__. ![The project explorer tab](src/images/proj-explorer.png)
+>Configuration files for MQTT can be found under the `config` directory. 
 
 The `MQTT_brokerURL` should be set as below:
 ```
@@ -141,8 +137,7 @@ Open the `MQTT.yaml` file.  This contains configuration relating to the chain wh
 messages to EPL events.
 
 MQTT messages need to be mapped to EPL events in order to be able to use them within Apama.  The 
-easiest way to do this for this purpose is using the 
-[Classifier codec](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-ConApaAppToExtCom_classifier_codec.html%23wwconnect_header) 
+easiest way to do this for this purpose is using the Classifier codec 
 which inspects incoming events on the transport and classify them, usually to an EPL event 
 type, based upon their payload and metadata.  
 
@@ -153,18 +148,18 @@ found within the other Streaming Analytics sample projects in this repository.
 ### Writing Apama Projects
 
 The quick start example (see [Quick Start](#quick-start)) and the samples in this directory show 
-some examples of EPL for some basic use cases.  The full EPL reference can be found 
-[here](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/ApamaDoc/index.html).
+some examples of EPL for some basic use cases.  The full EPL reference can be found in the 
+[documentation](https://cumulocity.com/apama/docs/latest).
 
 
 ### Deploying a Project
 To deploy a project, use the `engine_deploy` utility provided with Apama.  Navigate to the 
-workspace directory in a command prompt/terminal and run the following command in an `apama_env` 
-prompt (see ['Setting up the environment using the Apama command prompt'](https://www.apamacommunity.com/documents/10.11.0.1/apama_10.11.0.1_webhelp/apama-webhelp/#page/apama-webhelp%2Fco-DepAndManApaApp_setting_up_the_environment_using_the_apama_command_prompt.html)):
+workspace directory run the following command after sourcing `bin/apama_env`:
 ```
 engine_deploy --outputDeployDir project <project-src-dir>
 ```
-Prior to uploading the project to your Cumulocity IoT tenant you must zip up the project folder. Note that you must use the zip format, and not some other compression utility. After doing this you can then upload the zip file to the tenant's software repository and then deploy it to the thin-edge device by following the instructions given above for the Quick Start project.
+
+Prior to uploading the project to your Cumulocity tenant you must zip up the project folder. Note that you must use the zip format, and not some other compression utility. After doing this you can then upload the zip file to the tenant's software repository and then deploy it to the thin-edge device by following the instructions given above for the Quick Start project.
 
 
 ## Launching a Project
@@ -173,7 +168,7 @@ The project should be launched automatically on being deployed down to the thin-
 >If you update or replace the project you should repeat the steps given above for deploying a project to thin-edge.
 
 ## Testing a Project
-To publish messages to MQTT, thin-edge.io has a [built-in command](https://thin-edge.github.io/thin-edge.io/operate/telemetry/pub_sub/).
+To publish messages to MQTT, thin-edge.io has a [built-in command](https://thin-edge.github.io/thin-edge.io/operate/telemetry/mqtt-tools/).
 You can publish/subscribe to any MQTT topic using this command, not just
 thin-edge.io specific ones.  The messages should be valid [Thin Edge JSON](https://thin-edge.github.io/thin-edge.io/understand/thin-edge-json/)
 format.

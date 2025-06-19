@@ -26,7 +26,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    mqttClient = mqtt.Client("Resource-monitor")
+    mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "Resource-monitor")
 
     def on_publish(_client, _userdata, _result):  # create function for callback
         print("data published")

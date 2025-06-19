@@ -29,7 +29,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    mqttClient = mqtt.Client("Low-latency")
+    mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "Low-latency")
 
     def on_publish(_client, _userdata, _result):  # create function for callback
         print("data published")
